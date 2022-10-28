@@ -8,7 +8,7 @@ module.exports = {
       fontSize:{
         xs: 14,
         sm: 16,
-        md: 16,
+        md: 18,
         lg: 20,
         xl: 24,
         '2xl':32
@@ -24,7 +24,9 @@ module.exports = {
         'cyan-500': '#81D8F7',
         'cyan-300': '#AEE4F8',
         
-        'green-600': '#51BB7A',
+        
+        'green-600': '#27AE60',
+        'green-500': '#51BB7A',
 
         'palm-700': '#789B3D'
 
