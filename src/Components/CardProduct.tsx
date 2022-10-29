@@ -2,7 +2,7 @@ import { IconAddList } from "./IconAddList";
 
 export function CardProduct() {
   return (
-    <div className="w-[16rem] h-auto min:h-[20rem] my-4 md:my-8 flex justify-center">
+    <div className="w-[16rem] h-auto min:h-[20rem] mb-4 md:mb-8 flex justify-center">
       <div className="rounded-lg shadow-lg bg-white max-w-sm">
         <a href="#!">
           <img

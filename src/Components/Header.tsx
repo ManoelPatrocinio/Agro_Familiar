@@ -32,7 +32,7 @@ export function Header() {
       </nav>
       <ul  className="w-full hidden max-h-8 h-8 md:flex items-center justify-evenly mt-8">
         <li>  <a href="/" className="text-lg text-palm-700 font-normal font-display ml-16">Início</a></li>
-        <li>  <a href="/" className="text-lg text-palm-700 font-normal font-display">Produtos</a></li>
+        <li>  <a href="/Products" className="text-lg text-palm-700 font-normal font-display">Produtos</a></li>
         <li>  <a href="/Entities" className="text-lg text-palm-700 font-normal font-display">Associações/Cooperativas</a></li>
         <li>  <a href="/" className="text-lg text-palm-700 font-normal font-display">Produtores</a></li>
         <li>  <a href="/" className="text-lg text-palm-700 font-normal font-display">Territórios</a></li>
