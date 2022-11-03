@@ -1,11 +1,15 @@
 import Logo from "../assets/images/Logo.png"
 import { MagnifyingGlass, User,ClipboardText,List } from "phosphor-react";
+import { Menu_Sidebar } from "./Menu_Sidebar";
+import { useState } from "react";
+
 
 export function Header() {
+  const [menuVisibility, Setmenuvisibilty] = useState<boolean>(false)
   return (
-    <header className="w-full px-5 md:px-14">
+    <header className="relative w-full px-5 md:px-14">
       <nav  className="navbar py-2  bg-white relative flex items-center w-full justify-between">
-        <List size={32} color="#789B3D" className="md:hidden"/>
+        <List size={32} color="#789B3D" className="md:hidden" onClick={()=>Setmenuvisibilty(!menuVisibility)}/>
         <div className="header-form-search hidden md:flex items-end w-[25%]">
           <button className="w-10 h-10">
             <MagnifyingGlass size={32} color="#789B3D" mirrored/>
@@ -51,6 +55,8 @@ export function Header() {
         />
 
        </div>
+        {menuVisibility && <Menu_Sidebar toggleMenuVisibility={Setmenuvisibilty} valueMenu={menuVisibility}/>}
+       
     </header>
   );
 }

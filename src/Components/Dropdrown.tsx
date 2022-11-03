@@ -1,4 +1,4 @@
-import { Funnel } from "phosphor-react";
+import { FunnelSimple  } from "phosphor-react";
 
 export function Dropdrown() {
   return (
@@ -30,7 +30,7 @@ export function Dropdrown() {
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <Funnel size={20}  className="mr-2"/>
+            <FunnelSimple  size={20}  className="mr-2"/>
 
             Ordenar Por:
             <svg
