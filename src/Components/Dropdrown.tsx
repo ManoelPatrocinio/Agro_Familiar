@@ -7,23 +7,23 @@ export function Dropdrown() {
         <div className="dropdown relative">
           <a
             className="
-          dropdown-toggle
-          px-0
-          md:px-6
-          py-2.5
-          text-gray-800
-          font-medium
-          text-xs
-          leading-tight
-          
-          rounded          
-          transition
-          duration-150
-          ease-in-out
-          flex
-          items-center
-          whitespace-nowrap
-        "
+              dropdown-toggle
+              px-0
+              md:px-6
+              py-2.5
+              text-gray-800
+              font-medium
+              text-xs
+              leading-tight
+              
+              rounded          
+              transition
+              duration-150
+              ease-in-out
+              flex
+              items-center
+              whitespace-nowrap
+            "
             href="#"
             type="button"
             id="dropdownMenuButton2"

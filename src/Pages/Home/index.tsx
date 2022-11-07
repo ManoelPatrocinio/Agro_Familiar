@@ -12,8 +12,8 @@ export function Home() {
       <Header/>
       <Carrousel/>
       
-      <section className="flex items-start flex-col px-8 md:px-20">
-        <SectionTitle title={"Destaques"} className={ "my-6"}/>
+      <section className="w-full flex items-start flex-col px-8 md:px-20">
+        <SectionTitle title={"Destaques"} className={ "my-6 w-full"}/>
         <Dropdrown/>
         <div className="w-full flex flex-wrap justify-around ">
             <CardProduct/>

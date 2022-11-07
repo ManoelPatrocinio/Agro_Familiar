@@ -1,14 +1,23 @@
-import { User, X, XCircle } from "phosphor-react";
-import { ReactEventHandler } from "react";
+import classNames from "classnames";
+import { User, X } from "phosphor-react";
 
 type PropsHeader = {
     toggleMenuVisibility: any
-    valueMenu:boolean
+    valueMenu:boolean,
+   
   }
   
 export function Menu_Sidebar ({toggleMenuVisibility,valueMenu}:PropsHeader){
     return(
-        <div className="block absolute left-0 top-0 min-h-screen h-auto w-[90%] z-20  px-2 bg-white  shadow-md shadow-gray-400  ">
+        <div className={classNames(
+            "block fixed top-0 min-h-screen h-auto w-[90%] z-20  px-2 bg-white  shadow-md shadow-gray-400 transition-all ",
+            {
+                "left-0":valueMenu,
+                "left-[-90%]":!valueMenu
+            }
+            
+        )
+        }>
             <X size={32} color="#789B3D"   className="absolute right-0 top-0" onClick={()=>toggleMenuVisibility(!valueMenu)}/>
             <div className="w-full h-auto flex items-center border-b-[1px] py-6 px-2 border-palm-700">
                 <User size={32} color="#789B3D" />

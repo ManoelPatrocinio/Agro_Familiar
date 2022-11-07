@@ -55,7 +55,7 @@ export function Header() {
         />
 
        </div>
-        {menuVisibility && <Menu_Sidebar toggleMenuVisibility={Setmenuvisibilty} valueMenu={menuVisibility}/>}
+        <Menu_Sidebar toggleMenuVisibility={Setmenuvisibilty} valueMenu={menuVisibility}/>
        
     </header>
   );

@@ -11,7 +11,6 @@ import { SectionTitle } from "../../Components/SectionTitle";
 
 export function Products() {
   const [toggleFilterVisibility,SetToggleFilterVisibility] = useState<boolean>(false)
-  console.log(toggleFilterVisibility)
   return (
     <>
       <Header />
@@ -20,7 +19,7 @@ export function Products() {
       <main className="flex items-start flex-col px-8 md:px-20">
         <SectionTitle title={"Destaques"} className={"my-6"} />
         <div className="relative w-full flex items-start justify-between ">
-          <Filter_category mobileVisiblity={toggleFilterVisibility} />
+          <Filter_category ToggleFilterVisibility={SetToggleFilterVisibility} mobileVisiblity={toggleFilterVisibility} />
           <div className="w-full md:w-3/4 flex flex-col  items-start">
             <div className="w-full flex justify-between md:justify-start ">
               <Dropdrown />
