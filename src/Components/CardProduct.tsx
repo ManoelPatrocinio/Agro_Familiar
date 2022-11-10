@@ -2,11 +2,11 @@ import { IconAddList } from "./IconAddList";
 
 export function CardProduct() {
   return (
-    <div className="w-[16rem] h-auto min:h-[20rem] mb-4 md:mb-8 flex justify-center">
+    <div className="w-[16rem] h-auto min:h-[20rem] mb-4 md:mb-8 flex justify-center hover:scale-110 transition duration-300 ease-in-out">
       <div className="rounded-lg shadow-lg bg-white max-w-sm">
-        <a href="#!">
+        <a href="#">
           <img
-            className="rounded-t-lg"
+            className="rounded-t-lg "
             src="https://mdbootstrap.com/img/new/standard/nature/184.jpg"
             alt=""
           />

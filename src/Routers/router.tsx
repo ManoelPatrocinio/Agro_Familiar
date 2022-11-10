@@ -3,10 +3,11 @@ import {
     Routes,
     Route
   } from "react-router-dom";
-  import { Home } from "../Pages/Home";
-  import { Entities } from "../Pages/Entities";
+import { Home } from "../Pages/Home";
+import { Entities } from "../Pages/Entities";
 import { Products } from "../Pages/Products";
 import { Entity } from "../Pages/Entity";
+import { InfoEntity } from "../Pages/InfoEntitty/InfoEntity";
 //   import { Login } from "../pages/Login";
 //   import { Register } from "../pages/Register";
 //   import { ContactUs } from "../pages/FaleConosco";
@@ -19,6 +20,7 @@ export  const SystemRoutes = () => {
             <Route path="/" element={<Home/>} />
             <Route path="/Entities" element={<Entities/>} />
             <Route path="/Entity" element={<Entity/>} />
+            <Route path="/Entity-info" element={<InfoEntity/>} />
             <Route path="/Products" element={<Products/>} />
             {/* <Route path="/login" element={<Login/>} />
             <Route path="/register" element={<Register/>} />

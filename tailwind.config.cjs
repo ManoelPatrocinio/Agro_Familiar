@@ -1,7 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './src/**/*.tsx',
+    "./index.html",
+    './node_modules/tw-elements/dist/js/**/*.js',
+    "./src/**/*.tsx",
   ],
   theme: {
     extend: {
@@ -37,5 +39,7 @@ module.exports = {
       }
     },
   },
-  plugins: [],
+  plugins: [
+    require('tw-elements/dist/plugin')
+  ],
 }

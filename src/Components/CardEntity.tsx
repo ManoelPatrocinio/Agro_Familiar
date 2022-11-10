@@ -5,7 +5,7 @@ import IconAgropecuary from "../assets/images/Agropecuaria.png";
 
 export function CardEntity() {
   return (
-    <div className="w-[21.25rem] h-[13.8rem] flex flex-col justify-between pt-4 mt-4 mb-8 border border-gray-400 rounded">
+    <div className="w-[21.25rem] h-[13.8rem] flex flex-col justify-between pt-4 mt-4 mb-8 border border-gray-400 rounded hover:scale-110 transition duration-300 ease-in-out">
       <a href="/Entity" className="w-full text-center text-palm-700 font-display text-sm">
         Associação dos Produtores Rurais do Pau D´arco
       </a>
