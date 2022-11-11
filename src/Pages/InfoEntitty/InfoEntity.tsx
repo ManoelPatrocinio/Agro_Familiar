@@ -2,6 +2,7 @@ import Star from "../../assets/images/star_icon.png";
 import header_background from "../../assets/images/img_header_exemple.png";
 import entity_profile from "../../assets/images/img_entity_profile_exemple.png";
 import { Header } from "../../Components/Header";
+import { ChatText } from "phosphor-react";
 export function InfoEntity() {
   return (
     <>
@@ -57,10 +58,7 @@ export function InfoEntity() {
         </p>
         <div className="w-full flex flex-col md:flex-row justify-between py-8">
           <p className="text-sm text-left text-gray-800">
-
-            <span className="font-semibold">
-              CNPJ:
-            </span> 44.448.094/0001-31
+            <span className="font-semibold">CNPJ:</span> 44.448.094/0001-31
           </p>
           <p className="text-sm text-left  text-gray-800 py-4 md:py-0">
             <span className="font-semibold">Responsável Legal: </span> Manoel de
@@ -75,7 +73,7 @@ export function InfoEntity() {
             Comentários sobre Associação
           </h4>
           <div className="w-full max-h-[25rem] overflow-y-auto  ">
-            <div className="flex justify-start items-start relative mb-6 border-b border-gray-400 pb-4">
+            <div className="flex flex-col md:flex-row justify-start items-start relative mb-6 border-b border-gray-400 pb-4">
               <div className="w-20 min-w-[5rem] h-20 rounded-[50%] mr-2">
                 <img
                   src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/256/charlie-chaplin-icon.png"
@@ -137,7 +135,7 @@ export function InfoEntity() {
                 </p>
               </div>
             </div>
-            <div className="flex justify-start items-start relative mb-6 border-b border-gray-400 pb-4">
+            <div className="flex  flex-col md:flex-row justify-start items-start relative mb-6 border-b border-gray-400 pb-4">
               <div className="w-20 min-w-[5rem] h-20 rounded-[50%] mr-2">
                 <img
                   src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/256/charlie-chaplin-icon.png"
@@ -199,7 +197,7 @@ export function InfoEntity() {
                 </p>
               </div>
             </div>
-            <div className="flex justify-start items-start relative mb-6 border-b border-gray-400 pb-4">
+            <div className="flex  flex-col md:flex-row justify-start items-start relative mb-6 border-b border-gray-400 pb-4">
               <div className="w-20 min-w-[5rem] h-20 rounded-[50%] mr-2">
                 <img
                   src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/256/charlie-chaplin-icon.png"
@@ -261,8 +259,116 @@ export function InfoEntity() {
                 </p>
               </div>
             </div>
-           
           </div>
+        </div>
+
+        <div className="mt-5 md:col-span-2 md:mt-12">
+          <div className="w-full  flex items-start justify-start pb-4">
+            {" "}
+            <ChatText size={24} />{" "}
+            <p className="w-full ml-1 text-left text-sm text-gray-800 font-semibold ">
+              {" "}
+              Deixe o seu Comentário
+            </p>
+          </div>
+          <form action="#" method="POST">
+            <div className="overflow-hidden ">
+              <div className="bg-white py-5">
+                <div className="grid grid-cols-6 gap-6">
+                  <div className="col-span-6 sm:col-span-3">
+                    <label
+                      htmlFor="first-name"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Seu Nome
+                    </label>
+                    <small className="text-xs text-gray-400">
+                      Não será publica
+                    </small>
+                    <input
+                      type="text"
+                      name="first-name"
+                      id="first-name"
+                      autoComplete="given-name"
+                      className="mt-2 py-2 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    />
+                  </div>
+
+                  <div className="col-span-6 sm:col-span-3">
+                    <label
+                      htmlFor="email-address"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Seu E-mail
+                    </label>
+                    <small className="text-xs text-gray-400">
+                      Não será publica
+                    </small>
+
+                    <input
+                      type="email"
+                      name="email-address"
+                      id="email-address"
+                      autoComplete="email"
+                      className="mt-2 py-2 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    />
+                  </div>
+                  <div className="col-span-6 sm:col-span-3 ">
+                    <label
+                      htmlFor="user-comment"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Seu Comentário
+                    </label>
+                    <small className="text-xs text-gray-400">
+                      será publicado nesta página 
+                    </small>
+                    <textarea
+                      name="user-comment"
+                      id="user-comment"
+                      rows={5}
+                      className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm sm:text-sm"
+                    />
+                  </div>
+                  <div className="col-span-6 sm:col-span-3 ">
+                     <label
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Deixe sua Avaliação
+                    </label>
+                    <small className="text-xs text-gray-400">
+                      Sua avaliação é importante para o desenvolvimento desse(s) produtor(es) 
+                    </small>
+
+                    <div className="star-rating mt-2">
+                      <input type="radio" name="stars" id="star-a" value="5" />
+                      <label htmlFor="star-a"></label>
+
+                      <input type="radio" name="stars" id="star-b" value="4" />
+                      <label htmlFor="star-b"></label>
+
+                      <input type="radio" name="stars" id="star-c" value="3" />
+                      <label htmlFor="star-c"></label>
+
+                      <input type="radio" name="stars" id="star-d" value="2" />
+                      <label htmlFor="star-d"></label>
+
+                      <input type="radio" name="stars" id="star-e" value="1" />
+                      <label htmlFor="star-e"></label>
+                    </div>
+                  </div>
+                
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-6 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                Publicar Comentário
+              </button>
+            </div>
+          </form>
         </div>
       </main>
     </>
