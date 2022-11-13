@@ -1,11 +1,12 @@
 import { FunnelSimple  } from "phosphor-react";
+import { Link } from "react-router-dom";
 
 export function Dropdrown() {
   return (
     <div className="flex justify-center">
       <div>
         <div className="dropdown relative">
-          <a
+          <Link
             className="
               dropdown-toggle
               px-0
@@ -24,7 +25,7 @@ export function Dropdrown() {
               items-center
               whitespace-nowrap
             "
-            href="#"
+            to="#"
             type="button"
             id="dropdownMenuButton2"
             data-bs-toggle="dropdown"
@@ -48,7 +49,7 @@ export function Dropdrown() {
                 d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
               ></path>
             </svg>
-          </a>
+          </Link>
           <ul
             className="
           dropdown-menu
@@ -72,7 +73,7 @@ export function Dropdrown() {
             aria-labelledby="dropdownMenuButton2"
           >
             <li>
-              <a
+              <Link
                 className="
               dropdown-item
               md:text-sm
@@ -87,13 +88,13 @@ export function Dropdrown() {
               text-gray-700
               hover:bg-gray-100
             "
-                href="#"
+                to="#"
               >
                 Menor Preço
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 className="
               dropdown-item
               md:text-sm
@@ -108,13 +109,13 @@ export function Dropdrown() {
               text-gray-700
               hover:bg-gray-100
             "
-                href="#"
+                to="#"
               >
                 Maior Preço
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 className="
               dropdown-item
               md:text-sm
@@ -129,13 +130,13 @@ export function Dropdrown() {
               text-gray-700
               hover:bg-gray-100
             "
-                href="#"
+                to="#"
               >
                 De A - Z
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 className="
               dropdown-item
               md:text-sm
@@ -150,10 +151,10 @@ export function Dropdrown() {
               text-gray-700
               hover:bg-gray-100
             "
-                href="#"
+                to="#"
               >
                 De Z - A
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

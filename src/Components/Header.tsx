@@ -2,6 +2,7 @@ import Logo from "../assets/images/Logo.png"
 import { MagnifyingGlass, User,ClipboardText,List } from "phosphor-react";
 import { Menu_Sidebar } from "./Menu_Sidebar";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 
 export function Header() {
@@ -24,7 +25,7 @@ export function Header() {
         <div className="header-icons-left w-10 md:w-[25%] flex  justify-end">
           <div className=" h-10 mr-6 hidden md:flex items-center">
             <User size={32} color="#789B3D" />
-            <a href="/Login" className=" font-body text-xs font-semibold text-palm-700 ml-2" >Login / <br/>  Registre-se </a>
+            <Link to="/Login" className=" font-body text-xs font-semibold text-palm-700 ml-2" >Login / <br/>  Registre-se </Link>
           </div>
           <button className="w-10 h-9 relative">
             <ClipboardText size={36} color="#789B3D"/>
@@ -35,11 +36,11 @@ export function Header() {
       
       </nav>
       <ul  className="w-full hidden max-h-8 h-8 md:flex items-center justify-evenly mt-8">
-        <li>  <a href="/" className="text-lg text-palm-700 font-normal font-display ml-16">Início</a></li>
-        <li>  <a href="/Products" className="text-lg text-palm-700 font-normal font-display">Produtos</a></li>
-        <li>  <a href="/Entities" className="text-lg text-palm-700 font-normal font-display">Associações/Cooperativas</a></li>
-        <li>  <a href="/" className="text-lg text-palm-700 font-normal font-display">Produtores</a></li>
-        <li>  <a href="/" className="text-lg text-palm-700 font-normal font-display">Territórios</a></li>
+        <li>  <Link to="/" className="text-lg text-palm-700 font-normal font-display ml-16">Início</Link></li>
+        <li>  <Link to="/Products" className="text-lg text-palm-700 font-normal font-display">Produtos</Link></li>
+        <li>  <Link to="/Entities" className="text-lg text-palm-700 font-normal font-display">Associações/Cooperativas</Link></li>
+        <li>  <Link to="/" className="text-lg text-palm-700 font-normal font-display">Produtores</Link></li>
+        <li>  <Link to="/" className="text-lg text-palm-700 font-normal font-display">Territórios</Link></li>
       </ul>
 
       <div className="relative w-full h-10 mt-4 md:hidden">

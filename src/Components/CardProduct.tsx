@@ -1,16 +1,17 @@
+import { Link } from "react-router-dom";
 import { IconAddList } from "./IconAddList";
 
 export function CardProduct() {
   return (
     <div className="w-[16rem] h-auto min:h-[20rem] mb-4 md:mb-8 flex justify-center hover:scale-110 transition duration-300 ease-in-out">
       <div className="rounded-lg shadow-lg bg-white max-w-sm">
-        <a href="#">
+        <Link to="#">
           <img
             className="rounded-t-lg "
             src="https://mdbootstrap.com/img/new/standard/nature/184.jpg"
             alt=""
           />
-        </a>
+        </Link>
         <div className="py-4 px-3">
           <h5 className="w-full text-center text-gray-900 text-md font-medium mb-2">Product Name</h5>
           <div className="w-full flex justify-center items-center text-base mb-4">

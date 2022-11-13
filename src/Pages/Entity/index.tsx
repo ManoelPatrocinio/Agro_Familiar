@@ -7,6 +7,7 @@ import { Dropdrown } from "../../Components/Dropdrown";
 import { DotsThreeVertical, Funnel } from "phosphor-react";
 import { CardProduct } from "../../Components/CardProduct";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export function Entity() {
   const [toggleFilterVisibility, SetToggleFilterVisibility] =
@@ -35,7 +36,10 @@ export function Entity() {
                 {" "}
                 Associação dos Produtores Rurais do Pau D´arco
               </h4>
-              <p className="text-xs md:text-sm text-gray-400 font-semibold"> Pau D´arco</p>
+              <p className="text-xs md:text-sm text-gray-400 font-semibold">
+                {" "}
+                Pau D´arco
+              </p>
 
               <div className="flex w-1/4 items-center justify-start">
                 <span className="text-xs md:text-sm text-gray-400"> 4.6 </span>
@@ -91,7 +95,7 @@ export function Entity() {
                   aria-labelledby="dropdownMenuButton1s"
                 >
                   <li>
-                    <a
+                    <Link
                       className="
                         dropdown-item
                         text-sm
@@ -105,13 +109,13 @@ export function Entity() {
                         text-gray-700
                         hover:bg-gray-100
                       "
-                      href="/Entity-info"
+                      to="/Entity-info"
                     >
                       Sobre
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
+                    <Link
                       className="
               dropdown-item
               text-sm
@@ -125,13 +129,13 @@ export function Entity() {
               text-gray-700
               hover:bg-gray-100
             "
-                      href="#"
+                      to="#"
                     >
                       Another action
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
+                    <Link
                       className="
               dropdown-item
               text-sm
@@ -145,10 +149,10 @@ export function Entity() {
               text-gray-700
               hover:bg-gray-100
             "
-                      href="#"
+                      to="#"
                     >
                       Something else here
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
