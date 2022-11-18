@@ -30,7 +30,9 @@ module.exports = {
         'green-600': '#27AE60',
         'green-500': '#51BB7A',
 
-        'palm-700': '#789B3D'
+        'palm-900': '#678433',
+        'palm-700': '#789B3D',
+        'palm-500': '#89B045'
 
       },
       fontFamily:{
