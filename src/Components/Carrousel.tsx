@@ -2,7 +2,7 @@ export function Carrousel() {
   return (
     <div
       id="carouselExampleCrossfade"
-      className="carousel slide carousel-fade relative w-[90%] md:w-full h-40 md:h-[27rem] md:min-h-[60vh]  mt-6 mx-auto  "
+      className="carousel slide carousel-fade relative w-[90%] md:w-full h-48 md:h-[27rem] md:min-h-[60vh]  mt-6 mx-auto  "
       data-bs-ride="carousel"
     >
       <div className="carousel-indicators absolute right-0 bottom-0 left-0 flex justify-center p-0 mb-4">
