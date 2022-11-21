@@ -1,8 +1,8 @@
-import Star from "../../assets/images/star_icon.png";
-import header_background from "../../assets/images/img_header_exemple.png";
-import entity_profile from "../../assets/images/img_entity_profile_exemple.png";
-import { Header } from "../../Components/Header";
 import { ChatText } from "phosphor-react";
+import entity_profile from "../../assets/images/img_entity_profile_exemple.png";
+import header_background from "../../assets/images/img_header_exemple.png";
+import Star from "../../assets/images/star_icon.png";
+import { Header } from "../../Components/Header";
 export function InfoEntity() {
   return (
     <>
@@ -13,16 +13,16 @@ export function InfoEntity() {
           alt="foto de capa"
           className="w-full h-full  "
         />
-        <div className=" w-full absolute top-[7rem] md:top-[24rem] flex flex-col md:flex-row items-center md:items-end md:pl-16 ">
+        <div className=" w-full absolute top-[7rem] md:top-[87%] flex flex-col md:flex-row items-center md:items-end md:pl-16 ">
           <div className="w-[7rem] h-[7rem] md:w-[9.5rem] md:h-[9.5rem] rounded-[50%]">
             <img
               src={entity_profile}
-              alt=""
+              alt="foto de perfil"
               className="w-full h-full object-cover"
             />
           </div>
           <div className="flex flex-col items-center md:items-start justify-evenly px-4 pb-4">
-            <h4 className="text-sm md:text-lg text-center md:text-left text-gray-800 font-display font-semibold">
+            <h4 className="text-sm md:text-lg text-center md:text-left text-palm-700 font-display font-semibold">
               {" "}
               Associação dos Produtores Rurais do Pau D´arco
             </h4>
@@ -321,7 +321,7 @@ export function InfoEntity() {
                       Seu Comentário
                     </label>
                     <small className="text-xs text-gray-400">
-                      será publicado nesta página 
+                      será publicado nesta página
                     </small>
                     <textarea
                       name="user-comment"
@@ -331,13 +331,12 @@ export function InfoEntity() {
                     />
                   </div>
                   <div className="col-span-6 sm:col-span-3 ">
-                     <label
-                      className="block text-sm font-medium text-gray-700"
-                    >
+                    <label className="block text-sm font-medium text-gray-700">
                       Deixe sua Avaliação
                     </label>
                     <small className="text-xs text-gray-400">
-                      Sua avaliação é importante para o desenvolvimento desse(s) produtor(es) 
+                      Sua avaliação é importante para o desenvolvimento desse(s)
+                      produtor(es)
                     </small>
 
                     <div className="star-rating mt-2">
@@ -357,7 +356,6 @@ export function InfoEntity() {
                       <label htmlFor="star-e"></label>
                     </div>
                   </div>
-                
                 </div>
               </div>
 

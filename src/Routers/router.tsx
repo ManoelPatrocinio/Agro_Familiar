@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { AboutUs } from "../Pages/AboutUs";
 import { Entities } from "../Pages/Entities";
 import { Entity } from "../Pages/Entity";
 import { Home } from "../Pages/Home";
@@ -19,6 +20,7 @@ export const SystemRoutes = () => {
         <Route path="/Entity-info" element={<InfoEntity />} />
         <Route path="/Products" element={<Products />} />
         <Route path="/Product-detail" element={<ProductDetail />} />
+        <Route path="/AboutUs" element={<AboutUs />} />
         {/* <Route path="/login" element={<Login/>} />
             <Route path="/register" element={<Register/>} />
             <Route path="/fale-conosco" element={<FaleConosco/>} /> */}
