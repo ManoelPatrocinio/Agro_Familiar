@@ -3,6 +3,10 @@ import IconFacebook from "../assets/images/icon-facebook.svg";
 import IconInstagram from "../assets/images/icon-instragam.svg";
 import IconWhatsapp from "../assets/images/icon-whatsapp.svg";
 
+const phone = import.meta.env.VITE_PORTAL_PHONE;
+const instagram = import.meta.env.VITE_PORTAL_INSTAGRAM;
+const linkWhatsapp = `https://api.whatsapp.com/send?phone=${phone}`;
+
 export function Footer() {
   return (
     <footer className="w-full  border-t border-gray-200 mt-10 py-8">
@@ -71,8 +75,20 @@ export function Footer() {
           </p>
 
           <div className="flex justify-between items-center">
-            <img className="w-9 h-9" src={IconWhatsapp} alt="whatsApp" />
-            <img className="w-9 h-9 mx-8" src={IconInstagram} alt="Instagram" />
+            <a href={linkWhatsapp} className="w-9 h-9" target={"_blank"}>
+              <img
+                className="w-full h-full"
+                src={IconWhatsapp}
+                alt="whatsApp"
+              />
+            </a>
+            <a href={instagram} className="w-9 h-9 mx-8" target={"_blank"}>
+              <img
+                className="w-full h-full"
+                src={IconInstagram}
+                alt="Instagram"
+              />
+            </a>
             <img className="w-9 h-9" src={IconFacebook} alt="Facebook" />
           </div>
         </div>
