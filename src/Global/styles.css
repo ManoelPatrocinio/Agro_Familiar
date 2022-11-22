@@ -2,29 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
 html {
   scroll-behavior: smooth;
-
 }
 
 *::-webkit-scrollbar {
-  width: .2rem;
-  height: .5rem;
+  width: 0.2rem;
+  height: 0.5rem;
 }
 
 *::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
-  box-shadow: inset 0 0 6px rgba(0,0,0,0.3) ;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   border-radius: 1rem;
 }
 
 *::-webkit-scrollbar-thumb {
   border-radius: 2px;
-  -webkit-box-shadow: inset 0 0 6px var(--Color-purple); 
-  box-shadow:inset 0 0 6px var(--Color-purple) ;
+  -webkit-box-shadow: inset 0 0 6px var(--Color-purple);
+  box-shadow: inset 0 0 6px var(--Color-purple);
 }
-
 
 .star-rating {
   display: flex;
@@ -45,8 +48,8 @@ html {
   font-family: Arial;
   font-size: 30px;
   transition: 0.2s ease;
-  color:  #FACC15;
-  cursor:pointer
+  color: #facc15;
+  cursor: pointer;
 }
 /* give label a hover state */
 .star-rating label:hover {
@@ -54,24 +57,24 @@ html {
   transition: 0.2s ease;
 }
 .star-rating label:active::before {
-  transform:scale(1.1);
+  transform: scale(1.1);
 }
 
 /* set shape of unselected label */
 .star-rating label::before {
-  content: '\2606';
+  content: "\2606";
   position: absolute;
   top: 0px;
   line-height: 26px;
 }
 /* set full star shape for checked label and those that come after it */
 .star-rating input:checked ~ label:before {
-  content:'\2605';
+  content: "\2605";
 }
 
 @-moz-document url-prefix() {
   .star-rating input:checked ~ label:before {
-  font-size: 36px;
-  line-height: 21px;
+    font-size: 36px;
+    line-height: 21px;
   }
-}  
+}

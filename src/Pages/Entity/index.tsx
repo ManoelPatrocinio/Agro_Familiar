@@ -1,13 +1,14 @@
-import { Header } from "../../Components/Header";
-import header_background from "../../assets/images/img_header_exemple.png";
-import entity_profile from "../../assets/images/img_entity_profile_exemple.png";
-import Star from "../../assets/images/star_icon.png";
-import { Filter_category } from "../../Components/Filter_category";
-import { Dropdrown } from "../../Components/Dropdrown";
 import { DotsThreeVertical, Funnel } from "phosphor-react";
-import { CardProduct } from "../../Components/CardProduct";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import entity_profile from "../../assets/images/img_entity_profile_exemple.png";
+import header_background from "../../assets/images/img_header_exemple.png";
+import Star from "../../assets/images/star_icon.png";
+import { CardProduct } from "../../Components/CardProduct";
+import { Dropdrown } from "../../Components/Dropdrown";
+import { Filter_category } from "../../Components/Filter_category";
+import { Footer } from "../../Components/Footer";
+import { Header } from "../../Components/Header";
 
 export function Entity() {
   const [toggleFilterVisibility, SetToggleFilterVisibility] =
@@ -22,7 +23,7 @@ export function Entity() {
           alt="foto de capa"
           className="w-full h-full  "
         />
-        <div className=" w-full absolute top-[7rem] md:top-[24rem] flex justify-between  items-center md:px-20">
+        <div className=" w-full absolute top-[7rem] md:top-[87%] flex justify-between  items-center md:px-20">
           <div className="flex flex-col md:flex-row items-center md:items-end">
             <div className="w-[7rem] h-[7rem] md:w-[9.5rem] md:h-[9.5rem] rounded-[50%]">
               <img
@@ -202,6 +203,7 @@ export function Entity() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

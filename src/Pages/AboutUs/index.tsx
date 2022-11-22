@@ -1,6 +1,7 @@
 import allFree from "../../assets/images/all_Free.png";
 import forClient from "../../assets/images/forClient.png";
 import whatWeOffer from "../../assets/images/whatWeOffer.png";
+import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 
 export function AboutUs() {
@@ -14,7 +15,7 @@ export function AboutUs() {
           </h3>
           <p className="w-full text-md text-gray-700 ">
             O Portal Agro Familiar foi idealizado com o objetivo de ser mais do
-            que um produto, e sim uma ferramenta social e de transformação.
+            que um produto, e sim, uma ferramenta social e de transformação.
             trazendo maior visibilidade e competitividade para a agricultura
             familiar.
           </p>
@@ -78,7 +79,7 @@ export function AboutUs() {
             </div>
           </div>
         </div>
-        <div className="w-full h-full md:h-[22rem]  text-center font-display my-10 md:my-20">
+        <div className="w-full h-full md:h-[22rem]  text-center font-display my-10 ">
           <div className="w-full h-full  flex  flex-col-reverse md:flex-row">
             <div className="w-full md:w-1/2 text-left md:pt-8">
               <h4 className="text-md text-palm-700 font-medium my-4">
@@ -106,7 +107,7 @@ export function AboutUs() {
             </div>
           </div>
         </div>
-        <div className="w-full text-justify indent-8 md:indent-0 md:text-center font-display mt-10">
+        <div className="w-full text-justify indent-8 md:indent-0 md:text-center font-display ">
           <img
             src={allFree}
             alt="all free"
@@ -119,6 +120,7 @@ export function AboutUs() {
           </p>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

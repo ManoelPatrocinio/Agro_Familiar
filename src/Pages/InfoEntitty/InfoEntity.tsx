@@ -2,6 +2,7 @@ import { ChatText } from "phosphor-react";
 import entity_profile from "../../assets/images/img_entity_profile_exemple.png";
 import header_background from "../../assets/images/img_header_exemple.png";
 import Star from "../../assets/images/star_icon.png";
+import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 export function InfoEntity() {
   return (
@@ -42,7 +43,6 @@ export function InfoEntity() {
           </div>
         </div>
       </div>
-
       <main className="w-full px-8 md:px-20 mt-[11rem] md:mt-[9rem]">
         <h1 className="w-full text-center text-sm md:text-lg  text-gray-800 font-display font-semibold  mb-4">
           Informações sobre a Associação
@@ -369,6 +369,7 @@ export function InfoEntity() {
           </form>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

@@ -3,6 +3,7 @@ import { useState } from "react";
 import ProductExemple from "../../assets/images/product-exemple.png";
 import Star from "../../assets/images/star_icon.png";
 import { Carrousel } from "../../Components/Carrousel";
+import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { IconAddList } from "../../Components/IconAddList";
 import { SectionTitle } from "../../Components/SectionTitle";
@@ -347,6 +348,7 @@ export function ProductDetail() {
         </header>
         {viewProdDetail === "description" ? description : reviews}
       </section>
+      <Footer />
     </>
   );
 }

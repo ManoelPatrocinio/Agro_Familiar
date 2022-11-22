@@ -5,12 +5,13 @@ import { CardProduct } from "../../Components/CardProduct";
 import { Carrousel } from "../../Components/Carrousel";
 import { Dropdrown } from "../../Components/Dropdrown";
 import { Filter_category } from "../../Components/Filter_category";
+import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
 
-
 export function Products() {
-  const [toggleFilterVisibility,SetToggleFilterVisibility] = useState<boolean>(false)
+  const [toggleFilterVisibility, SetToggleFilterVisibility] =
+    useState<boolean>(false);
   return (
     <>
       <Header />
@@ -19,13 +20,19 @@ export function Products() {
       <main className="flex items-start flex-col px-8 md:px-20">
         <SectionTitle title={"Destaques"} className={"my-6"} />
         <div className="relative w-full flex items-start justify-between ">
-          <Filter_category ToggleFilterVisibility={SetToggleFilterVisibility} mobileVisiblity={toggleFilterVisibility} />
+          <Filter_category
+            ToggleFilterVisibility={SetToggleFilterVisibility}
+            mobileVisiblity={toggleFilterVisibility}
+          />
           <div className="w-full md:w-3/4 flex flex-col  items-start">
             <div className="w-full flex justify-between md:justify-start ">
               <Dropdrown />
               <button
-                onClick={()=>SetToggleFilterVisibility(!toggleFilterVisibility)}
-                className=" md:hidden text-xs text-gray-800 flex items-center whitespace-nowrap ">
+                onClick={() =>
+                  SetToggleFilterVisibility(!toggleFilterVisibility)
+                }
+                className=" md:hidden text-xs text-gray-800 flex items-center whitespace-nowrap "
+              >
                 <Funnel size={20} className="mr-2" />
                 Filtrar
               </button>
@@ -43,6 +50,7 @@ export function Products() {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   );
 }
