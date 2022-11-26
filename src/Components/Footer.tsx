@@ -29,7 +29,10 @@ export function Footer() {
               Política de privacidade
             </li>
             <li className="text-xs text-gray-800 py-2"> Termos de Uso </li>
-            <li className="text-xs text-gray-800 py-2"> Fale Conosco </li>
+            <li className="text-xs text-gray-800 py-2">
+              {" "}
+              <Link to="/ContactUs"> Fale Conosco </Link>{" "}
+            </li>
             <li className="text-xs text-gray-800 py-2">
               <Link to="/AboutUs"> Sobre Nós </Link>
             </li>

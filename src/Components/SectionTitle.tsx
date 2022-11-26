@@ -1,6 +1,6 @@
 type Props = {
   title: string;
-  className: string;
+  className?: string;
 };
 
 export function SectionTitle({ title, className }: Props) {

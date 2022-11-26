@@ -1,14 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AboutUs } from "../Pages/AboutUs";
+import { ContactUs } from "../Pages/ContactUs";
 import { Entities } from "../Pages/Entities";
 import { Entity } from "../Pages/Entity";
 import { Home } from "../Pages/Home";
 import { InfoEntity } from "../Pages/InfoEntitty/InfoEntity";
 import { ProductDetail } from "../Pages/ProductDetail";
 import { Products } from "../Pages/Products";
-//   import { Login } from "../pages/Login";
-//   import { Register } from "../pages/Register";
-//   import { ContactUs } from "../pages/FaleConosco";
+//   import { Login } from "../Pages/Login";
+//   import { Register } from "../Pages/Register";
 
 export const SystemRoutes = () => {
   return (
@@ -21,9 +21,10 @@ export const SystemRoutes = () => {
         <Route path="/Products" element={<Products />} />
         <Route path="/Product-detail" element={<ProductDetail />} />
         <Route path="/AboutUs" element={<AboutUs />} />
+        <Route path="/ContactUs" element={<ContactUs/>} />
         {/* <Route path="/login" element={<Login/>} />
             <Route path="/register" element={<Register/>} />
-            <Route path="/fale-conosco" element={<FaleConosco/>} /> */}
+   */}
       </Routes>
     </BrowserRouter>
   );
