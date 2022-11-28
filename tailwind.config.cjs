@@ -38,7 +38,7 @@ module.exports = {
         display: "Fredoka, sans-serif",
       },
        backgroundImage: {
-        'bg-joinUs': "url('src/assets/images/banner_joinUs.jpeg')",
+        'bg-joinUs': "url('./src/assets/images/banner_joinUs.jpeg')",
       }
     },
   },
