@@ -67,8 +67,7 @@ export function Footer() {
             <li className="text-sm text-gray-800 py-2">Cliente</li>
             <li className="text-xs text-gray-800 py-2">Produtor Individual</li>
             <li className="text-xs text-gray-800 py-2">
-              {" "}
-              Associação/Cooperativa{" "}
+              <Link to="/Register-entity">Associação/Cooperativa</Link>
             </li>
           </ul>
         </div>

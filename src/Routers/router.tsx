@@ -3,10 +3,12 @@ import { AboutUs } from "../Pages/AboutUs";
 import { ContactUs } from "../Pages/ContactUs";
 import { Entities } from "../Pages/Entities";
 import { Entity } from "../Pages/Entity";
+import { Farmers } from "../Pages/Farmers";
 import { Home } from "../Pages/Home";
 import { InfoEntity } from "../Pages/InfoEntitty/InfoEntity";
 import { ProductDetail } from "../Pages/ProductDetail";
 import { Products } from "../Pages/Products";
+import { RegisterEntity } from "../Pages/RegisterEntity";
 //   import { Login } from "../Pages/Login";
 //   import { Register } from "../Pages/Register";
 
@@ -20,8 +22,10 @@ export const SystemRoutes = () => {
         <Route path="/Entity-info" element={<InfoEntity />} />
         <Route path="/Products" element={<Products />} />
         <Route path="/Product-detail" element={<ProductDetail />} />
+        <Route path="/Farmers" element={<Farmers />} />
         <Route path="/AboutUs" element={<AboutUs />} />
-        <Route path="/ContactUs" element={<ContactUs/>} />
+        <Route path="/ContactUs" element={<ContactUs />} />
+        <Route path="/Register-entity" element={<RegisterEntity />} />
         {/* <Route path="/login" element={<Login/>} />
             <Route path="/register" element={<Register/>} />
    */}

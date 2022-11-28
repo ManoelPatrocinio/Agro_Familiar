@@ -144,7 +144,6 @@ export function ContactUs() {
                     px-3
                     py-1.5
                     text-base
-                    font-normal
                     text-gray-700
                     bg-white bg-clip-padding
                     border border-solid border-gray-300
@@ -152,9 +151,9 @@ export function ContactUs() {
                     transition
                     ease-in-out
                     m-0
-                    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
+                    focus:text-gray-700 focus:outline-none
                      "
-                  id="exampleFormControlTextarea13"
+                  id="userMessageName"
                   rows={3}
                   placeholder="Digite aqui, sua dúvida, ideia ou reclamação"
                   required

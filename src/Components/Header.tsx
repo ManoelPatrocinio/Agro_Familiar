@@ -78,7 +78,7 @@ export function Header() {
         <li>
           {" "}
           <Link
-            to="/"
+            to="/Farmers"
             className="text-lg text-palm-700 font-normal font-display"
           >
             Produtores

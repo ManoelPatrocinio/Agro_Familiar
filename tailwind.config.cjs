@@ -37,6 +37,9 @@ module.exports = {
         sans: "Inter, sans-serif",
         display: "Fredoka, sans-serif",
       },
+       backgroundImage: {
+        'bg-joinUs': "url('src/assets/images/banner_joinUs.jpeg')",
+      }
     },
   },
   plugins: [require("tw-elements/dist/plugin")],
