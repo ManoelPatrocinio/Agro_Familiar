@@ -39,7 +39,7 @@ export function Entities() {
           <CardEntity type="entity" />
           <CardEntity type="entity" />
         </div>
-        <div className="w-full min-h-[10%] bg-bg-joinUs bg-no-repeat bg-[length:100%_100%] rounded">
+        <div className="w-full min-h-[10%] bg-bg-joinUs bg-no-repeat bg-[length:100%_100%]   rounded">
           <div className="bg-[rgba(0,0,0,0.7)] w-full h-full px-2 py-8 rounded">
             <h3 className="w-full text-center text-md text-white font-bold mb-4">
               Faça parte do Potal Agro Familiar
