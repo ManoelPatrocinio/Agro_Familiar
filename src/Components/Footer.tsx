@@ -52,7 +52,7 @@ export function Footer() {
               <Link to=""> Territórios </Link>
             </li>
             <li className="text-xs text-gray-800 py-2">
-              <Link to=""> Produtores </Link>
+              <Link to="/Farmers"> Produtores </Link>
             </li>
             <li className="text-xs text-gray-800 py-2">
               <Link to="/Entities"> Assocs/Coops </Link>

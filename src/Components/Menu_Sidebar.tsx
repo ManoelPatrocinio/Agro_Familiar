@@ -87,51 +87,51 @@ export function Menu_Sidebar() {
         </div>
 
         <ul className="w-full  flex flex-col items-center justify-evenly mt-8 ">
-          <li className="w-full px-2 py-4   ">
+          <li className="w-full px-2    ">
             {" "}
             <Link
               to="/"
-              className="flex items-end text-left text-lg text-palm-700 font-normal font-display "
+              className="flex items-end text-left text-lg text-palm-700 font-normal font-display py-4 "
             >
               <House size={28} weight="fill" className="mr-3" />
               Início
             </Link>
           </li>
-          <li className="w-full  px-2 py-4  ">
+          <li className="w-full  px-2  ">
             {" "}
             <Link
               to="/Products"
-              className="flex items-end  text-left text-lg text-palm-700 font-normal font-display"
+              className="flex items-end  text-left text-lg text-palm-700 font-normal font-display py-4 "
             >
               <ToteSimple size={28} weight="fill" className="mr-3" />
               Produtos
             </Link>
           </li>
-          <li className="w-full px-2 py-4  ">
+          <li className="w-full px-2   ">
             {" "}
             <Link
               to="/Entities"
-              className="flex items-end text-left text-lg text-palm-700 font-normal font-display"
+              className="flex items-end text-left text-lg text-palm-700 font-normal font-display py-4"
             >
               <UsersThree size={28} weight="fill" className="mr-3" />
               Associações/Cooperativas
             </Link>
           </li>
-          <li className="w-full  px-2 py-4  ">
+          <li className="w-full  px-2   ">
             {" "}
             <Link
-              to="/"
-              className="flex items-end  text-left text-lg text-palm-700 font-normal font-display"
+              to="/Farmers"
+              className="flex items-end  text-left text-lg text-palm-700 font-normal font-display py-4"
             >
               <User size={28} weight="fill" className="mr-3" />
               Produtores
             </Link>
           </li>
-          <li className="w-full  px-2 py-4  ">
+          <li className="w-full  px-2 ">
             {" "}
             <Link
               to="/"
-              className="flex items-end text-left text-lg text-palm-700 font-normal font-display"
+              className="flex items-end text-left text-lg text-palm-700 font-normal font-display  py-4 "
             >
               <MapPinLine size={28} weight="fill" className="mr-3" />
               Territórios

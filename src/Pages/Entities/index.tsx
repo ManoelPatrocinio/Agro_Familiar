@@ -1,5 +1,6 @@
 import { User, UsersThree } from "phosphor-react";
 import { Link } from "react-router-dom";
+import bannerJoinUs from "../../assets/images/banner_joinUs.jpeg";
 import { CardEntity } from "../../Components/CardEntity";
 import { Carrousel } from "../../Components/Carrousel";
 import { Dropdrown } from "../../Components/Dropdrown";
@@ -39,8 +40,13 @@ export function Entities() {
           <CardEntity type="entity" />
           <CardEntity type="entity" />
         </div>
-        <div className="w-full min-h-[10%] bg-bg-joinUs bg-no-repeat bg-[length:100%_100%]   rounded">
-          <div className="bg-[rgba(0,0,0,0.7)] w-full h-full px-2 py-8 rounded">
+        <div className="w-full h-[22rem] min-h-[10%] relative rounded">
+          <img
+            src={bannerJoinUs}
+            alt="banner junte-se a nos"
+            className="w-full h-full rounded"
+          />
+          <div className="bg-[rgba(0,0,0,0.7)] w-full h-full px-2 py-8 rounded absolute left-0 top-0">
             <h3 className="w-full text-center text-md text-white font-bold mb-4">
               Faça parte do Potal Agro Familiar
             </h3>
@@ -61,7 +67,7 @@ export function Entities() {
                 to="/Register-entity"
                 className="w-[17rem] border border-white flex flex-col justify-center items-center py-4 rounded hover:scale-110 transition duration-300 ease-in-out"
               >
-                <UsersThree size={48} color="white" />
+                <UsersThree size={48} color="white" weight="fill" />
                 <span className="w-full text-center text-sm text-white font-bold">
                   Cadastro como Associação
                 </span>
@@ -70,7 +76,7 @@ export function Entities() {
                 to="/Register-entity"
                 className="w-[17rem] border border-white flex flex-col justify-center items-center py-4 my-6 md:my-0 rounded hover:scale-110 transition duration-300 ease-in-out"
               >
-                <User size={48} color="white" />
+                <User size={48} color="white" weight="fill" />
                 <span className="w-full text-center text-sm text-white font-bold">
                   Cadastro como Produtor Individual
                 </span>
@@ -79,7 +85,7 @@ export function Entities() {
                 to="/Register-entity"
                 className="w-[17rem] border border-white flex flex-col justify-center items-center py-4 rounded hover:scale-110 transition duration-300 ease-in-out"
               >
-                <UsersThree size={48} color="white" />
+                <UsersThree size={48} color="white" weight="fill" />
                 <span className="w-full text-center text-sm text-white font-bold">
                   Cadastro como Cooperativa
                 </span>
