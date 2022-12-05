@@ -1,6 +1,5 @@
 import { User, UsersThree } from "phosphor-react";
 import { Link } from "react-router-dom";
-import bannerJoinUs from "../../assets/images/banner_joinUs.jpeg";
 import { CardEntity } from "../../Components/CardEntity";
 import { Carrousel } from "../../Components/Carrousel";
 import { Dropdrown } from "../../Components/Dropdrown";
@@ -40,13 +39,8 @@ export function Entities() {
           <CardEntity type="entity" />
           <CardEntity type="entity" />
         </div>
-        <div className="w-full h-[22rem] min-h-[10%] relative rounded">
-          <img
-            src={bannerJoinUs}
-            alt="banner junte-se a nos"
-            className="w-full h-full rounded"
-          />
-          <div className="bg-[rgba(0,0,0,0.7)] w-full h-full px-2 py-8 rounded absolute left-0 top-0">
+        <div className="w-full md:h-[22rem] h-full bg-[url('https://i.ibb.co/2MRTyb9/banner-join-Us.jpg')] bg-no-repeat bg-[length:100%_100%] rounded">
+          <div className="bg-[rgba(0,0,0,0.7)] w-full h-full px-2 py-8 rounded  left-0 top-0">
             <h3 className="w-full text-center text-md text-white font-bold mb-4">
               Faça parte do Potal Agro Familiar
             </h3>
