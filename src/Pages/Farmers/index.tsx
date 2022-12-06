@@ -28,18 +28,12 @@ export function Farmers() {
           <CardEntity type="farmer" />
           <CardEntity type="farmer" />
         </div>
-        <div className="w-full h:[50rem]  md:h-[22rem]  relative rounded">
-          <img
-            src={bannerJoinUs}
-            alt="banner junte-se a nos"
-            className="w-full h-full rounded"
-          />
-          <div className="bg-[rgba(0,0,0,0.7)] w-full h-full px-2 py-8 rounded absolute left-0 top-0">
+        <div className="w-full md:h-[22rem] h-auto bg-[url('https://i.ibb.co/2MRTyb9/banner-join-Us.jpg')] bg-no-repeat bg-[length:100%_100%] rounded">
+          <div className="bg-[rgba(0,0,0,0.7)] w-full h-full px-2 py-8 rounded ">
             <h3 className="w-full text-center text-md text-white font-bold mb-4">
               Faça parte do Potal Agro Familiar
             </h3>
             <p className="w-full text-justify md:text-center text-sm text-white mb-8 leading-6">
-              {" "}
               Esse portal foi criado como objetivo de aumentar a visubilidade e
               os meios de divulgação das Associações, Cooperativas e produtores
               individuais, além de trazer maior proximidade com o consumidor
@@ -50,10 +44,10 @@ export function Farmers() {
                 Gostaria de ver sua produção divulgada neste portal ?
               </span>
             </p>
-            <div className="w-full flex  flex-wrap justify-around">
+            <div className="w-full h-auto flex  flex-wrap justify-around items-center">
               <Link
                 to="/Register-entity"
-                className="w-[17rem] border border-white flex flex-col justify-center items-center py-4 rounded hover:scale-110 transition duration-300 ease-in-out"
+                className="w-[17rem] h-[7.5rem] border border-white flex flex-col justify-center items-center py-4 rounded hover:scale-110 transition duration-300 ease-in-out"
               >
                 <UsersThree size={48} color="white" weight="fill" />
                 <span className="w-full text-center text-sm text-white font-bold">
@@ -62,7 +56,7 @@ export function Farmers() {
               </Link>
               <Link
                 to="/Register-entity"
-                className="w-[17rem] border border-white flex flex-col justify-center items-center py-4 my-6 md:my-0 rounded hover:scale-110 transition duration-300 ease-in-out"
+                className="w-[17rem] h-[7.5rem] border border-white flex flex-col justify-center items-center py-4 my-6 md:my-0 rounded hover:scale-110 transition duration-300 ease-in-out"
               >
                 <User size={48} color="white" weight="fill" />
                 <span className="w-full text-center text-sm text-white font-bold">
@@ -71,7 +65,7 @@ export function Farmers() {
               </Link>
               <Link
                 to="/Register-entity"
-                className="w-[17rem] border border-white flex flex-col justify-center items-center py-4 rounded hover:scale-110 transition duration-300 ease-in-out"
+                className="w-[17rem] h-[7.5rem] border border-white flex flex-col justify-center items-center py-4 rounded hover:scale-110 transition duration-300 ease-in-out"
               >
                 <UsersThree size={48} color="white" weight="fill" />
                 <span className="w-full text-center text-sm text-white font-bold">
