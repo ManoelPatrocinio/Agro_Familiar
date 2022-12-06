@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { Login } from "./Login";
 
 export function Menu_Sidebar() {
-  return (
+  return ( 
     <div className="md:hidden">
       <button
         className="md:hidden"
@@ -19,7 +19,7 @@ export function Menu_Sidebar() {
         data-bs-target="#offcanvasExample"
         aria-controls="offcanvasExample"
       >
-        <List size={32} color="#789B3D" className="md:hidden" />
+        <List size={32} color="#789B3D"  />
       </button>
 
       <div
@@ -119,13 +119,13 @@ export function Menu_Sidebar() {
           </li>
           <li className="w-full  px-2   ">
             {" "}
-            <Link
-              to="/Farmers"
+            <a
+              href="/Farmers"
               className="flex items-end  text-left text-lg text-palm-700 font-normal font-display py-4"
             >
               <User size={28} weight="fill" className="mr-3" />
               Produtores
-            </Link>
+            </a>
           </li>
           <li className="w-full  px-2 ">
             {" "}

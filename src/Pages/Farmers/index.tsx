@@ -28,8 +28,8 @@ export function Farmers() {
           <CardEntity type="farmer" />
           <CardEntity type="farmer" />
         </div>
-        <div className="w-full md:h-[22rem] h-auto bg-[url('https://i.ibb.co/2MRTyb9/banner-join-Us.jpg')] bg-no-repeat bg-[length:100%_100%] rounded">
-          <div className="bg-[rgba(0,0,0,0.7)] w-full h-full px-2 py-8 rounded ">
+        <div className="w-full  h-auto  bg-[url('https://i.ibb.co/2MRTyb9/banner-join-Us.jpg')] bg-no-repeat bg-[length:100%_100%] rounded">
+          <div className="bg-[rgba(0,0,0,0.7)] w-full h-auto px-2 py-8 rounded ">
             <h3 className="w-full text-center text-md text-white font-bold mb-4">
               Faça parte do Potal Agro Familiar
             </h3>

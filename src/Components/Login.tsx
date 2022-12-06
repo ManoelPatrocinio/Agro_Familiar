@@ -8,7 +8,6 @@ export function Login() {
         <input
           type="email"
           className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
-          id="userLoginEmail"
           placeholder="Email address"
         />
       </div>
@@ -17,7 +16,6 @@ export function Login() {
         <input
           type="password"
           className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
-          id="userLoginPassword"
           placeholder="Password"
         />
       </div>
