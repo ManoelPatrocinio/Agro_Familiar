@@ -31,7 +31,7 @@ export function Footer() {
             <li className="text-xs text-gray-800 py-2"> Termos de Uso </li>
             <li className="text-xs text-gray-800 py-2">
               {" "}
-              <Link to="/Farmers"> Fale Conosco </Link>{" "}
+              <Link to="/ContactUs"> Fale Conosco </Link>{" "}
             </li>
             <li className="text-xs text-gray-800 py-2">
               <Link to="/AboutUs"> Sobre Nós </Link>

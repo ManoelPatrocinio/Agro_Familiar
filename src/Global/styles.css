@@ -8,6 +8,10 @@
   box-sizing: border-box;
   text-decoration: none;
 }
+body{
+/*if delete this, the scrow-down page dont work*/
+  overflow-y: auto !important; 
+}
 html {
   scroll-behavior: smooth;
 }
