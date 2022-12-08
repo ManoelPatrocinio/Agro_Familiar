@@ -9,8 +9,6 @@ import { InfoEntity } from "../Pages/InfoEntitty/InfoEntity";
 import { ProductDetail } from "../Pages/ProductDetail";
 import { Products } from "../Pages/Products";
 import { RegisterEntity } from "../Pages/RegisterEntity";
-//   import { Login } from "../Pages/Login";
-//   import { Register } from "../Pages/Register";
 
 export const SystemRoutes = () => {
   return (

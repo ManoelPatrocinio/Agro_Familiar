@@ -16,6 +16,7 @@ export function CardProduct() {
           <h5 className="w-full text-center text-gray-900 text-md font-medium mb-2">
             Product Name
           </h5>
+
           <div className="w-full flex justify-center items-center text-base mb-4">
             <span className=" text-sm text-green-600"> R$ 5,00</span>
             <span className=" text-sm text-gray-400 line-through ml-3 ">

@@ -1,11 +1,10 @@
-import { User, UsersThree } from "phosphor-react";
-import { Link } from "react-router-dom";
 import { CardProduct } from "../../Components/CardProduct";
 import { Carrousel } from "../../Components/Carrousel";
 import { Dropdrown } from "../../Components/Dropdrown";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
+import { ModalRegister } from "../ModalRegister";
 
 export function Home() {
   return (
@@ -26,8 +25,9 @@ export function Home() {
           <CardProduct />
           <CardProduct />
         </div>
-      
       </main>
+      <ModalRegister />
+
       <Footer />
     </>
   );

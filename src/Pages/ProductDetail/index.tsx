@@ -238,7 +238,7 @@ export function ProductDetail() {
       <Carrousel />
       <SectionTitle
         title={"Associação dos Produtores Rurais do Pau D´arco"}
-        className={"my-6"}
+        className={"my-10"}
       />
       <main className="w-full flex flex-col md:flex-row px-8 md:px-20">
         <div className="w-full md:w-1/2 p-0">

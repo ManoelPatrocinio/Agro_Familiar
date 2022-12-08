@@ -51,7 +51,7 @@ export function Header() {
                 w-[20rem]
                 h-[26rem]
                 top-[3rem]
-                left-[-5rem]
+                left-[-8rem]
                 bg-white
                 z-50
                 float-left

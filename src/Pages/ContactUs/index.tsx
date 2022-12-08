@@ -131,7 +131,7 @@ export function ContactUs() {
               </div>
               <div className="form-group mb-6">
                 <label
-                  htmlFor="userMessageName"
+                  htmlFor="userMessage"
                   className="form-label inline-block mb-2 text-gray-700"
                 >
                   Sua Mensagem
@@ -153,7 +153,7 @@ export function ContactUs() {
                     m-0
                     focus:text-gray-700 focus:outline-none
                      "
-                  id="userMessageName"
+                  id="userMessage"
                   rows={3}
                   placeholder="Digite aqui, sua dúvida, ideia ou reclamação"
                   required
