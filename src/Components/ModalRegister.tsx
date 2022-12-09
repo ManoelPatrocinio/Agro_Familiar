@@ -2,6 +2,7 @@ import { ArrowLeft } from "phosphor-react";
 import {  useState } from "react";
 import {
 
+  Link,
   useNavigate,
 } from "react-router-dom";
 import iconEntity from "../assets/images/icon-entity.svg";
@@ -66,9 +67,12 @@ export function ModalRegister() {
                   ></button>
                 </header>
                 <div className="mt-6 md:mt-0">
-                  <p className="w-full text-left text-sm md:text-md text-gray-700 font-display font-semibold mb-8">
+                  <a
+                    href="https://portal-agro-familiar.vercel.app/Register"
+                    className="w-full text-left text-sm md:text-md text-gray-700 font-display font-semibold mb-8"
+                  >
                     Escolha seu perfil de usuário:
-                  </p>
+                  </a>
                   <div className="w-full flex flex-col md:flex-row justify-between items-center">
                     <button
                       type="button"
@@ -104,8 +108,8 @@ export function ModalRegister() {
                         Cadastro e anúncio de produtos
                       </p>
                     </button>
-                    <button
-                      onClick={() => redirectTo("Register-farmer")}
+                    <Link
+                      to="Register"
                       className="w-[11rem] p-3 border border-gray-200 rounded  hover:scale-110 transition duration-300 ease-in-out"
                     >
                       <img
@@ -119,7 +123,7 @@ export function ModalRegister() {
                       <p className="w-full text-center text-xs text-gray-700">
                         Cadastro e anúncio de produtos
                       </p>
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </>
