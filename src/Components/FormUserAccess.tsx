@@ -1,43 +1,80 @@
-export function Login() {
+type FormProps = {
+  type: "userLogin" | "userRegister";
+};
+export function FormUserAccess({ type }: FormProps) {
   return (
     <>
-      <form className="w-full h-full">
-        <h4 className="w-full text-center text-lg font-semibold text-palm-700 mb-6">
-          Acesse sua conta
-        </h4>
+      <form className="w-full h-auto">
+        {type === "userRegister" ? (
+          <>
+            <h4 className="w-full text-center text-lg font-semibold text-palm-700 mb-6">
+              Crie sua conta
+            </h4>
+            <div className="w-full mb-6">
+              <label
+                htmlFor="idUserEmail"
+                className="form-label inline-block text-sm mb-2 text-gray-700"
+              >
+                Nome Completo
+              </label>
+              <input
+                type="text"
+                className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
+                placeholder="Nome Completo"
+              />
+            </div>
+          </>
+        ) : (
+          <h4 className="w-full text-center text-lg font-semibold text-palm-700 mb-6">
+            Acesse sua conta
+          </h4>
+        )}
+
         <div className="w-full mb-6">
+          <label
+            htmlFor="idUserEmail"
+            className="form-label inline-block text-sm mb-2 text-gray-700"
+          >
+            Seu E-mail
+          </label>
           <input
             type="email"
             className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
-            placeholder="Email address"
+            placeholder="exemplo@gmail.com"
+            id="idUserEmail"
           />
         </div>
 
         <div className="mb-4">
+          <label
+            htmlFor="idUserPassword"
+            className="form-label inline-block text-sm mb-2 text-gray-700"
+          >
+            Sua senha
+          </label>
           <input
             type="password"
             className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
-            placeholder="Password"
+            placeholder="******"
+            id="idUserPassword"
           />
         </div>
 
-        <a href="#!" className="w-full text-left text-gray-800 text-sm ">
-          Esqueceu sua senha?
-        </a>
+        {type === "userLogin" && (
+          <a href="#!" className="w-full text-left text-gray-800 text-sm ">
+            Esqueceu sua senha?
+          </a>
+        )}
 
         <div className="flex flex-col justify-center  text-center lg:text-left mt-6">
           <button
             type="button"
             className="w-full inline-block px-7 py-2 bg-palm-700 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-palm-500 hover:shadow-lg focus:bg-palm-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-palm-700 active:shadow-lg transition duration-150 ease-in-out"
           >
-            Login
+            {type === "userRegister" ? "Cadastrar" : "Login"}
           </button>
-          <div className="flex items-center my-4 before:flex-1 before:border-t before:border-gray-400 before:mt-0.5 after:flex-1 after:border-t after:border-gray-400 after:mt-0.5">
-            <p className="text-center font-semibold mx-4 mb-0 text-gray-400">
-              Or
-            </p>
-          </div>
-          <div className="hidden  w-full  flex-row items-center justify-around ">
+
+          {/* <div className="hidden  w-full  flex-row items-center justify-around ">
             <button
               type="button"
               data-mdb-ripple="true"
@@ -91,19 +128,27 @@ export function Login() {
                 />
               </svg>
             </button>
-          </div>
-
-          <p className="text-xs md:text-sm  font-semibold  mb-0 text-gray-400">
-            Ainda não tem uma conta ?
-            <button
-              type="button"
-              className="text-palm-500 hover:text-palm-700 focus:text-palm-700 ml-2 transition duration-200 ease-in-out"
-              data-bs-toggle="modal"
-              data-bs-target="#modalPreviewRegister"
-            >
-              Registre-se
-            </button>
-          </p>
+          </div> */}
+          {type === "userLogin" && (
+            <>
+              <div className="flex items-center my-4 before:flex-1 before:border-t before:border-gray-400 before:mt-0.5 after:flex-1 after:border-t after:border-gray-400 after:mt-0.5">
+                <p className="text-center font-semibold mx-4 mb-0 text-gray-400">
+                  Or
+                </p>
+              </div>
+              <p className="text-xs md:text-sm  font-semibold  mb-0 text-gray-400">
+                Ainda não tem uma conta ?
+                <button
+                  type="button"
+                  className="text-palm-500 hover:text-palm-700 focus:text-palm-700 ml-2 transition duration-200 ease-in-out"
+                  data-bs-toggle="modal"
+                  data-bs-target="#modalPreviewRegister"
+                >
+                  Registre-se
+                </button>
+              </p>
+            </>
+          )}
         </div>
       </form>
     </>

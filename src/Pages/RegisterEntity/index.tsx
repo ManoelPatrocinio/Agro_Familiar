@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Carrousel } from "../../Components/Carrousel";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";

@@ -1,7 +1,7 @@
 import { ClipboardText, MagnifyingGlass, User } from "phosphor-react";
 import { Link } from "react-router-dom";
 import Logo from "../assets/images/Logo.png";
-import { Login } from "./Login";
+import { FormUserAccess } from "./FormUserAccess";
 import { Menu_Sidebar } from "./Menu_Sidebar";
 import { PurchaseList } from "./PurchaseList";
 
@@ -49,7 +49,8 @@ export function Header() {
                 min-w-max
                 absolute
                 w-[20rem]
-                h-[26rem]
+                min-h-[26rem]
+                h-auto
                 top-[3rem]
                 left-[-8rem]
                 bg-white
@@ -69,7 +70,7 @@ export function Header() {
               "
               aria-labelledby="dropdownLogin"
             >
-              <Login />
+              <FormUserAccess type="userLogin" />
             </div>
           </div>
 

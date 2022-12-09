@@ -4,7 +4,7 @@ import { Dropdrown } from "../../Components/Dropdrown";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
-import { ModalRegister } from "../ModalRegister";
+import { ModalRegister } from "../../Components/ModalRegister";
 
 export function Home() {
   return (

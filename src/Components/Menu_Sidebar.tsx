@@ -7,7 +7,7 @@ import {
   UsersThree,
 } from "phosphor-react";
 import { Link } from "react-router-dom";
-import { Login } from "./Login";
+import { FormUserAccess } from "./FormUserAccess";
 
 export function Menu_Sidebar() {
   return (
@@ -55,7 +55,8 @@ export function Menu_Sidebar() {
                 min-w-max
                 absolute
                 w-[100%]
-                h-[26rem]
+                min-h-[26rem]
+                h-auto
                 top-[4rem]
                 left-[0]
                 bg-white
@@ -75,7 +76,7 @@ export function Menu_Sidebar() {
               "
               aria-labelledby="dropdownLogin"
             >
-              <Login />
+              <FormUserAccess type="userLogin" />
             </div>
           </div>
           <button
