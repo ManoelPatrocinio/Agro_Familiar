@@ -22,7 +22,7 @@ export function ModalRegister() {
 
       setTimeout(() => {
         window.location.reload();
-      }, 500);
+      }, 800);
 
     },1000)
   }
@@ -89,7 +89,7 @@ export function ModalRegister() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => redirectTo("Register-entity")}
+                      onClick={() => redirectTo("Register")}
                       className="w-[11rem] p-3 border border-gray-200 rounded my-4 md:my-0 cursor-pointer hover:scale-110 transition duration-300 ease-in-out"
                     >
                       <img
