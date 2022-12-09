@@ -87,9 +87,9 @@ export function ModalRegister() {
                         Busca e compra de produtos
                       </p>
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => redirectTo("Register-entity")}
+                    <a
+                   
+                       href= "Register-entity"
                       className="w-[11rem] p-3 border border-gray-200 rounded my-4 md:my-0 cursor-pointer hover:scale-110 transition duration-300 ease-in-out"
                     >
                       <img
@@ -103,7 +103,7 @@ export function ModalRegister() {
                       <p className="w-full text-center text-xs text-gray-700 ">
                         Cadastro e anúncio de produtos
                       </p>
-                    </button>
+                    </a>
                     <button
                       onClick={() => redirectTo("Register-farmer")}
                       className="w-[11rem] p-3 border border-gray-200 rounded  hover:scale-110 transition duration-300 ease-in-out"
