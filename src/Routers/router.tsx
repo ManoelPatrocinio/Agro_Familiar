@@ -24,7 +24,7 @@ export const SystemRoutes = () => {
         <Route path="/Farmers" element={<Farmers />} />
         <Route path="/AboutUs" element={<AboutUs />} />
         <Route path="/ContactUs" element={<ContactUs />} />
-        <Route path="/Register" element={<RegisterEntity />} />
+        <Route path="/Register-entity" element={<RegisterEntity />} />
         <Route path="/Register-farmer" element={<RegisterFarmer />} />
         {/* <Route path="/login" element={<Login/>} />
             <Route path="/register" element={<Register/>} />
