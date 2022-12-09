@@ -1,6 +1,9 @@
 import { ArrowLeft } from "phosphor-react";
-import { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import {  useState } from "react";
+import {
+
+  useNavigate,
+} from "react-router-dom";
 import iconEntity from "../assets/images/icon-entity.svg";
 import iconFarmer from "../assets/images/icon-farmer.svg";
 import iconUser2 from "../assets/images/icon-user2.svg";
@@ -8,12 +11,18 @@ import registerImgBackgroun from "../assets/images/registerImgBackgroun.png";
 import { FormUserAccess } from "../Components/FormUserAccess";
 
 export function ModalRegister() {
-  const [typeContent, useTypeContent] = useState<
+  const [typeContent, setTypeContent] = useState<
     "ChooseTypeRegister" | "userRegister" | null
-  >(null);
-  useEffect(() => {
-    useTypeContent("ChooseTypeRegister");
-  }, []);
+  >("ChooseTypeRegister");
+
+  const navigate = useNavigate()
+  const redirectTo = ()=>{
+    setTimeout(()=>{
+      navigate("/register-entity");
+      window.location.reload()
+
+    },1000)
+  }
   return (
     <div
       className="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
@@ -24,7 +33,10 @@ export function ModalRegister() {
       role="dialog"
     >
       <div className="modal-dialog modal-xl relative w-auto ">
-        <div className="modal-content bg-white  border-none shadow-lg relative flex flex-col md:flex-row w-full h-auto md:h-[34rem] items-center justify-start rounded mt-10">
+        <div
+          className="modal-content bg-white  border-none shadow-lg relative flex flex-col md:flex-row 
+              w-full h-auto md:h-[34rem] items-center justify-start rounded mt-10"
+        >
           <div className="hidden md:block md:w-2/5  md:h-full rounded">
             <img
               src={registerImgBackgroun}
@@ -54,12 +66,11 @@ export function ModalRegister() {
                   <p className="w-full text-left text-sm md:text-md text-gray-700 font-display font-semibold mb-8">
                     Escolha seu perfil de usuário:
                   </p>
-
                   <div className="w-full flex flex-col md:flex-row justify-between items-center">
                     <button
                       type="button"
                       className="w-[11rem] p-3 border border-gray-200 rounded cursor-pointer hover:scale-110 transition duration-300 ease-in-out"
-                      onClick={() => useTypeContent("userRegister")}
+                      onClick={() => setTypeContent("userRegister")}
                     >
                       <img
                         src={iconUser2}
@@ -73,8 +84,9 @@ export function ModalRegister() {
                         Busca e compra de produtos
                       </p>
                     </button>
-                    <Link
-                      to="/Register-entity"
+                    <button
+                      type="button"
+                      onClick={() => redirectTo()}
                       className="w-[11rem] p-3 border border-gray-200 rounded my-4 md:my-0 cursor-pointer hover:scale-110 transition duration-300 ease-in-out"
                     >
                       <img
@@ -88,7 +100,7 @@ export function ModalRegister() {
                       <p className="w-full text-center text-xs text-gray-700 ">
                         Cadastro e anúncio de produtos
                       </p>
-                    </Link>
+                    </button>
                     <div className="w-[11rem] p-3 border border-gray-200 rounded">
                       <img
                         src={iconFarmer}
@@ -108,7 +120,7 @@ export function ModalRegister() {
             ) : (
               <>
                 <header className="w-full ">
-                  <button onClick={() => useTypeContent("ChooseTypeRegister")}>
+                  <button onClick={() => setTypeContent("ChooseTypeRegister")}>
                     <ArrowLeft
                       size={32}
                       weight="bold"
