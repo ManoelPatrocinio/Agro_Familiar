@@ -1,9 +1,5 @@
 import { ArrowLeft } from "phosphor-react";
 import {  useState } from "react";
-import {
-
-  useNavigate,
-} from "react-router-dom";
 import iconEntity from "../assets/images/icon-entity.svg";
 import iconFarmer from "../assets/images/icon-farmer.svg";
 import iconUser2 from "../assets/images/icon-user2.svg";
@@ -15,17 +11,7 @@ export function ModalRegister() {
     "ChooseTypeRegister" | "userRegister" | null
   >("ChooseTypeRegister");
 
-  const navigate = useNavigate()
-  const redirectTo = (router:string)=>{
-    setTimeout(()=>{
-      navigate(router);
 
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
-
-    },500)
-  }
   return (
     <div
       className="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
@@ -104,8 +90,8 @@ export function ModalRegister() {
                         Cadastro e anúncio de produtos
                       </p>
                     </a>
-                    <button
-                      onClick={() => redirectTo("Register-farmer")}
+                    <a
+                      href= "Register-farmer"
                       className="w-[11rem] p-3 border border-gray-200 rounded  hover:scale-110 transition duration-300 ease-in-out"
                     >
                       <img
@@ -119,7 +105,7 @@ export function ModalRegister() {
                       <p className="w-full text-center text-xs text-gray-700">
                         Cadastro e anúncio de produtos
                       </p>
-                    </button>
+                    </a>
                   </div>
                 </div>
               </>
