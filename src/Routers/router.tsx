@@ -9,6 +9,7 @@ import { InfoEntity } from "../Pages/InfoEntitty/InfoEntity";
 import { ProductDetail } from "../Pages/ProductDetail";
 import { Products } from "../Pages/Products";
 import { RegisterEntity } from "../Pages/RegisterEntity";
+import { RegisterFarmer } from "../Pages/RegisterFarmer";
 
 export const SystemRoutes = () => {
   return (
@@ -24,6 +25,7 @@ export const SystemRoutes = () => {
         <Route path="/AboutUs" element={<AboutUs />} />
         <Route path="/ContactUs" element={<ContactUs />} />
         <Route path="/Register-entity" element={<RegisterEntity />} />
+        <Route path="/Register-farmer" element={<RegisterFarmer />} />
         {/* <Route path="/login" element={<Login/>} />
             <Route path="/register" element={<Register/>} />
    */}

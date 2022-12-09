@@ -16,10 +16,13 @@ export function ModalRegister() {
   >("ChooseTypeRegister");
 
   const navigate = useNavigate()
-  const redirectTo = ()=>{
+  const redirectTo = (router:string)=>{
     setTimeout(()=>{
-      navigate("/register-entity");
-      window.location.reload()
+      navigate(router);
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
 
     },1000)
   }
@@ -86,7 +89,7 @@ export function ModalRegister() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => redirectTo()}
+                      onClick={() => redirectTo("Register-entity")}
                       className="w-[11rem] p-3 border border-gray-200 rounded my-4 md:my-0 cursor-pointer hover:scale-110 transition duration-300 ease-in-out"
                     >
                       <img
@@ -101,7 +104,10 @@ export function ModalRegister() {
                         Cadastro e anúncio de produtos
                       </p>
                     </button>
-                    <div className="w-[11rem] p-3 border border-gray-200 rounded">
+                    <button
+                      onClick={() => redirectTo("Register-farmer")}
+                      className="w-[11rem] p-3 border border-gray-200 rounded  hover:scale-110 transition duration-300 ease-in-out"
+                    >
                       <img
                         src={iconFarmer}
                         alt="icone comprador"
@@ -113,7 +119,7 @@ export function ModalRegister() {
                       <p className="w-full text-center text-xs text-gray-700">
                         Cadastro e anúncio de produtos
                       </p>
-                    </div>
+                    </button>
                   </div>
                 </div>
               </>

@@ -1,18 +1,16 @@
-import { useEffect } from "react";
 import { Carrousel } from "../../Components/Carrousel";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
 
-export function RegisterEntity() {
- 
+export function RegisterFarmer() {
   return (
     <>
       <Header />
       <Carrousel />
       <main className="px-8 md:px-20">
         <SectionTitle
-          title="Cadastro de Organização"
+          title="Cadastro de Produtor Individual"
           className="my-6 w-full font-semibold md:font-normal"
         ></SectionTitle>
 
@@ -27,81 +25,14 @@ export function RegisterEntity() {
             Preencha o formulário com os dados da Associação ou Cooperativa que
             você é responsável.
           </p>
-          <div className="form-group mb-6">
-            <label className="form-label inline-block mb-2 text-palm-700 mr-3">
-              Tipo de Organização{" "}
-              <span className="text-red-500 font-bold"> *</span>:
-            </label>
-            <div className="form-check form-check-inline">
-              <input
-                className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-                type="radio"
-                name="inlineRadioOptions"
-                id="typeAssoc"
-                value="association"
-              />
-              <label
-                className="form-check-label inline-block text-gray-800"
-                htmlFor="typeAssocs"
-              >
-                Associação
-              </label>
-            </div>
-            <div className="form-check form-check-inline">
-              <input
-                className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-                type="radio"
-                name="inlineRadioOptions"
-                id="typeCooperative"
-                value="cooperative"
-              />
-              <label
-                className="form-check-label inline-block text-gray-800"
-                htmlFor="typeCooperative"
-              >
-                Cooperativa
-              </label>
-            </div>
-          </div>
-          <div className="form-group mb-6 ">
-            <label
-              htmlFor="presidentName"
-              className="form-label inline-block mb-2 text-palm-700"
-            >
-              Nome do(a) Presitende{" "}
-              <span className="text-red-500 font-bold"> *</span>:
-            </label>
 
-            <input
-              type="text"
-              className="form-control
-  
-                    w-full
-        
-                    px-3
-                    py-1.5
-                    text-base
-                    text-gray-700
-                    bg-white bg-clip-padding
-                    border border-solid border-gray-300
-                    rounded
-                    transition
-                    ease-in-out
-                    m-0
-                    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-              id="presidentName"
-              aria-describedby="president Name"
-              required
-              placeholder="Nome Completo"
-            />
-          </div>
-          <div className="grid grid-col-2 md:grid-cols-2  md:gap-8">
+          <div className="grid grid-col-2 md:grid-cols-2  md:gap-4">
             <div className="form-group mb-6">
               <label
-                htmlFor="entityName"
+                htmlFor="FarmerName"
                 className="form-label inline-block mb-2 text-palm-700 mr-3"
               >
-                Nome da Organização
+                Nome Completo
                 <span className="text-red-500 font-bold"> *</span>:
               </label>
               <input
@@ -120,17 +51,17 @@ export function RegisterEntity() {
                     ease-in-out
                     m-0
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                id="entityName"
-                aria-describedby="emailHelp123"
-                placeholder="Digite aqui"
+                id="FarmerName"
+                aria-describedby="FarmerName"
+                placeholder="Seu nome completo"
               />
             </div>
             <div className="form-group mb-6">
               <label
-                htmlFor="entityCnpj"
+                htmlFor="farmerCPF"
                 className="form-label inline-block mb-2 text-palm-700 mr-3"
               >
-                CNPJ
+                CPF
                 <span className="text-red-500 font-bold"> *</span>:
               </label>
               <input
@@ -150,9 +81,9 @@ export function RegisterEntity() {
                   ease-in-out
                   m-0
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                id="entityCnpj"
-                aria-describedby="emailHelp124"
-                placeholder="Digite aqui"
+                id="farmerCPF"
+                aria-describedby="farmerCPF"
+                placeholder="000.000.000-00"
               />
             </div>
           </div>
@@ -342,8 +273,7 @@ export function RegisterEntity() {
                 htmlFor="entityCnpj"
                 className="form-label inline-block mb-2 text-palm-700 mr-3"
               >
-                Nº Whatsapp 1
-                <span className="text-red-500 font-bold"> *</span>:
+                Nº Whatsapp 1<span className="text-red-500 font-bold"> *</span>:
               </label>
               <input
                 type="text"
