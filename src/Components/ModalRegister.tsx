@@ -33,7 +33,7 @@ export function ModalRegister() {
               className="w-full h-full  rounded-l"
             />
           </div>
-          <div className="w-full md:w-3/5 h-full relative flex flex-col justify-around  px-8  pb-2 pt-4 md:pt-0">
+          <div className="w-full md:w-3/5 h-full relative flex flex-col justify-around  px-8 py-6  md:pb-2  md:pt-0">
             {typeContent === "ChooseTypeRegister" ? (
               <>
                 <header className="w-full ">

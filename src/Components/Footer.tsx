@@ -65,7 +65,9 @@ export function Footer() {
           </p>
           <ul className="w-full">
             <li className="text-sm text-gray-800 py-2">Cliente</li>
-            <li className="text-xs text-gray-800 py-2">Produtor Individual</li>
+            <li className="text-xs text-gray-800 py-2">
+              <Link to="/Register-farmer"> Produtor Individual</Link>
+            </li>
             <li className="text-xs text-gray-800 py-2">
               <Link to="/Register-entity">Associação/Cooperativa</Link>
             </li>
