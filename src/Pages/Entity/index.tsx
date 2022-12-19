@@ -1,14 +1,14 @@
 import { DotsThreeVertical, Funnel } from "phosphor-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import entity_profile from "../../assets/images/img_entity_profile_exemple.png";
-import header_background from "../../assets/images/img_header_exemple.png";
-import Star from "../../assets/images/star_icon.png";
 import { CardProduct } from "../../Components/CardProduct";
 import { Dropdrown } from "../../Components/Dropdrown";
 import { Filter_category } from "../../Components/Filter_category";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
+import entity_profile from "../../assets/images/img_entity_profile_exemple.png";
+import header_background from "../../assets/images/img_header_exemple.png";
+import Star from "../../assets/images/star_icon.png";
 
 export function Entity() {
   const [toggleFilterVisibility, SetToggleFilterVisibility] =
@@ -179,7 +179,9 @@ export function Entity() {
           />
           <div className="w-full md:w-3/4 flex flex-col  items-start">
             <div className="w-full flex justify-between md:justify-start ">
-              <Dropdrown />
+              <Dropdrown
+                items={["Menor Preço", "Maior Preço", "De A a Z", "De Z a A"]}
+              />
               <button
                 onClick={() =>
                   SetToggleFilterVisibility(!toggleFilterVisibility)

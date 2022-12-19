@@ -26,7 +26,7 @@ export function Entities() {
             Cooperativas
           </h4>
         </div>
-        <Dropdrown />
+        <Dropdrown items={["De A a Z", "De Z a A"]} />
 
         <div className="w-full flex flex-wrap justify-around ">
           <CardEntity type="entity" />
@@ -45,14 +45,14 @@ export function Entities() {
               Faça parte do Potal Agro Familiar
             </h3>
             <p className="w-full text-justify md:text-center text-sm text-white mb-8 leading-6">
-              Esse portal foi criado como objetivo de aumentar a visubilidade e
+              Esse portal foi criado como objetivo de aumentar a visibilidade e
               os meios de divulgação das Associações, Cooperativas e produtores
-              individuais, além de trazer maior proximidade com o consumidor
+              individuais, além, de trazer maior proximidade com o consumidor
               interessado em produtos da agricultura familiar de sua região.
               <br />
               <span className="underline decoration-1 ">
                 {" "}
-                Gostaria de ver sua produção divulgada neste portal ?
+                Cadastre-se, e faça parte dessa iniciativa
               </span>
             </p>
             <div className="w-full h-auto flex  flex-wrap justify-around items-center">
