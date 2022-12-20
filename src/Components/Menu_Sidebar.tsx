@@ -128,15 +128,118 @@ export function Menu_Sidebar() {
               Produtores
             </Link>
           </li>
-          <li className="w-full  px-2 ">
-            {" "}
-            <Link
-              to="/"
-              className="flex items-end text-left text-lg text-palm-700 font-normal font-display  py-4 "
+          <li className="w-full  px-2 py-4 flex text-palm-700 items-center">
+            <MapPinLine size={28} weight="fill" className="mr-3" />
+
+            <select
+              className="
+                form-select 
+                appearance-none
+                block
+                w-full
+          
+                py-2
+                text-lg
+                font-display
+                text-palm-700
+                bg-white bg-clip-padding bg-no-repeat
+                border-none
+                rounded
+                transition
+                ease-in-out
+                m-0
+            "
+              aria-label="Default select example"
             >
-              <MapPinLine size={28} weight="fill" className="mr-3" />
-              Territórios
-            </Link>
+              <option
+                selected
+                className="flex items-end text-left text-lg text-palm-700 font-normal font-display  py-4 "
+                text-lg
+                text-palm-700
+                font-normal
+                font-display
+                py-4
+              >
+                {" "}
+                Territórios
+              </option>
+              <optgroup
+                label="Bahia"
+                className="
+                    text-md
+                    text-left
+                    py-2
+                    px-4
+                    font-semibold
+                    block
+                    w-full
+                    whitespace-nowrap
+                    bg-transparent
+                    text-gray-400
+                  "
+              >
+                <option
+                  value="Barra"
+                  className="
+                    dropdown-item
+                    text-sm
+                    text-left
+                    py-2
+                    pr-4
+                    pl-6
+                    font-normal
+                    block
+                    w-full
+                    whitespace-nowrap
+                    bg-transparent
+                    text-gray-700
+                    hover:bg-gray-100
+                  "
+                >
+                  Barra
+                </option>
+                <option
+                  value="Irecê"
+                  className="
+                    dropdown-item
+                    text-sm
+                    text-left
+                    py-2
+                    pr-4
+                    pl-6
+                    font-normal
+                    block
+                    w-full
+                    whitespace-nowrap
+                    bg-transparent
+                    text-gray-700
+                    hover:bg-gray-100
+                  "
+                >
+                  Irecê
+                </option>
+                <option
+                  value="Xique-Xique"
+                  className="
+                    dropdown-item
+                    text-sm
+                    text-left
+                    py-2
+                    pr-4
+                    pl-6
+                    font-normal
+                    block
+                    w-full
+                    whitespace-nowrap
+                    bg-transparent
+                    text-gray-700
+                    hover:bg-gray-100
+                  "
+                >
+                  Xique-Xique
+                </option>
+              </optgroup>
+            </select>
           </li>
         </ul>
       </div>
