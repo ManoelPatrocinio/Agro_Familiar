@@ -1,9 +1,9 @@
 import { ChatText } from "phosphor-react";
+import { Footer } from "../../Components/Footer";
+import { Header } from "../../Components/Header";
 import entity_profile from "../../assets/images/img_entity_profile_exemple.png";
 import header_background from "../../assets/images/img_header_exemple.png";
 import Star from "../../assets/images/star_icon.png";
-import { Footer } from "../../Components/Footer";
-import { Header } from "../../Components/Header";
 export function InfoEntity() {
   return (
     <>
@@ -83,7 +83,7 @@ export function InfoEntity() {
                 />
               </div>
               <div className="flex flex-col ">
-                <p className="w-full text-left text-sm  text-gray-800 font-medium font-display">
+                <p className="w-full text-left text-sm  text-gray-800 font-medium font-display mb-2">
                   Manoel Patrocino
                 </p>
                 <div className=" flex flex-col md:flex-row justify-start items-start mb-4">
@@ -122,7 +122,7 @@ export function InfoEntity() {
                     </svg>
                   </div>
                   <span className="text-xs text-gray-400">
-                    20 de abril de 2022, às 14h88
+                    20 de abril de 2022, às 14h12
                   </span>
                 </div>
                 <p className="w-full text-sm text-justify md:text-left text-gray-800 ">

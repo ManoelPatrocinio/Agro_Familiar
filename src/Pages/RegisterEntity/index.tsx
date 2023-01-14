@@ -1,11 +1,9 @@
-import { useEffect } from "react";
 import { Carrousel } from "../../Components/Carrousel";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
 
 export function RegisterEntity() {
- 
   return (
     <>
       <Header />
@@ -42,7 +40,7 @@ export function RegisterEntity() {
               />
               <label
                 className="form-check-label inline-block text-gray-800"
-                htmlFor="typeAssocs"
+                htmlFor="typeAssoc"
               >
                 Associação
               </label>
@@ -342,8 +340,7 @@ export function RegisterEntity() {
                 htmlFor="entityCnpj"
                 className="form-label inline-block mb-2 text-palm-700 mr-3"
               >
-                Nº Whatsapp 1
-                <span className="text-red-500 font-bold"> *</span>:
+                Nº Whatsapp 1<span className="text-red-500 font-bold"> *</span>:
               </label>
               <input
                 type="text"

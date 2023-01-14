@@ -1,7 +1,10 @@
-import { FunnelSimple  } from "phosphor-react";
+import { FunnelSimple } from "phosphor-react";
 import { Link } from "react-router-dom";
 
-export function Dropdrown() {
+type Props = {
+  items: string[];
+};
+export function Dropdrown({ items }: Props) {
   return (
     <div className="flex justify-center">
       <div>
@@ -31,8 +34,7 @@ export function Dropdrown() {
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <FunnelSimple  size={20}  className="mr-2"/>
-
+            <FunnelSimple size={20} className="mr-2" />
             Ordenar Por:
             <svg
               aria-hidden="true"
@@ -52,110 +54,48 @@ export function Dropdrown() {
           </Link>
           <ul
             className="
-          dropdown-menu
-          min-w-max
-          absolute
-          hidden
-          bg-white
-          text-base
-          z-50
-          float-left
-          py-2
-          list-none
-          text-left
-          rounded-lg
-          shadow-lg
-          mt-1
-          m-0
-          bg-clip-padding
-          border-none
-        "
+              dropdown-menu
+              min-w-max
+              absolute
+              hidden
+              bg-white
+              text-base
+              z-50
+              float-left
+              py-2
+              list-none
+              text-left
+              rounded-lg
+              shadow-lg
+              mt-1
+              m-0
+              bg-clip-padding
+              border-none
+            "
             aria-labelledby="dropdownMenuButton2"
           >
-            <li>
-              <Link
-                className="
-              dropdown-item
-              md:text-sm
-              text-xs
-              py-2
-              px-4
-              font-normal
-              block
-              w-full
-              whitespace-nowrap
-              bg-transparent
-              text-gray-700
-              hover:bg-gray-100
-            "
-                to="#"
-              >
-                Menor Preço
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="
-              dropdown-item
-              md:text-sm
-              text-xs
-              py-2
-              px-4
-              font-normal
-              block
-              w-full
-              whitespace-nowrap
-              bg-transparent
-              text-gray-700
-              hover:bg-gray-100
-            "
-                to="#"
-              >
-                Maior Preço
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="
-              dropdown-item
-              md:text-sm
-              text-xs
-              py-2
-              px-4
-              font-normal
-              block
-              w-full
-              whitespace-nowrap
-              bg-transparent
-              text-gray-700
-              hover:bg-gray-100
-            "
-                to="#"
-              >
-                De A - Z
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="
-              dropdown-item
-              md:text-sm
-              text-xs
-              py-2
-              px-4
-              font-normal
-              block
-              w-full
-              whitespace-nowrap
-              bg-transparent
-              text-gray-700
-              hover:bg-gray-100
-            "
-                to="#"
-              >
-                De Z - A
-              </Link>
-            </li>
+            {items.map((item) => {
+              return (
+                <li
+                  className="
+                      dropdown-item
+                      md:text-sm
+                      text-xs
+                      py-2
+                      px-4
+                      font-normal
+                      block
+                      w-full
+                      whitespace-nowrap
+                      bg-transparent
+                      text-gray-700
+                      hover:bg-gray-100
+                    "
+                >
+                  {item}
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>

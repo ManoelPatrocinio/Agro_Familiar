@@ -26,7 +26,9 @@ export function Products() {
           />
           <div className="w-full md:w-3/4 flex flex-col  items-start">
             <div className="w-full flex justify-between md:justify-start ">
-              <Dropdrown />
+              <Dropdrown
+                items={["Menor Preço", "Maior Preço", "De A a Z", "De Z a A"]}
+              />
               <button
                 onClick={() =>
                   SetToggleFilterVisibility(!toggleFilterVisibility)
