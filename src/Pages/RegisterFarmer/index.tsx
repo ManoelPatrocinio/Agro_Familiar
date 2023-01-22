@@ -15,7 +15,7 @@ export function RegisterFarmer() {
         ></SectionTitle>
 
         <form
-          className="w-dull md:w-[80%] h-full md:border border-gray-200 rounded   md:py-10 md:p-10  md:mx-auto"
+          className="w-full md:w-[80%] h-full md:border border-gray-200 rounded   md:py-10 md:p-10  md:mx-auto"
           method="POST"
         >
           <h3 className=" hidden md:block text-center text-sm md:text-lg text-palm-700 mb-2">

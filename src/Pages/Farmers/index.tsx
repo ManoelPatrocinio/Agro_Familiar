@@ -6,6 +6,8 @@ import { Dropdrown } from "../../Components/Dropdrown";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
+import iconEntityWhite from "../../assets/images/icone-entity-white.png";
+import iconFarmeWhite from "../../assets/images/icon-farmer-white.png";
 
 export function Farmers() {
   return (
@@ -40,35 +42,34 @@ export function Farmers() {
               <br />
               <span className="underline decoration-1 ">
                 {" "}
-                Cadastre-se, e faça parte dessa iniciativa{" "}
+                Cadastre-se, e faça parte dessa iniciativa
               </span>
             </p>
             <div className="w-full h-auto flex  flex-wrap justify-around items-center">
               <Link
                 to="/Register-entity"
-                className="w-[17rem] h-[7.5rem] border border-white flex flex-col justify-center items-center py-4 rounded hover:scale-110 transition duration-300 ease-in-out"
+                className="w-[17rem] h-[8.5rem] border border-white flex flex-col justify-center items-center  rounded hover:scale-110 transition duration-300 ease-in-out"
               >
-                <UsersThree size={48} color="white" weight="fill" />
+                <img
+                  src={iconEntityWhite}
+                  alt="icon Cadastro como Associação"
+                  className="h-[5.5rem] max-h-24 mx-auto"
+                />
                 <span className="w-full text-center text-sm text-white font-bold">
-                  Cadastro como Associação
+                  Cadastro de Assoc/Coop
                 </span>
               </Link>
               <Link
-                to="/Register-entity"
-                className="w-[17rem] h-[7.5rem] border border-white flex flex-col justify-center items-center py-4 my-6 md:my-0 rounded hover:scale-110 transition duration-300 ease-in-out"
+                to="/Register-farmer"
+                className="w-[17rem] h-[8.5rem] border border-white flex flex-col justify-center items-center py-4 my-6 md:my-0 rounded hover:scale-110 transition duration-300 ease-in-out"
               >
-                <User size={48} color="white" weight="fill" />
+                <img
+                  src={iconFarmeWhite}
+                  alt="icon Cadastro como Associação"
+                  className="h-[5.5rem] max-h-24 mx-auto"
+                />
                 <span className="w-full text-center text-sm text-white font-bold">
                   Cadastro como Produtor Individual
-                </span>
-              </Link>
-              <Link
-                to="/Register-entity"
-                className="w-[17rem] h-[7.5rem] border border-white flex flex-col justify-center items-center py-4 rounded hover:scale-110 transition duration-300 ease-in-out"
-              >
-                <UsersThree size={48} color="white" weight="fill" />
-                <span className="w-full text-center text-sm text-white font-bold">
-                  Cadastro como Cooperativa
                 </span>
               </Link>
             </div>

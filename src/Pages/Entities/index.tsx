@@ -1,4 +1,3 @@
-import { User, UsersThree } from "phosphor-react";
 import { Link } from "react-router-dom";
 import { CardEntity } from "../../Components/CardEntity";
 import { Carrousel } from "../../Components/Carrousel";
@@ -8,7 +7,6 @@ import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
 import iconEntityWhite from "../../assets/images/icone-entity-white.png";
 import iconFarmeWhite from "../../assets/images/icon-farmer-white.png";
-import iconCustumerWhite from "../../assets/images/icon-user-white.png";
 export function Entities() {
   return (
     <>

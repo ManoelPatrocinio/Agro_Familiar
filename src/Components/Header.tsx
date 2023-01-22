@@ -8,8 +8,8 @@ import { PurchaseList } from "./PurchaseList";
 export function Header() {
   return (
     <header className="relative w-full px-5 md:px-14">
-      <nav className="navbar py-2  bg-white relative flex items-center w-full justify-between">
-        <Menu_Sidebar />
+      <nav className="navbar py-2  bg-white relative flex items-end w-full justify-between">
+        <Menu_Sidebar type="default" />
         <div className="header-form-search hidden md:flex items-end w-[25%]">
           <button className="w-10 h-10">
             <MagnifyingGlass size={32} color="#789B3D" mirrored />
@@ -20,7 +20,7 @@ export function Header() {
             className="w-10/12 p-2 border-b-[1px] border-palm-700 rounded-br focus:outline-none"
           />
         </div>
-        <Link to="/" className="w-20 h-20 mt-2">
+        <Link to="/" className="w-[11rem]  mt-2">
           {" "}
           <img src={Logo} alt="Logo" className="w-full object-cover" />
         </Link>
@@ -75,13 +75,13 @@ export function Header() {
           </div>
 
           <button
-            className="w-10 h-9 relative "
+            className="w-10 h-9 relative mb-[1rem] md:mb-0"
             type="button"
             data-bs-toggle="offcanvas"
             data-bs-target="#PurchaseList"
             aria-controls="PurchaseList"
           >
-            <ClipboardText size={36} color="#789B3D" />
+            <ClipboardText size={40} color="#789B3D" />
             <span className="w-5 h-5 rounded-2xl bg-palm-700 text-white text-xs text-center leading-5 absolute top-[-6px] right-[-2px]">
               2
             </span>{" "}
