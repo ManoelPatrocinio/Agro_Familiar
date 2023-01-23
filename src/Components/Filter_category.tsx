@@ -25,8 +25,7 @@ export function Filter_category({ToggleFilterVisibility,mobileVisiblity}:FilterP
           Agricultura
         </h5>
         <ul className="w-full text-left pl-2">
-          <li className="w-full text-left text-sm my-1 py-3">Milho</li>
-          <li className="w-full text-left text-sm my-1 py-3">Feijão</li>
+          <li className="w-full text-left text-sm my-1 py-3">Grãos</li>
           <li className="w-full text-left text-sm my-1 py-3">Mandioca</li>
           <li className="w-full text-left text-sm my-1 py-3">Hotaliças</li>
           <li className="w-full text-left text-sm my-1 py-3">Frutas</li>
