@@ -1,8 +1,9 @@
-import { Link, MagnifyingGlass, Question } from "phosphor-react";
+import { MagnifyingGlass, Question } from "phosphor-react";
 import { Menu_Sidebar } from "../../../Components/Menu_Sidebar";
 import Logo from "../../../assets/images/Logo.png";
-import { DashboardMenu } from "../../../Components/DashboardMenu";
+import { MenuOfDashboard } from "../../../Components/MenuOfDashboard";
 import { ProductInList } from "../../../Components/ProductInList";
+import { Link } from "react-router-dom";
 
 export function ManageProducts() {
   return (
@@ -17,7 +18,7 @@ export function ManageProducts() {
       </header>
       <div className="flex ">
         <div className="hidden md:block w-[30%] min-h-full border-r border-gray-200 ">
-          <DashboardMenu />
+          <MenuOfDashboard />
         </div>
         <div className="w-full md:w-[70%] h-full px-8">
           <h1 className="w-full text-center md:text-left text-md md:text-xl text-palm-700 font-semibold my-8">

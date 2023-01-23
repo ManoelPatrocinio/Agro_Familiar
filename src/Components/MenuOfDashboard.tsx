@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Logo from "../assets/images/Logo.png";
 
-export function DashboardMenu() {
+export function MenuOfDashboard() {
   return (
     <div className="w-full h-full flex flex-col justify-start items-center relative">
       <button
@@ -36,7 +36,7 @@ export function DashboardMenu() {
             to="/Admin/manage-product"
             className="block w-full h-full px-4 py-3 text-left text-white text-md  font-semibold"
           >
-            Gerenciar
+            Gerenciar produtos
           </Link>{" "}
         </li>
         <li className="w-full  bg-palm-700  my-2  rounded hover:bg-palm-500">

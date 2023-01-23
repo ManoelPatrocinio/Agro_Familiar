@@ -9,7 +9,7 @@ import {
 import { Link } from "react-router-dom";
 import { FormUserAccess } from "./FormUserAccess";
 import Logo from "../assets/images/Logo.png";
-import { DashboardMenu } from "./DashboardMenu";
+import { MenuOfDashboard } from "./MenuOfDashboard";
 
 type Prop ={
   type:("default"|"admin")
@@ -256,7 +256,7 @@ export function Menu_Sidebar({type}:Prop) {
             </ul>
           </>
         ) : (
-          <DashboardMenu/>
+          <MenuOfDashboard/>
         )}
       </div>
     </div>

@@ -3,7 +3,7 @@ import { Question } from "phosphor-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { DashboardMenu } from "../../../Components/DashboardMenu";
+import { MenuOfDashboard } from "../../../Components/MenuOfDashboard";
 import { DropzoneInput } from "../../../Components/Dropzone";
 import { ImgPreview } from "../../../Components/ImgPreview";
 import { Menu_Sidebar } from "../../../Components/Menu_Sidebar";
@@ -99,7 +99,7 @@ export function CreateProduct(){
       </header>
       <div className="flex">
         <div className="hidden md:block w-[30%] min-h-full border-r border-gray-200 ">
-          <DashboardMenu />
+          <MenuOfDashboard />
         </div>
         <div className="w-full md:w-[70%] h-full px-8">
           <h1 className="w-full text-center md:text-left text-md md:text-xl text-palm-700 font-semibold my-8">
