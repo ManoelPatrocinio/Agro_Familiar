@@ -10,8 +10,7 @@
     "p_n_contact":"74988748381",
     "p_description":"saca de arroz de 50 kilos",
     "p_main_image":"http://portalbackend/ims/products/image.jpg",
-    "p_secondary_images":
-    {
+    "p_optional_images":{
         "p_image_2":"http://portalbackend/ims/products/image.jpg",
         "p_image_3":"http://portalbackend/ims/products/image.jpg",
         "p_image_4":"http://portalbackend/ims/products/image.jpg"
@@ -24,7 +23,6 @@
 {
     "TABLE ": "table de produtor individual ",
     "id":"61dc8bb4f2616b1f289a4c74",
-    "user_type": "farmer",
     "f_email": "paulo@gmail.com",
     "f_password":"12345",
     "f_full_name":"Paulo luiz",
@@ -43,7 +41,6 @@
 {
     "TABLE ": "table de cliente ",
     "id":"61dc8bb4f2616b1f289a4c74",
-    "user_type": "assoc/coop",
     "C_name":"Paulo luiz",
     "C_email": "paulo@gmail.com",
     "C_password":"12345",

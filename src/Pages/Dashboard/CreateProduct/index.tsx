@@ -9,6 +9,8 @@ import { ImgPreview } from "../../../Components/ImgPreview";
 import { Menu_Sidebar } from "../../../Components/Menu_Sidebar";
 import { FileUploaded } from "../../../Types/fileUploaded.types";
 import Logo from "../../../assets/images/Logo.png";
+import { useApiPost } from "../../../hook/useApi";
+import Swal from "sweetalert2";
 
 const InitialUserState = { 
   id: "",
@@ -20,17 +22,14 @@ const InitialUserState = {
   p_raiting: 0,
   p_n_contact: "",
   p_description: "",
-  p_main_image: "",
-  p_secondary_images: {
-    p_image_2: "",
-    p_image_3: "",
-    p_image_4: "",
-  },
+  p_images: [],
+
 };
 export function CreateProduct(){
   //************* start pre config from register form *************
   const [prodData, setProductData] = useState(InitialUserState); //state for add new user
   const [filesData, setFileData] = useState<FileUploaded[]>([]);
+  let filesArray: FileUploaded[] = [];
 
   const {
     register,
@@ -38,11 +37,11 @@ export function CreateProduct(){
     handleSubmit,
   } = useForm();
 
+  //function for add value input on state
   const setValueFromFormInput = (newValue: any) => {
-    //function for add value input on state
     setProductData((inputValue) => ({ ...inputValue, ...newValue }));
   };
-
+  //receive the file from dropzone component and set news props to display on other component ex: ImgPreview
   const handleUpload = (files: FileUploaded[]) => {
     const uploadedFiles = files.map((file) => ({
       file,
@@ -50,10 +49,8 @@ export function CreateProduct(){
       preview: file.preview,
       isUploaded: true,
       itsError: false,
-     
     }));
     let finalListFile = filesData.concat(uploadedFiles);
-
     if (finalListFile.length <= 4) {
       setFileData(finalListFile);
     }
@@ -66,25 +63,34 @@ export function CreateProduct(){
     return setFileData(filesData.filter((file) => file.id !== id));
   };
 
-  //create an object with file and user data foreach file image or audio
-  const processFileUpload = async (finalFile: any) => {
-    const data = new FormData();
+  const sendNewProduct = async () => {
+    const data: any = new FormData();
 
-    data.append("uploads", finalFile.file);
-    data.append("user_fullName", finalFile.user_fullname);
-    data.append("user_email", finalFile.user_email);
-    data.append("user_description", finalFile.user_description);
+    // set all images on prop uploads
+    filesData.forEach((file, index) => {
+      data.append("uploads", file.file);
+    });
+    data.append("p_name", prodData.p_name);
+    data.append("p_category", prodData.p_category);
+    data.append("p_price", prodData.p_price);
+    data.append("p_old_price", prodData.p_old_price);
+    data.append("p_n_contact", prodData.p_n_contact);
+    data.append("p_description", prodData.p_description);
 
-   
+    console.log("filesArray", filesArray);
+    console.log("filesData", filesData);
+
+    const { apiResponse } = await useApiPost<any>("upload-files/image", data);
+
+    if (apiResponse) {
+      Swal.fire({
+        icon: "success",
+        title: "Success !",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
   };
-
-  //call the function for create an object foreach image or video file
-
-  function sendNewProducto() {
-    // filesData.forEach((file) => processFileUpload(file));
-    alert("foii");
-    console.log(prodData);
-  }
   return (
     <>
       {" "}
@@ -166,6 +172,7 @@ export function CreateProduct(){
                 </label>
                 <div className=" w-full">
                   <select
+                    defaultValue={"default"}
                     className="form-select appearance-none
                       block
                       w-full
@@ -192,7 +199,9 @@ export function CreateProduct(){
                       })
                     }
                   >
-                    <option selected>Selecione</option>
+                    <option selected value="default">
+                      Selecione
+                    </option>
                     <optgroup label="Agricultura">
                       <option value="Milho">Milho</option>
                       <option value="Feijão">Feijão</option>
@@ -406,7 +415,6 @@ export function CreateProduct(){
                       value: 11,
                       message: "O nome deve ter mais de 1 caracteres",
                     },
-                    maxLength: 12,
                   })}
                   onChange={(e) =>
                     setValueFromFormInput({
@@ -433,13 +441,16 @@ export function CreateProduct(){
                 terão desse produto{" "}
               </p>
 
-              <div className="w-full flex flex-col md:flex-row justify-between items-center">
-                {!!filesData[0] ? (
+              <div className="w-full flex flex-col md:flex-row justify-start items-center">
+                {filesData.map((item, index) => (
                   <ImgPreview
-                    filesUploaded={filesData[0]}
+                    key={index}
+                    filesUploaded={item}
                     deleteFile={handleDelete}
                   />
-                ) : (
+                ))}
+
+                {!filesData[0] && (
                   <DropzoneInput
                     onUpload={handleUpload}
                     typeFile="image"
@@ -447,36 +458,7 @@ export function CreateProduct(){
                   />
                 )}
 
-                {!!filesData[1] ? (
-                  <ImgPreview
-                    filesUploaded={filesData[1]}
-                    deleteFile={handleDelete}
-                  />
-                ) : (
-                  <DropzoneInput
-                    onUpload={handleUpload}
-                    typeFile="image"
-                    text="Adicionar outra imagem"
-                  />
-                )}
-                {!!filesData[2] ? (
-                  <ImgPreview
-                    filesUploaded={filesData[2]}
-                    deleteFile={handleDelete}
-                  />
-                ) : (
-                  <DropzoneInput
-                    onUpload={handleUpload}
-                    typeFile="image"
-                    text="Adicionar outra imagem"
-                  />
-                )}
-                {!!filesData[3] ? (
-                  <ImgPreview
-                    filesUploaded={filesData[3]}
-                    deleteFile={handleDelete}
-                  />
-                ) : (
+                {!!filesData[0] && filesData.length < 4 && (
                   <DropzoneInput
                     onUpload={handleUpload}
                     typeFile="image"
@@ -486,7 +468,7 @@ export function CreateProduct(){
               </div>
             </div>
             <button
-              onClick={handleSubmit(() => sendNewProducto())}
+              onClick={handleSubmit(() => sendNewProduct())}
               type="submit"
               className="w-[60%] md:w-1/4 mx-[20%] md:mx-0 my-4 py-3 px-3 text-white text-md font-semibold  bg-palm-700 rounded "
             >
