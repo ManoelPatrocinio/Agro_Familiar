@@ -1,7 +1,70 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { useApiPost } from "../hook/useApi";
+import { CheckLocalStorage } from "../service/localStorage";
+import { Client } from "../Types/client.type";
+
 type FormProps = {
   type: "userLogin" | "userRegister";
 };
+
+const InitialUserState ={
+  c_full_name : "",
+  c_email: "",
+  c_password: ""
+}
 export function FormUserAccess({ type }: FormProps) {
+  const navigate = useNavigate();
+
+  const [userFormData, setUserFormData] = useState<Client>(InitialUserState); //state for add new user
+
+  //function for add value input on state
+  const setValueFromFormInput = (newValue: any) => {
+    setUserFormData((inputValue) => ({ ...inputValue, ...newValue }));
+  };
+
+  const formSubmit = async(type: string) => {
+   
+    if (type === "userRegister"){
+      const { apiResponse } = await useApiPost<Client>(
+        "/client-register",
+        userFormData
+      );
+      if (apiResponse) {
+        Swal.fire({
+          icon: "success",
+          title: "Success !",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+      CheckLocalStorage.setLoggedUser(apiResponse!);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+
+    }else if(type === "userLogin"){
+      const { apiResponse } = await useApiPost<Client>(
+        "/login",
+        userFormData
+      );
+      if (apiResponse) {
+        Swal.fire({
+          icon: "success",
+          title: "Success !",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+      CheckLocalStorage.setLoggedUser(apiResponse!);
+      setTimeout(() => {
+             window.location.reload();
+      }, 2000);
+    }
+
+
+  };
   return (
     <>
       <form className="w-full h-auto">
@@ -21,6 +84,11 @@ export function FormUserAccess({ type }: FormProps) {
                 type="text"
                 className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                 placeholder="Nome Completo"
+                onChange={(e) =>
+                  setValueFromFormInput({
+                    c_full_name: e.target.value,
+                  })
+                }
               />
             </div>
           </>
@@ -42,6 +110,11 @@ export function FormUserAccess({ type }: FormProps) {
             className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
             placeholder="exemplo@gmail.com"
             id="idUserEmail"
+            onChange={(e) =>
+              setValueFromFormInput({
+                c_email: e.target.value,
+              })
+            }
           />
         </div>
 
@@ -57,6 +130,11 @@ export function FormUserAccess({ type }: FormProps) {
             className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
             placeholder="******"
             id="idUserPassword"
+            onChange={(e) =>
+              setValueFromFormInput({
+                c_password: e.target.value,
+              })
+            }
           />
         </div>
 
@@ -69,6 +147,7 @@ export function FormUserAccess({ type }: FormProps) {
         <div className="flex flex-col justify-center  text-center lg:text-left mt-6">
           <button
             type="button"
+            onClick={() => formSubmit(type)}
             className="w-full inline-block px-7 py-2 bg-palm-700 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-palm-500 hover:shadow-lg focus:bg-palm-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-palm-700 active:shadow-lg transition duration-150 ease-in-out"
           >
             {type === "userRegister" ? "Cadastrar" : "Login"}

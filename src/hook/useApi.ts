@@ -27,7 +27,7 @@ export async function useApiPost<T = unknown>(url: string, data: unknown) {
         console.error("data", error);
         Swal.fire({
           icon: "error",
-          title: error.response.data,
+          title: error.response.data.message,
           showConfirmButton: true,
         });
       } else if (error.request) {

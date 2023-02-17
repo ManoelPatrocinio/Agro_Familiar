@@ -3,8 +3,7 @@ import { IconAddList } from "./IconAddList";
 
 export function CardProduct() {
   return (
-    <div className="w-[16rem] h-auto min:h-[20rem] mb-4 md:mb-8 flex justify-center hover:scale-110 transition duration-300 ease-in-out">
-      <div className="rounded-lg shadow-lg bg-white max-w-sm">
+      <div className="w-[20rem] md:w-[16rem] h-auto min:h-[20rem] mb-4 md:mb-8 hover:scale-110 transition duration-300 ease-in-out rounded-lg shadow-lg bg-white ">
         <Link to="/Product-detail">
           <img
             className="rounded-t-lg "
@@ -26,13 +25,12 @@ export function CardProduct() {
           </div>
           <button
             type="button"
-            className="w-full flex items-center justify-center  py-2.5 bg-green-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out"
+            className="w-full flex items-center justify-center py-4 md:py-2.5 bg-green-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out"
           >
             <IconAddList w={"20"} h={"20"} color="#fff" className="mr-1" />
             Adicionar
           </button>
         </div>
       </div>
-    </div>
   );
 }

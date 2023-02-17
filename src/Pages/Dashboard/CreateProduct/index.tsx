@@ -12,13 +12,13 @@ import Logo from "../../../assets/images/Logo.png";
 import { useApiPost } from "../../../hook/useApi";
 import Swal from "sweetalert2";
 
-const InitialUserState = { 
+const InitialProductState = { 
   id: "",
   farmer_id: "",
   p_name: "",
   p_category: "",
   p_price: "",
-  p_old_price: "",
+  p_old_price: "",  
   p_raiting: 0,
   p_n_contact: "",
   p_description: "",
@@ -27,7 +27,7 @@ const InitialUserState = {
 };
 export function CreateProduct(){
   //************* start pre config from register form *************
-  const [prodData, setProductData] = useState(InitialUserState); //state for add new user
+  const [prodData, setProductData] = useState(InitialProductState); //state for add new user
   const [filesData, setFileData] = useState<FileUploaded[]>([]);
   let filesArray: FileUploaded[] = [];
 
@@ -56,7 +56,7 @@ export function CreateProduct(){
     }
   };
   function resetFileData() {
-    setProductData(InitialUserState);
+    setProductData(InitialProductState);
     setFileData([]);
   }
   const handleDelete = (id: string) => {

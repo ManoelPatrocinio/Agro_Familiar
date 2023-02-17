@@ -1,11 +1,39 @@
+import classNames from "classnames";
 import { ClipboardText, MagnifyingGlass, User } from "phosphor-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 import Logo from "../assets/images/Logo.png";
+import { CheckLocalStorage } from "../service/localStorage";
+import { Client } from "../Types/client.type";
 import { FormUserAccess } from "./FormUserAccess";
 import { Menu_Sidebar } from "./Menu_Sidebar";
 import { PurchaseList } from "./PurchaseList";
 
 export function Header() {
+  const [userStatus, setUserStatus] = useState<Client | null>(null);
+
+  useEffect(() => {
+    setUserStatus(CheckLocalStorage.getLoggedUser());
+  }, []);
+
+  const UserFirstName = userStatus?.c_full_name!.split(" ", 1);
+  const CheckLogout = () => {
+    Swal.fire({
+      icon: "question",
+      title: "Sair",
+      showCancelButton: true,
+      confirmButtonText: "Sim",
+      text: "Deseja mesmo nos deixar ?",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        CheckLocalStorage.logout();
+        window.location.reload();
+      }
+    });
+  };
+
+  
   return (
     <header className="relative w-full px-5 md:px-14">
       <nav className="navbar py-2  bg-white relative flex items-end w-full justify-between">
@@ -29,11 +57,13 @@ export function Header() {
             <button
               className="
               flex  
+              items-end
               text-left
               font-body
               text-xs 
               font-semibold
-              text-palm-700 ml-2         
+              text-palm-700 ml-2  
+              capitalize  
             "
               type="button"
               id="dropdownLogin"
@@ -41,36 +71,42 @@ export function Header() {
               aria-expanded="false"
             >
               <User size={32} color="#789B3D" className="mr-2" />
-              Login / <br /> Registre-se{" "}
+              {UserFirstName ? (
+                UserFirstName
+              ) : (
+                <>
+                  Login / <br /> Registre-se
+                </>
+              )}
             </button>
             <div
-              className="
-                dropdown-menu
-                min-w-max
-                absolute
-                w-[20rem]
-                min-h-[26rem]
-                h-auto
-                top-[3rem]
-                left-[-8rem]
-                bg-white
-                z-50
-                float-left
-                px-4
-                py-8
-               text-left
-                rounded-lg
-                shadow-lg
-                mt-1
-                hidden
-                m-0
-                bg-clip-padding
-                border
-                border-gray-200
-              "
+              className={classNames(
+                " dropdown-menu min-w-max absolute  top-[3rem]   bg-white z-50 float-left  text-left  rounded-lg  shadow-lg mt-1  hidden   m-0   bg-clip-padding                border                border-gray-200               ",
+                {
+                  " w-[20rem]  min-h-[26rem] h-auto left-[-8rem] px-4  py-8":
+                    !UserFirstName,
+                  " w-[10rem]   h-auto py-2": UserFirstName,
+                }
+              )}
               aria-labelledby="dropdownLogin"
             >
-              <FormUserAccess type="userLogin" />
+              {UserFirstName ? (
+                <div className="w-full h-full">
+                  <button className="w-full text-center text-palm-700 text-sm py-2">
+                    {" "}
+                    Meu Perfil
+                  </button>
+                  <button
+                    className="w-full text-center text-palm-700 text-sm py-2"
+                    onClick={() => CheckLogout()}
+                  >
+                    {" "}
+                    Sair da conta
+                  </button>
+                </div>
+              ) : (
+                <FormUserAccess type="userLogin" />
+              )}
             </div>
           </div>
 

@@ -6,7 +6,7 @@ type Props = {
 };
 export function Dropdrown({ items }: Props) {
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center pl-4 md:pl-0">
       <div>
         <div className="dropdown relative">
           <Link

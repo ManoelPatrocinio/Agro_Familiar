@@ -1,8 +1,9 @@
+import ImgHeaderCarousel_1 from "../assets/images/header_slide_1.png"
 export function Carrousel() {
   return (
     <div
       id="carouselExampleCrossfade"
-      className="carousel slide carousel-fade relative w-[90%] md:w-full h-48 md:h-[27rem] md:min-h-[60vh]  mt-6 mx-auto  "
+      className="carousel slide carousel-fade relative w-full h-52 md:h-[27rem] md:min-h-[60vh]  mt-6 mx-auto  "
       data-bs-ride="carousel"
     >
       <div className="carousel-indicators absolute right-0 bottom-0 left-0 flex justify-center p-0 mb-4">
@@ -30,9 +31,9 @@ export function Carrousel() {
       <div className="carousel-inner relative w-full h-full overflow-hidden rounded">
         <div className="carousel-item active float-left w-full h-full">
           <img
-            src="https://mdbcdn.b-cdn.net/img/new/slides/041.webp"
+            src={ImgHeaderCarousel_1}
             className="block w-full h-full"
-            alt="Wild Landscape"
+            alt="slide o melhor da agricultura familiar da sua região "
           />
         </div>
         <div className="carousel-item float-left w-full h-full">
