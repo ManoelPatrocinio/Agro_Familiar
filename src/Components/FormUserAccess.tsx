@@ -1,24 +1,29 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
+
 import Swal from "sweetalert2";
 import { useApiPost } from "../hook/useApi";
 import { CheckLocalStorage } from "../service/localStorage";
-import { Client } from "../Types/client.type";
+import { User } from "../Types/user.type";
 
 type FormProps = {
   type: "userLogin" | "userRegister";
 };
 
-const InitialUserState ={
-  c_full_name : "",
-  c_email: "",
-  c_password: ""
-}
+const InitialUserState:User = {
+  u_type:"customer",
+  u_full_name: "",
+  u_email: "",
+  u_password: "",
+};
 export function FormUserAccess({ type }: FormProps) {
-  const navigate = useNavigate();
-
-  const [userFormData, setUserFormData] = useState<Client>(InitialUserState); //state for add new user
-
+  const [userFormData, setUserFormData] = useState<User>(InitialUserState); //state for add new user
+ const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
   //function for add value input on state
   const setValueFromFormInput = (newValue: any) => {
     setUserFormData((inputValue) => ({ ...inputValue, ...newValue }));
@@ -27,8 +32,8 @@ export function FormUserAccess({ type }: FormProps) {
   const formSubmit = async(type: string) => {
    
     if (type === "userRegister"){
-      const { apiResponse } = await useApiPost<Client>(
-        "/client-register",
+      const { apiResponse } = await useApiPost<User>(
+        "/register",
         userFormData
       );
       if (apiResponse) {
@@ -45,7 +50,7 @@ export function FormUserAccess({ type }: FormProps) {
       }, 2000);
 
     }else if(type === "userLogin"){
-      const { apiResponse } = await useApiPost<Client>(
+      const { apiResponse } = await useApiPost<User>(
         "/login",
         userFormData
       );
@@ -75,20 +80,35 @@ export function FormUserAccess({ type }: FormProps) {
             </h4>
             <div className="w-full mb-6">
               <label
-                htmlFor="idUserEmail"
+                htmlFor="userFullName"
                 className="form-label inline-block text-sm mb-2 text-gray-700"
               >
                 Nome Completo
               </label>
               <input
                 type="text"
+                id="userFullName"
                 className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                 placeholder="Nome Completo"
+                {...register("userFullName", {
+                  required: "Informe seu nome completo para continuar",
+                  minLength: {
+                    value: 6,
+                    message: "Este campo deve ter mais de 6 caracteres",
+                  },
+                })}
                 onChange={(e) =>
                   setValueFromFormInput({
-                    c_full_name: e.target.value,
+                    u_full_name: e.target.value,
                   })
                 }
+              />
+              <ErrorMessage
+                errors={errors}
+                name="userFullName"
+                render={({ message }) => (
+                  <small className="text-red-500 text-xs">{message}</small>
+                )}
               />
             </div>
           </>
@@ -100,7 +120,7 @@ export function FormUserAccess({ type }: FormProps) {
 
         <div className="w-full mb-6">
           <label
-            htmlFor="idUserEmail"
+            htmlFor="formAccessUserEmail"
             className="form-label inline-block text-sm mb-2 text-gray-700"
           >
             Seu E-mail
@@ -109,18 +129,36 @@ export function FormUserAccess({ type }: FormProps) {
             type="email"
             className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
             placeholder="exemplo@gmail.com"
-            id="idUserEmail"
+            id="formAccessUserEmail"
+            {...register("formAccessUserEmail", {
+              required: "Informe seu email para continuar",
+              pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: "Informe um e-mail válido",
+              },
+              minLength: {
+                value: 15,
+                message: "O email deve ter mais de 14 caracteres",
+              },
+            })}
             onChange={(e) =>
               setValueFromFormInput({
-                c_email: e.target.value,
+                u_email: e.target.value,
               })
             }
+          />
+          <ErrorMessage
+            errors={errors}
+            name="formAccessUserEmail"
+            render={({ message }) => (
+              <small className="text-red-500 text-xs">{message}</small>
+            )}
           />
         </div>
 
         <div className="mb-4">
           <label
-            htmlFor="idUserPassword"
+            htmlFor="FormAccessUserPassword"
             className="form-label inline-block text-sm mb-2 text-gray-700"
           >
             Sua senha
@@ -129,12 +167,26 @@ export function FormUserAccess({ type }: FormProps) {
             type="password"
             className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
             placeholder="******"
-            id="idUserPassword"
+            id="FormAccessUserPassword"
+            {...register("FormAccessUserPassword", {
+              required: "Informe sua senha para continuar",
+              minLength: {
+                value: 6,
+                message: "O senha deve ter no mínimo 6 caracteres",
+              },
+            })}
             onChange={(e) =>
               setValueFromFormInput({
-                c_password: e.target.value,
+                u_password: e.target.value,
               })
             }
+          />
+          <ErrorMessage
+            errors={errors}
+            name="FormAccessUserPassword"
+            render={({ message }) => (
+              <small className="text-red-500 text-xs">{message}</small>
+            )}
           />
         </div>
 
@@ -147,7 +199,7 @@ export function FormUserAccess({ type }: FormProps) {
         <div className="flex flex-col justify-center  text-center lg:text-left mt-6">
           <button
             type="button"
-            onClick={() => formSubmit(type)}
+            onClick={handleSubmit(() => formSubmit(type))}
             className="w-full inline-block px-7 py-2 bg-palm-700 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-palm-500 hover:shadow-lg focus:bg-palm-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-palm-700 active:shadow-lg transition duration-150 ease-in-out"
           >
             {type === "userRegister" ? "Cadastrar" : "Login"}

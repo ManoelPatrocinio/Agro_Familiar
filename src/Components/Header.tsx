@@ -5,19 +5,19 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import Logo from "../assets/images/Logo.png";
 import { CheckLocalStorage } from "../service/localStorage";
-import { Client } from "../Types/client.type";
+import { User as UserType } from "../Types/user.type";
 import { FormUserAccess } from "./FormUserAccess";
 import { Menu_Sidebar } from "./Menu_Sidebar";
 import { PurchaseList } from "./PurchaseList";
 
 export function Header() {
-  const [userStatus, setUserStatus] = useState<Client | null>(null);
+  const [userStatus, setUserStatus] = useState<UserType | null>(null);
 
   useEffect(() => {
     setUserStatus(CheckLocalStorage.getLoggedUser());
   }, []);
 
-  const UserFirstName = userStatus?.c_full_name!.split(" ", 1);
+  const UserFirstName = userStatus?.u_full_name!.split(" ", 1);
   const CheckLogout = () => {
     Swal.fire({
       icon: "question",
@@ -166,18 +166,18 @@ export function Header() {
           <div className="dropdown relative">
             <button
               className="
-          text-lg 
-          text-palm-700 
-          font-normal 
-          font-display
-          dropdown-toggle
-          transition
-          duration-150
-          ease-in-out
-          flex
-          items-center
-          whitespace-nowrap
-        "
+                text-lg 
+                text-palm-700 
+                font-normal 
+                font-display
+                dropdown-toggle
+                transition
+                duration-150
+                ease-in-out
+                flex
+                items-center
+                whitespace-nowrap
+              "
               type="button"
               id="dropdownMenuButton1"
               data-bs-toggle="dropdown"

@@ -74,7 +74,7 @@ export function Dropdrown({ items }: Props) {
             "
             aria-labelledby="dropdownMenuButton2"
           >
-            {items.map((item) => {
+            {items.map((item,index) => {
               return (
                 <li
                   className="
@@ -91,6 +91,7 @@ export function Dropdrown({ items }: Props) {
                       text-gray-700
                       hover:bg-gray-100
                     "
+                  key={index}
                 >
                   {item}
                 </li>

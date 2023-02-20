@@ -145,32 +145,28 @@ export function Menu_Sidebar({type}:Prop) {
 
                 <select
                   className="
-                  form-select 
-                  appearance-none
-                  block
-                  w-full
-            
-                  py-2
-                  text-lg
-                  font-display
-                  text-palm-700
-                  bg-white bg-clip-padding bg-no-repeat
-                  border-none
-                  rounded
-                  transition
-                  ease-in-out
-                  m-0
-              "
+                    form-select 
+                    appearance-none
+                    block
+                    w-full
+                    py-2
+                    text-lg
+                    font-display
+                    text-palm-700
+                    bg-white bg-clip-padding bg-no-repeat
+                    border-none
+                    rounded
+                    transition
+                    ease-in-out
+                    m-0                      
+                  "
                   aria-label="Default select example"
                 >
                   <option
-                    selected
+                    value=""
                     className="flex items-end text-left text-lg text-palm-700 font-normal font-display  py-4 "
-                    text-lg
-                    text-palm-700
-                    font-normal
-                    font-display
-                    py-4
+
+                   
                   >
                     {" "}
                     Territórios
@@ -256,7 +252,7 @@ export function Menu_Sidebar({type}:Prop) {
             </ul>
           </>
         ) : (
-          <MenuOfDashboard/>
+          <MenuOfDashboard />
         )}
       </div>
     </div>
