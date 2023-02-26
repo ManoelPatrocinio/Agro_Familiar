@@ -78,10 +78,7 @@ export function RegisterEntity() {
         ></SectionTitle>
         {!toggleForm ? (
           <form className="w-full md:w-[80%] h-full md:border border-gray-200 rounded   md:py-10 md:p-10  md:mx-auto">
-            <h3 className=" hidden md:block text-center text-sm md:text-lg text-palm-700 mb-2">
-              Formulário de cadastro
-            </h3>
-            <p className="w-full text-center text-sm text-gray-400 mb-8 ">
+            <p className="w-full text-center text-sm text-gray-400 mb-10 ">
               Preencha o formulário com os dados da Associação ou Cooperativa
               que você é responsável.
             </p>
