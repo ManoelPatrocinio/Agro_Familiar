@@ -3,29 +3,28 @@ import { Question } from "phosphor-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { MenuOfDashboard } from "../../../Components/MenuOfDashboard";
+import Swal from "sweetalert2";
 import { DropzoneInput } from "../../../Components/Dropzone";
 import { ImgPreview } from "../../../Components/ImgPreview";
+import { MenuOfDashboard } from "../../../Components/MenuOfDashboard";
 import { Menu_Sidebar } from "../../../Components/Menu_Sidebar";
 import { FileUploaded } from "../../../Types/fileUploaded.types";
 import Logo from "../../../assets/images/Logo.png";
 import { useApiPost } from "../../../hook/useApi";
-import Swal from "sweetalert2";
 
-const InitialProductState = { 
+const InitialProductState = {
   id: "",
   farmer_id: "",
   p_name: "",
   p_category: "",
   p_price: "",
-  p_old_price: "",  
+  p_old_price: "",
   p_raiting: 0,
   p_n_contact: "",
   p_description: "",
   p_images: [],
-
 };
-export function CreateProduct(){
+export function CreateProduct() {
   //************* start pre config from register form *************
   const [prodData, setProductData] = useState(InitialProductState); //state for add new user
   const [filesData, setFileData] = useState<FileUploaded[]>([]);
@@ -141,7 +140,7 @@ export function CreateProduct(){
                   aria-describedby="productName"
                   placeholder="Digite aqui"
                   {...register("productName", {
-                    required: "Informe o nome do produto para continuar",
+                    required: "Campo Obrigatório",
                     minLength: {
                       value: 3,
                       message: "O nome deve ter mais de 3 caracteres",
@@ -172,7 +171,6 @@ export function CreateProduct(){
                 </label>
                 <div className=" w-full">
                   <select
-                    defaultValue={"default"}
                     className="form-select appearance-none
                       block
                       w-full
@@ -191,7 +189,7 @@ export function CreateProduct(){
                     aria-label="Default select example"
                     id="productCategory"
                     {...register("productCategory", {
-                      required: "Informe a categoria do produto para continuar",
+                      required: "Campo Obrigatório",
                     })}
                     onChange={(e) =>
                       setValueFromFormInput({
@@ -199,9 +197,7 @@ export function CreateProduct(){
                       })
                     }
                   >
-                    <option selected value="default">
-                      Selecione
-                    </option>
+                    <option value="">Selecione</option>
                     <optgroup label="Agricultura">
                       <option value="Milho">Milho</option>
                       <option value="Feijão">Feijão</option>
@@ -266,7 +262,7 @@ export function CreateProduct(){
                     aria-describedby="productPrice"
                     placeholder="R$"
                     {...register("productPrice", {
-                      required: "Informe o atual preço do produto",
+                      required: "Campo Obrigatório",
                       minLength: {
                         value: 1,
                         message: "O nome deve ter mais de 1 caracteres",
@@ -352,16 +348,20 @@ export function CreateProduct(){
                   max={12}
                   maxLength={12}
                   aria-describedby="productWhatsApp"
-                  placeholder="Digite aqui"
+                  placeholder="(DDD)9XXXX-XXXX"
                   {...register("productWhatsApp", {
-                    required: "Informe um número p/ contato para continuar",
+                    required: "Campo Obrigatório",
                     minLength: {
-                      value: 11,
+                      value: 12,
                       message: "informe o DDD + Nº do celular",
                     },
                     maxLength: {
                       value: 12,
                       message: "informe apenas o DDD + Nº do celular",
+                    },
+                    pattern: {
+                      value: /^[0-9]+$/,
+                      message: "Por favor, apenas números",
                     },
                   })}
                   onChange={(e) =>
