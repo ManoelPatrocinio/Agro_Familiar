@@ -8,13 +8,12 @@ import {
 } from "phosphor-react";
 import { Link } from "react-router-dom";
 import { FormUserAccess } from "./FormUserAccess";
-import Logo from "../assets/images/Logo.png";
 import { MenuOfDashboard } from "./MenuOfDashboard";
 
-type Prop ={
-  type:("default"|"admin")
-}
-export function Menu_Sidebar({type}:Prop) {
+type Prop = {
+  type: "default" | "admin";
+};
+export function Menu_Sidebar({ type }: Prop) {
   return (
     <div className="md:hidden m-0 p-0">
       <button
@@ -165,8 +164,6 @@ export function Menu_Sidebar({type}:Prop) {
                   <option
                     value=""
                     className="flex items-end text-left text-lg text-palm-700 font-normal font-display  py-4 "
-
-                   
                   >
                     {" "}
                     Territórios

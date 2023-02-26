@@ -7,32 +7,31 @@ import { Carrousel } from "../../Components/Carrousel";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
+import { User } from "../../Types/user.type";
 import { useApiPost } from "../../hook/useApi";
 import { CheckLocalStorage } from "../../service/localStorage";
-import { User } from "../../Types/user.type";
 
-
-const InitialUserState:User = {
-  u_type:"customer",
+const InitialUserState: User = {
+  u_type: "customer",
   u_full_name: "",
   u_email: "",
   u_password: "",
-  u_president_name:"",
-  u_entity_name : "",
+  u_president_name: "",
+  u_entity_name: "",
   u_CNPJ_CPF: "",
-  u_UF:"",
-  u_city:"",
-  u_district:"",
-  u_street :"",
-  u_number :"",
-  u_main_contact :"",
-  u_secondary_contact:"",
+  u_UF: "",
+  u_city: "",
+  u_district: "",
+  u_street: "",
+  u_number: "",
+  u_main_contact: "",
+  u_secondary_contact: "",
 };
 
 export function RegisterEntity() {
-  const navigate = useNavigate()
-  const [FormData, setFormData] = useState<User>(InitialUserState); 
-  const [toggleForm, setToggleForm] = useState<"step1" | "step2">("step1");
+  const navigate = useNavigate();
+  const [FormData, setFormData] = useState<User>(InitialUserState);
+  const [toggleForm, setToggleForm] = useState<boolean>(false);
   const {
     register,
     formState: { errors },
@@ -43,29 +42,29 @@ export function RegisterEntity() {
     setFormData((inputValue) => ({ ...inputValue, ...newValue }));
   };
 
+  const formSubmit = async () => {
+    console.log("FormData", FormData);
+    if (FormData.u_type == "customer") {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Escolha o Tipo de Organização",
+      });
+    }
 
-    const formSubmit = async () => {
-      console.log("FormData", FormData);
-      
-        // const { apiResponse } = await useApiPost<User>("/register", FormData);
-        // if (apiResponse) {
-        //   Swal.fire({
-        //     icon: "success",
-        //     title: "Success !",
-        //     showConfirmButton: false,
-        //     timer: 1500,
-        //   });
-        // }
-        // CheckLocalStorage.setLoggedUser(apiResponse!);
-        // setTimeout(() => {
-        //   navigate("/")
-        // }, 2000);
- 
-        
-      
-    };
-  const validadeFormStep1 = () => {
-    setToggleForm("step2")
+    const { apiResponse } = await useApiPost<User>("/register", FormData);
+    if (apiResponse != null) {
+      Swal.fire({
+        icon: "success",
+        title: "Success !",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      CheckLocalStorage.setLoggedUser(apiResponse!);
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    }
   };
 
   return (
@@ -77,7 +76,7 @@ export function RegisterEntity() {
           title="Cadastro de Organização"
           className="my-6 w-full font-semibold md:font-normal"
         ></SectionTitle>
-        {toggleForm === "step1" ? (
+        {!toggleForm ? (
           <form className="w-full md:w-[80%] h-full md:border border-gray-200 rounded   md:py-10 md:p-10  md:mx-auto">
             <h3 className=" hidden md:block text-center text-sm md:text-lg text-palm-700 mb-2">
               Formulário de cadastro
@@ -135,60 +134,11 @@ export function RegisterEntity() {
                 </div>
               </div>
             </div>
-            <div className="form-group mb-6 ">
-              <label
-                htmlFor="registerPresidentName"
-                className="form-label inline-block mb-2 text-palm-700"
-              >
-                Nome do(a) Presidente{" "}
-                <span className="text-red-500 font-bold"> *</span>:
-              </label>
 
-              <input
-                type="text"
-                className="
-                  form-control
-                  w-full
-                  px-3
-                  py-1.5
-                  text-base
-                  text-gray-700
-                  bg-white bg-clip-padding
-                  border border-solid border-gray-300
-                  rounded
-                  transition
-                  ease-in-out
-                  m-0
-                  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                id="registerPresidentName"
-                aria-describedby="president Name"
-                placeholder="Nome Completo"
-                {...register("registerPresidentName", {
-                  required:
-                    "Informe o nome completo do(a) presitente(a) da organização para continuar",
-                  minLength: {
-                    value: 6,
-                    message: "Este campo deve ter mais de 6 caracteres",
-                  },
-                })}
-                onChange={(e) =>
-                  setValueFromFormInput({
-                    u_president_name: e.target.value,
-                  })
-                }
-              />
-              <ErrorMessage
-                errors={errors}
-                name="registerPresidentName"
-                render={({ message }) => (
-                  <small className="text-red-500 text-xs">{message}</small>
-                )}
-              />
-            </div>
             <div className="grid grid-col-2 md:grid-cols-2  md:gap-8">
               <div className="form-group mb-6">
                 <label
-                  htmlFor="RegisterEntityName"
+                  htmlFor="inputRegisterEntityName"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
                   Nome da Organização
@@ -210,11 +160,11 @@ export function RegisterEntity() {
                     ease-in-out
                     m-0
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  id="RegisterEntityName"
+                  id="inputRegisterEntityName"
                   aria-describedby="entityName"
                   placeholder="Digite aqui"
-                  {...register("RegisterEntityName", {
-                    required: "Informe o nome da Organização para continuar",
+                  {...register("inputRegisterEntityName", {
+                    required: "Campo obrigatório",
                     minLength: {
                       value: 6,
                       message: "Este campo deve ter mais de 6 caracteres",
@@ -228,7 +178,7 @@ export function RegisterEntity() {
                 />
                 <ErrorMessage
                   errors={errors}
-                  name="RegisterEntityName"
+                  name="inputRegisterEntityName"
                   render={({ message }) => (
                     <small className="text-red-500 text-xs">{message}</small>
                   )}
@@ -236,7 +186,7 @@ export function RegisterEntity() {
               </div>
               <div className="form-group mb-6">
                 <label
-                  htmlFor="registerEntityCnpj"
+                  htmlFor="inputRegisterEntityCnpj"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
                   CNPJ
@@ -259,12 +209,12 @@ export function RegisterEntity() {
                   ease-in-out
                   m-0
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  id="registerEntityCnpj"
+                  id="inputRegisterEntityCnpj"
                   aria-describedby="EntityCnpj"
-                  placeholder="Digite aqui"
-                  max={14}
-                  maxLength={14}
-                  {...register("registerEntityCnpj", {
+                  placeholder="XX.XXX.XXX/XXXX.XX"
+                  max={18}
+                  maxLength={18}
+                  {...register("inputRegisterEntityCnpj", {
                     required: "Informe um CNPJ válido para continuar",
                     minLength: {
                       value: 14,
@@ -279,17 +229,66 @@ export function RegisterEntity() {
                 />
                 <ErrorMessage
                   errors={errors}
-                  name="registerEntityCnpj"
+                  name="inputRegisterEntityCnpj"
                   render={({ message }) => (
                     <small className="text-red-500 text-xs">{message}</small>
                   )}
                 />
               </div>
             </div>
+            <div className="form-group mb-6 ">
+              <label
+                htmlFor="inputRegisterPresidentName"
+                className="form-label inline-block mb-2 text-palm-700"
+              >
+                Nome do(a) Presidente{" "}
+                <span className="text-red-500 font-bold"> *</span>:
+              </label>
+
+              <input
+                type="text"
+                className="
+                  form-control
+                  w-full
+                  px-3
+                  py-1.5
+                  text-base
+                  text-gray-700
+                  bg-white bg-clip-padding
+                  border border-solid border-gray-300
+                  rounded
+                  transition
+                  ease-in-out
+                  m-0
+                  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                id="inputRegisterPresidentName"
+                aria-describedby="president Name"
+                placeholder="Nome Completo"
+                {...register("inputRegisterPresidentName", {
+                  required: "Campo obrigatório",
+                  minLength: {
+                    value: 6,
+                    message: "Este campo deve ter mais de 6 caracteres",
+                  },
+                })}
+                onChange={(e) =>
+                  setValueFromFormInput({
+                    u_president_name: e.target.value,
+                  })
+                }
+              />
+              <ErrorMessage
+                errors={errors}
+                name="inputRegisterPresidentName"
+                render={({ message }) => (
+                  <small className="text-red-500 text-xs">{message}</small>
+                )}
+              />
+            </div>
             <div className="w-full flex flex-col md:flex-row items-center ">
               <div className="w-full md:w-[23%] md:mr-[3%] form-group mb-6">
                 <label
-                  htmlFor="entityCity"
+                  htmlFor="iputRegisterEntityCity"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
                   Cidade
@@ -311,10 +310,12 @@ export function RegisterEntity() {
                     ease-in-out
                     m-0
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  id="entityCity"
-                  aria-describedby="entityCity"
+                  id="iputRegisterEntityCity"
+                  maxLength={40}
+                  max={40}
+                  aria-describedby="entity City"
                   placeholder="Digite aqui"
-                  {...register("entityCity", {
+                  {...register("iputRegisterEntityCity", {
                     required: "Campo Obrigatório",
                     minLength: {
                       value: 3,
@@ -329,15 +330,15 @@ export function RegisterEntity() {
                 />
                 <ErrorMessage
                   errors={errors}
-                  name="entityCity"
+                  name="iputRegisterEntityCity"
                   render={({ message }) => (
                     <small className="text-red-500 text-xs">{message}</small>
                   )}
                 />
               </div>
-              <div className="w-full md:w-[22%] md:mr-[4%] form-group mb-6">
+              <div className="w-full md:w-[22%] min-w-[132px] md:mr-[4%] form-group mb-6">
                 <label
-                  htmlFor="entityDistrict"
+                  htmlFor="inputRegisterEntityDistrict"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
                   Bairro
@@ -360,9 +361,11 @@ export function RegisterEntity() {
                   ease-in-out
                   m-0
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  id="entityDistrict"
-                  aria-describedby="entityDistrict"
+                  id="inputRegisterEntityDistrict"
+                  aria-describedby="inputRegisterEntityDistrict"
                   placeholder="Digite aqui"
+                  max={40}
+                  maxLength={40}
                   onChange={(e) =>
                     setValueFromFormInput({
                       u_district: e.target.value,
@@ -372,7 +375,7 @@ export function RegisterEntity() {
               </div>
               <div className="w-full md:w-[30%]  form-group mb-6">
                 <label
-                  htmlFor="entityStreet"
+                  htmlFor="inputRegisterEntityStreet"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
                   Rua{" "}
@@ -395,9 +398,10 @@ export function RegisterEntity() {
                   ease-in-out
                   m-0
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  id="entityStreet"
-                  aria-describedby="entityStreet"
+                  id="inputRegisterEntityStreet"
                   placeholder="Digite aqui"
+                  max={70}
+                  maxLength={70}
                   onChange={(e) =>
                     setValueFromFormInput({
                       u_street: e.target.value,
@@ -407,9 +411,9 @@ export function RegisterEntity() {
               </div>
             </div>
             <div className="w-full flex flex-col md:flex-row items-center ">
-              <div className="w-full md:w-[23%] mr-[3%] form-group mb-6 ">
+              <div className="w-full md:w-[23%] md:mr-[3%] form-group mb-6 ">
                 <label
-                  htmlFor="entityNumber"
+                  htmlFor="inputRegisterEntityNumber"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
                   Número{" "}
@@ -431,13 +435,13 @@ export function RegisterEntity() {
                     ease-in-out
                     m-0
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  id="entityNumber"
-                  aria-describedby="emailHelp124"
-                  {...register("entityNumber", {
-                    required: "Campo Obrigatório",
-                    minLength: {
-                      value: 1,
-                      message: "Caracteres insuficiente",
+                  id="inputRegisterEntityNumber"
+                  max={6}
+                  maxLength={6}
+                  {...register("inputRegisterEntityNumber", {
+                    pattern: {
+                      value: /^[0-9]+$/,
+                      message: "Por favor, apenas números",
                     },
                   })}
                   onChange={(e) =>
@@ -448,7 +452,7 @@ export function RegisterEntity() {
                 />
                 <ErrorMessage
                   errors={errors}
-                  name="entityNumber"
+                  name="inputRegisterEntityNumber"
                   render={({ message }) => (
                     <small className="text-red-500 text-xs">{message}</small>
                   )}
@@ -456,7 +460,7 @@ export function RegisterEntity() {
               </div>
               <div className="w-full md:w-[23%] form-group mb-6 ">
                 <label
-                  htmlFor="selectUf"
+                  htmlFor="inputRegisterEntityUf"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
                   UF
@@ -480,9 +484,9 @@ export function RegisterEntity() {
                       m-0
                       focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     aria-label="select entity Uf"
-                    id="selectUf"
-                    {...register("productCategory", {
-                      required: "Informe a categoria do produto para continuar",
+                    id="inputRegisterEntityUf"
+                    {...register("inputRegisterEntityUf", {
+                      required: "Campo obrigatório",
                     })}
                     onChange={(e) =>
                       setValueFromFormInput({
@@ -521,7 +525,7 @@ export function RegisterEntity() {
                   </select>
                   <ErrorMessage
                     errors={errors}
-                    name="selectUf"
+                    name="inputRegisterEntityUf"
                     render={({ message }) => (
                       <small className="text-red-500 text-xs">{message}</small>
                     )}
@@ -530,17 +534,18 @@ export function RegisterEntity() {
               </div>
             </div>
             <div className="w-full flex flex-col md:flex-row items-center ">
-              <div className="w-full md:w-[23%] mr-[3%] form-group mb-6 ">
+              <div className="w-full md:w-[23%] md:mr-[3%] form-group mb-6 ">
                 <label
-                  htmlFor="entityMainphone"
+                  htmlFor="inputEntityMainPhone"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
-                  Nº Whatsapp 1
+                  Nº Whatsapp
                   <span className="text-red-500 font-bold"> *</span>:
                 </label>
                 <input
                   type="text"
-                  className="form-control  
+                  className=" input-number-arrow-hidden
+                  form-control  
                   w-full
                   px-3
                   py-1.5
@@ -554,15 +559,19 @@ export function RegisterEntity() {
                   ease-in-out
                   m-0
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  id="entityMainphone"
-                  aria-describedby="input  entity cellphone"
-                  max={15}
-                  maxLength={15}
-                  {...register("entityMainphone", {
+                  id="inputEntityMainPhone"
+                  max={12}
+                  maxLength={12}
+                  placeholder="(DDD) 9XXXX-XXXX"
+                  {...register("inputEntityMainPhone", {
                     required: "Campo Obrigatório",
                     minLength: {
                       value: 12,
                       message: "Números insuficiente",
+                    },
+                    pattern: {
+                      value: /^[0-9]+$/,
+                      message: "Por favor, apenas números",
                     },
                   })}
                   onChange={(e) =>
@@ -573,7 +582,7 @@ export function RegisterEntity() {
                 />
                 <ErrorMessage
                   errors={errors}
-                  name="entityMainphone"
+                  name="inputEntityMainPhone"
                   render={({ message }) => (
                     <small className="text-red-500 text-xs">{message}</small>
                   )}
@@ -581,7 +590,7 @@ export function RegisterEntity() {
               </div>
               <div className="w-full md:w-[23%] form-group mb-6 ">
                 <label
-                  htmlFor="entityphoneOP"
+                  htmlFor="inputRegisterEntitySecondaryPhone"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
                   Nº Whatsapp 2
@@ -590,30 +599,47 @@ export function RegisterEntity() {
                 <input
                   type="text"
                   className="form-control
-                  
-                  w-full
-               
-                  px-3
-                  py-1.5
-                  text-base
-                  font-normal
-                  text-gray-700
-                  bg-white bg-clip-padding
-                  border border-solid border-gray-300
-                  rounded
-                  transition
-                  ease-in-out
-                  m-0
-                  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  id="entityphoneOP"
-                  max={15}
-                  maxLength={15}
-                  aria-describedby="entityphone"
+                    input-number-arrow-hidden
+                    w-full
+                    px-3
+                    py-1.5
+                    text-base
+                    font-normal
+                    text-gray-700
+                    bg-white bg-clip-padding
+                    border border-solid border-gray-300
+                    rounded
+                    transition
+                    ease-in-out
+                    m-0
+                    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                  id="inputRegisterEntitySecondaryPhone"
+                  placeholder="(DDD) 9XXXX-XXXX"
+                  max={12}
+                  maxLength={12}
+                  aria-describedby="entity phone 2"
+                  {...register("inputRegisterEntitySecondaryPhone", {
+                    minLength: {
+                      value: 12,
+                      message: "Números insuficiente",
+                    },
+                    pattern: {
+                      value: /^[0-9]+$/,
+                      message: "Por favor, apenas números",
+                    },
+                  })}
                   onChange={(e) =>
                     setValueFromFormInput({
                       u_secondary_contact: e.target.value,
                     })
                   }
+                />
+                <ErrorMessage
+                  errors={errors}
+                  name="inputRegisterEntitySecondaryPhone"
+                  render={({ message }) => (
+                    <small className="text-red-500 text-xs">{message}</small>
+                  )}
                 />
               </div>
             </div>
@@ -640,7 +666,7 @@ export function RegisterEntity() {
                 transition
                 duration-150
                 ease-in-out"
-                onClick={handleSubmit(() => validadeFormStep1())}
+                onClick={handleSubmit(() => setToggleForm(!toggleForm))}
               >
                 Próximo
               </button>
@@ -653,24 +679,28 @@ export function RegisterEntity() {
             </p>
           </form>
         ) : (
-          <form className="w-full md:w-[70%] h-full md:border border-gray-200 rounded   md:py-10 md:p-10  md:mx-auto">
-            <h4 className="w-full text-center text-lg font-semibold text-palm-700 mb-6">
-              Crie sua conta
+          <form className="w-full md:w-[70%] h-full flex flex-col items-center  md:border border-gray-200 rounded   md:py-10 md:p-10  md:mx-auto">
+            <h4 className="w-full text-center text-lg font-semibold text-palm-700 mb-3">
+              Dados para acesso
             </h4>
+            <p className="w-full text-center text-sm text-gray-500 mb-6">
+              Lembre-se bem desses dados, eles serão necessários para acessar
+              sua contra neste Portal
+            </p>
             <div className="w-full mb-6">
               <label
-                htmlFor="userFullName"
+                htmlFor="inputRegisterUserFullName"
                 className="form-label inline-block text-sm mb-2 text-gray-700"
               >
-                Nome Completo
+                Nome do gestor da conta
               </label>
               <input
                 type="text"
-                id="userFullName"
+                id="inputRegisterUserFullName"
                 className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                 placeholder="Nome Completo"
-                {...register("userFullName", {
-                  required: "Informe seu nome completo para continuar",
+                {...register("inputRegisterUserFullName", {
+                  required: "Campo obrigatório",
                   minLength: {
                     value: 6,
                     message: "Este campo deve ter mais de 6 caracteres",
@@ -684,7 +714,7 @@ export function RegisterEntity() {
               />
               <ErrorMessage
                 errors={errors}
-                name="userFullName"
+                name="inputRegisterUserFullName"
                 render={({ message }) => (
                   <small className="text-red-500 text-xs">{message}</small>
                 )}
@@ -693,7 +723,7 @@ export function RegisterEntity() {
 
             <div className="w-full mb-6">
               <label
-                htmlFor="inputUserEmailLogin"
+                htmlFor="inputRegisterUserEmail"
                 className="form-label inline-block text-sm mb-2 text-gray-700"
               >
                 Seu E-mail
@@ -702,9 +732,9 @@ export function RegisterEntity() {
                 type="email"
                 className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                 placeholder="exemplo@gmail.com"
-                id="inputUserEmailLogin"
-                {...register("inputUserEmailLogin", {
-                  required: "Informe seu email para continuar",
+                id="inputRegisterUserEmail"
+                {...register("inputRegisterUserEmail", {
+                  required: "Campo obrigatório",
                   pattern: {
                     value: /\S+@\S+\.\S+/,
                     message: "Informe um e-mail válido",
@@ -722,16 +752,16 @@ export function RegisterEntity() {
               />
               <ErrorMessage
                 errors={errors}
-                name="inputUserEmailLogin"
+                name="inputRegisterUserEmail"
                 render={({ message }) => (
                   <small className="text-red-500 text-xs">{message}</small>
                 )}
               />
             </div>
 
-            <div className="mb-4">
+            <div className="w-full mb-4">
               <label
-                htmlFor="inputUserPasswordLogin"
+                htmlFor="inputRegisterUserPassword"
                 className="form-label inline-block text-sm mb-2 text-gray-700"
               >
                 Sua senha
@@ -740,10 +770,9 @@ export function RegisterEntity() {
                 type="password"
                 className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                 placeholder="******"
-                value=""
-                id="FormAccessUserPassword"
-                {...register("FormAccessUserPassword", {
-                  required: "Informe sua senha para continuar",
+                id="inputRegisterUserPassword"
+                {...register("inputRegisterUserPassword", {
+                  required: "Campo obrigatório",
                   minLength: {
                     value: 6,
                     message: "O senha deve ter no mínimo 6 caracteres",
@@ -757,7 +786,7 @@ export function RegisterEntity() {
               />
               <ErrorMessage
                 errors={errors}
-                name="inputUserPasswordLogin"
+                name="inputRegisterUserPassword"
                 render={({ message }) => (
                   <small className="text-red-500 text-xs">{message}</small>
                 )}
@@ -773,11 +802,17 @@ export function RegisterEntity() {
                 Cadastrar
               </button>
             </div>
-            <p className="w-full text-center text-sm text-gray-500 mt-3">
+            <p className="w-full text-center text-sm text-gray-500 my-3">
               {" "}
               Etapa <span className="text-palm-700 font-semibold"> 2 </span> de
               2
             </p>
+            <button
+              onClick={() => setToggleForm(!toggleForm)}
+              className="relative text-center text-sm text-gray-500 mx-auto"
+            >
+              Voltar
+            </button>
           </form>
         )}
       </main>

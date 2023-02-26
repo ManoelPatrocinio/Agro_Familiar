@@ -3,9 +3,9 @@ import { ClipboardText, MagnifyingGlass, User } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { User as UserType } from "../Types/user.type";
 import Logo from "../assets/images/Logo.png";
 import { CheckLocalStorage } from "../service/localStorage";
-import { User as UserType } from "../Types/user.type";
 import { FormUserAccess } from "./FormUserAccess";
 import { Menu_Sidebar } from "./Menu_Sidebar";
 import { PurchaseList } from "./PurchaseList";
@@ -33,7 +33,6 @@ export function Header() {
     });
   };
 
-  
   return (
     <header className="relative w-full px-5 md:px-14">
       <nav className="navbar py-2  bg-white relative flex items-end w-full justify-between">

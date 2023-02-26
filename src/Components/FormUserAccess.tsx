@@ -1,25 +1,25 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
+import { memo, useState } from "react";
+import { useForm } from "react-hook-form";
 
 import Swal from "sweetalert2";
+import { User } from "../Types/user.type";
 import { useApiPost } from "../hook/useApi";
 import { CheckLocalStorage } from "../service/localStorage";
-import { User } from "../Types/user.type";
 
 type FormProps = {
   type: "userLogin" | "userRegister";
 };
 
-const InitialUserState:User = {
-  u_type:"customer",
+const InitialUserState: User = {
+  u_type: "customer",
   u_full_name: "",
   u_email: "",
   u_password: "",
 };
-export function FormUserAccess({ type }: FormProps) {
+export const FormUserAccess = memo(({ type }: FormProps) => {
   const [userFormData, setUserFormData] = useState<User>(InitialUserState); //state for add new user
- const {
+  const {
     register,
     formState: { errors },
     handleSubmit,
@@ -29,13 +29,9 @@ export function FormUserAccess({ type }: FormProps) {
     setUserFormData((inputValue) => ({ ...inputValue, ...newValue }));
   };
 
-  const formSubmit = async(type: string) => {
-   
-    if (type === "userRegister"){
-      const { apiResponse } = await useApiPost<User>(
-        "/register",
-        userFormData
-      );
+  const formSubmit = async (type: string) => {
+    if (type === "userRegister") {
+      const { apiResponse } = await useApiPost<User>("/register", userFormData);
       if (apiResponse) {
         Swal.fire({
           icon: "success",
@@ -48,12 +44,8 @@ export function FormUserAccess({ type }: FormProps) {
       setTimeout(() => {
         window.location.reload();
       }, 2000);
-
-    }else if(type === "userLogin"){
-      const { apiResponse } = await useApiPost<User>(
-        "/login",
-        userFormData
-      );
+    } else if (type === "userLogin") {
+      const { apiResponse } = await useApiPost<User>("/login", userFormData);
       if (apiResponse) {
         Swal.fire({
           icon: "success",
@@ -64,11 +56,9 @@ export function FormUserAccess({ type }: FormProps) {
       }
       CheckLocalStorage.setLoggedUser(apiResponse!);
       setTimeout(() => {
-             window.location.reload();
+        window.location.reload();
       }, 2000);
     }
-
-
   };
   return (
     <>
@@ -80,17 +70,17 @@ export function FormUserAccess({ type }: FormProps) {
             </h4>
             <div className="w-full mb-6">
               <label
-                htmlFor="userFullName"
+                htmlFor="inputAccessUserFullName"
                 className="form-label inline-block text-sm mb-2 text-gray-700"
               >
                 Nome Completo
               </label>
               <input
                 type="text"
-                id="userFullName"
+                id="inputAccessUserFullName"
                 className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                 placeholder="Nome Completo"
-                {...register("userFullName", {
+                {...register("inputAccessUserFullName", {
                   required: "Informe seu nome completo para continuar",
                   minLength: {
                     value: 6,
@@ -105,7 +95,7 @@ export function FormUserAccess({ type }: FormProps) {
               />
               <ErrorMessage
                 errors={errors}
-                name="userFullName"
+                name="inputAccessUserFullName"
                 render={({ message }) => (
                   <small className="text-red-500 text-xs">{message}</small>
                 )}
@@ -120,7 +110,7 @@ export function FormUserAccess({ type }: FormProps) {
 
         <div className="w-full mb-6">
           <label
-            htmlFor="formAccessUserEmail"
+            htmlFor="inputFormAccessUserEmail"
             className="form-label inline-block text-sm mb-2 text-gray-700"
           >
             Seu E-mail
@@ -129,8 +119,8 @@ export function FormUserAccess({ type }: FormProps) {
             type="email"
             className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
             placeholder="exemplo@gmail.com"
-            id="formAccessUserEmail"
-            {...register("formAccessUserEmail", {
+            id="inputFormAccessUserEmail"
+            {...register("inputFormAccessUserEmail", {
               required: "Informe seu email para continuar",
               pattern: {
                 value: /\S+@\S+\.\S+/,
@@ -149,7 +139,7 @@ export function FormUserAccess({ type }: FormProps) {
           />
           <ErrorMessage
             errors={errors}
-            name="formAccessUserEmail"
+            name="inputFormAccessUserEmail"
             render={({ message }) => (
               <small className="text-red-500 text-xs">{message}</small>
             )}
@@ -158,7 +148,7 @@ export function FormUserAccess({ type }: FormProps) {
 
         <div className="mb-4">
           <label
-            htmlFor="FormAccessUserPassword"
+            htmlFor="inputFormAccessUserPassword"
             className="form-label inline-block text-sm mb-2 text-gray-700"
           >
             Sua senha
@@ -167,8 +157,9 @@ export function FormUserAccess({ type }: FormProps) {
             type="password"
             className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
             placeholder="******"
-            id="FormAccessUserPassword"
-            {...register("FormAccessUserPassword", {
+            id="inputFormAccessUserPassword"
+            autoComplete="on"
+            {...register("inputFormAccessUserPassword", {
               required: "Informe sua senha para continuar",
               minLength: {
                 value: 6,
@@ -183,7 +174,7 @@ export function FormUserAccess({ type }: FormProps) {
           />
           <ErrorMessage
             errors={errors}
-            name="FormAccessUserPassword"
+            name="inputFormAccessUserPassword"
             render={({ message }) => (
               <small className="text-red-500 text-xs">{message}</small>
             )}
@@ -284,4 +275,4 @@ export function FormUserAccess({ type }: FormProps) {
       </form>
     </>
   );
-}
+});

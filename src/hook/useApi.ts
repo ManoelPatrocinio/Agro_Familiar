@@ -36,8 +36,8 @@ export async function useApiPost<T = unknown>(url: string, data: unknown) {
         // http.ClientRequest no node.js
         Swal.fire({
           icon: "error",
-          title:
-            "A requisição foi feita mas nenhuma resposta foi recebida do servidor",
+          title:"Oppss",
+            text: "Não foi prossível realizar esse pedido, tente mais tarde",
           showConfirmButton: true,
         });
         //console.error(error.request);
