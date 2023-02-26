@@ -1,4 +1,3 @@
-import { Client } from "../Types/user.type";
 
 type User ={
     u_type ?: ("client" | "farmer" | "assoc" | "coop")
