@@ -327,9 +327,12 @@ export function ProductDetail() {
               <span className="text-xs md:text-xs text-gray-400">(202)</span>
             </div>
             <div className="w-full flex justify-center md:justify-start items-start text-base mb-4">
-              <span className=" text-lg text-green-600"> R$ 5,00</span>
+              <span className=" text-lg text-green-600">
+                {" "}
+                R$ {productData?.p_price}
+              </span>
               <span className=" text-lg text-gray-400 line-through ml-3 ">
-                R$ 5,67
+                R$ {productData?.p_old_price}
               </span>
             </div>
           </div>

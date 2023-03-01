@@ -72,7 +72,7 @@ export function CreateProduct() {
   const sendNewProduct = async () => {
     const data: any = new FormData();
     const priceFormated = prodData.p_price.replace(",", ".");
-    const oldPriceFormated = prodData.p_price.replace(",", ".");
+    const oldPriceFormated = prodData.p_old_price.replace(",", ".");
     // set all images on prop uploads
     filesData.forEach((file, index) => {
       data.append("uploads", file.file);
