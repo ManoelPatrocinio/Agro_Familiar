@@ -1,15 +1,43 @@
-import { User, UsersThree } from "phosphor-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 import { CardEntity } from "../../Components/CardEntity";
 import { Carrousel } from "../../Components/Carrousel";
 import { Dropdrown } from "../../Components/Dropdrown";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
-import iconEntityWhite from "../../assets/images/icone-entity-white.png";
+import { User as typeUser } from "../../Types/user.type";
 import iconFarmeWhite from "../../assets/images/icon-farmer-white.png";
+import iconEntityWhite from "../../assets/images/icone-entity-white.png";
+import { api } from "../../hook/useApi";
 
 export function Farmers() {
+  const [entityData, setEntityData] = useState<typeUser[]>();
+  const [filtedEntityList, setFiltedEntityList] = useState<
+    "farmer" | "coop" | "assoc"
+  >("farmer");
+
+  useEffect(() => {
+    api
+      .get("/all-entity")
+      .then((response) => {
+        setEntityData(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        Swal.fire({
+          icon: "error",
+          title: "Oppss",
+          text: "Desculpe, não foi possível  exibir os produtores da sua região.",
+        });
+      });
+  }, []);
+
+  function filtedEntity() {
+    return entityData?.filter((entity) => entity.u_type === filtedEntityList);
+  }
+
   return (
     <>
       <Header />
@@ -19,15 +47,13 @@ export function Farmers() {
         <Dropdrown items={["De A a Z", "De Z a A"]} />
 
         <div className="w-full flex flex-wrap justify-around ">
-          <CardEntity type="farmer" />
-          <CardEntity type="farmer" />
-          <CardEntity type="farmer" />
-          <CardEntity type="farmer" />
-          <CardEntity type="farmer" />
-          <CardEntity type="farmer" />
-          <CardEntity type="farmer" />
-          <CardEntity type="farmer" />
-          <CardEntity type="farmer" />
+          {filtedEntity() && (
+            <>
+              {filtedEntity()?.map((entity, index) => (
+                <CardEntity entity={entity} key={index} />
+              ))}
+            </>
+          )}
         </div>
         <div className="w-full  h-auto  bg-[url('https://i.ibb.co/2MRTyb9/banner-join-Us.jpg')] bg-no-repeat bg-[length:100%_100%] rounded">
           <div className="bg-[rgba(0,0,0,0.7)] w-full h-auto px-2 py-8 rounded ">

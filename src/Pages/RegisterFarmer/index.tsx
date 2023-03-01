@@ -152,7 +152,7 @@ export function RegisterFarmer() {
                   {...register("inputRegisterEntityCnpj", {
                     required: "Informe um CPF válido para continuar",
                     minLength: {
-                      value: 14,
+                      value: 11,
                       message: "Este campo deve ter pelo menos 14 caracteres",
                     },
                   })}
@@ -453,7 +453,7 @@ export function RegisterFarmer() {
                   {...register("inputEntityMainPhone", {
                     required: "Campo Obrigatório",
                     minLength: {
-                      value: 12,
+                      value: 11,
                       message: "Números insuficiente",
                     },
                     pattern: {

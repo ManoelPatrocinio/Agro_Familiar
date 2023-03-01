@@ -1,6 +1,6 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { Question } from "phosphor-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -9,8 +9,11 @@ import { ImgPreview } from "../../../Components/ImgPreview";
 import { MenuOfDashboard } from "../../../Components/MenuOfDashboard";
 import { Menu_Sidebar } from "../../../Components/Menu_Sidebar";
 import { FileUploaded } from "../../../Types/fileUploaded.types";
+import { Product } from "../../../Types/product.type";
+import { User } from "../../../Types/user.type";
 import Logo from "../../../assets/images/Logo.png";
 import { useApiPost } from "../../../hook/useApi";
+import { CheckLocalStorage } from "../../../service/localStorage";
 
 const InitialProductState = {
   id: "",
@@ -19,6 +22,7 @@ const InitialProductState = {
   p_category: "",
   p_price: "",
   p_old_price: "",
+  p_stock: 0,
   p_raiting: 0,
   p_n_contact: "",
   p_description: "",
@@ -28,13 +32,16 @@ export function CreateProduct() {
   //************* start pre config from register form *************
   const [prodData, setProductData] = useState(InitialProductState); //state for add new user
   const [filesData, setFileData] = useState<FileUploaded[]>([]);
-  let filesArray: FileUploaded[] = [];
-
+  const [userStatus, setUserStatus] = useState<User | null>(null);
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
+
+  useEffect(() => {
+    setUserStatus(CheckLocalStorage.getLoggedUser());
+  }, []);
 
   //function for add value input on state
   const setValueFromFormInput = (newValue: any) => {
@@ -42,7 +49,7 @@ export function CreateProduct() {
   };
   //receive the file from dropzone component and set news props to display on other component ex: ImgPreview
   const handleUpload = (files: FileUploaded[]) => {
-    const uploadedFiles = files.map((file) => ({
+    const uploadedFiles = files.map((file, index) => ({
       file,
       name: file.name,
       preview: file.preview,
@@ -58,38 +65,45 @@ export function CreateProduct() {
     setProductData(InitialProductState);
     setFileData([]);
   }
-  const handleDelete = (id: string) => {
-    return setFileData(filesData.filter((file) => file.id !== id));
+  const handleDelete = (name: string) => {
+    return setFileData(filesData.filter((file) => file.name !== name));
   };
 
   const sendNewProduct = async () => {
     const data: any = new FormData();
-
+    const priceFormated = prodData.p_price.replace(",", ".");
+    const oldPriceFormated = prodData.p_price.replace(",", ".");
     // set all images on prop uploads
     filesData.forEach((file, index) => {
       data.append("uploads", file.file);
     });
+    data.append("farmer_id", userStatus?._id);
     data.append("p_name", prodData.p_name);
     data.append("p_category", prodData.p_category);
-    data.append("p_price", prodData.p_price);
-    data.append("p_old_price", prodData.p_old_price);
+    data.append("p_price", priceFormated);
+    data.append("p_old_price", oldPriceFormated);
     data.append("p_n_contact", prodData.p_n_contact);
     data.append("p_description", prodData.p_description);
 
-    console.log("filesArray", filesArray);
-    console.log("filesData", filesData);
+    const { apiResponse } = await useApiPost<Product>(
+      "upload-files/image",
+      data
+    );
 
-    const { apiResponse } = await useApiPost<any>("upload-files/image", data);
-
-    if (apiResponse) {
+    if (apiResponse != null) {
       Swal.fire({
         icon: "success",
         title: "Success !",
         showConfirmButton: false,
         timer: 1500,
       });
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     }
   };
+  console.log("filesData", filesData);
+
   return (
     <>
       {" "}
@@ -199,10 +213,9 @@ export function CreateProduct() {
                   >
                     <option value="">Selecione</option>
                     <optgroup label="Agricultura">
-                      <option value="Milho">Milho</option>
-                      <option value="Feijão">Feijão</option>
+                      <option value="Feijão">Grãos</option>
                       <option value="Mandioca">Mandioca</option>
-                      <option value="Hotaliças">Hotaliças</option>
+                      <option value="Hotaliças">Hortaliças</option>
                       <option value="Frutas">Frutas</option>
                     </optgroup>
                     <optgroup label="Deriados">
@@ -233,8 +246,8 @@ export function CreateProduct() {
               </div>
             </div>
             <div className="w-full flex flex-col md:flex-row items-center ">
-              <div className="w-full md:w-1/2 flex flex-col md:flex-row items-center ">
-                <div className="w-full md:w-[33%] md:mr-[15%] form-group mb-6">
+              <div className="w-full md:w-1/2 flex flex-col md:flex-row items-center md:justify-between ">
+                <div className="w-full md:w-[33%]  form-group mb-6">
                   <label
                     htmlFor="productPrice"
                     className="form-label inline-block mb-2 text-palm-700 mr-3"
@@ -243,7 +256,7 @@ export function CreateProduct() {
                     <span className="text-red-500 font-bold"> *</span>:
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     className="form-control
                     
                         w-full
@@ -265,9 +278,8 @@ export function CreateProduct() {
                       required: "Campo Obrigatório",
                       minLength: {
                         value: 1,
-                        message: "O nome deve ter mais de 1 caracteres",
+                        message: "o Preço deve ter mais de 1 caractere",
                       },
-                      maxLength: 10,
                     })}
                     onChange={(e) =>
                       setValueFromFormInput({
@@ -292,21 +304,21 @@ export function CreateProduct() {
                     <span className=" text-xs text-gray-400"></span>:
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     className="form-control
-                  block
-                  w-full
-                  px-3
-                  py-1.5
-                  text-base
-                  font-normal
-                  text-gray-700
-                  bg-white bg-clip-padding
-                  border border-solid border-gray-300
-                  rounded
-                  transition
-                  ease-in-out
-                  m-0
+                      block
+                      w-full
+                      px-3
+                      py-1.5
+                      text-base
+                      font-normal
+                      text-gray-700
+                      bg-white bg-clip-padding
+                      border border-solid border-gray-300
+                      rounded
+                      transition
+                      ease-in-out
+                      m-0
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     id="entityCnpj"
                     aria-describedby="productOldPrice"
@@ -314,6 +326,40 @@ export function CreateProduct() {
                     onChange={(e) =>
                       setValueFromFormInput({
                         p_old_price: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div className="w-full md:w-[25%]  form-group mb-6">
+                  <label
+                    htmlFor="productOldPrice"
+                    className="form-label inline-block mb-2 text-palm-700 mr-3"
+                  >
+                    Etoque
+                    <span className=" text-xs text-gray-400"></span>:
+                  </label>
+                  <input
+                    type="number"
+                    className="form-control
+                      block
+                      w-full
+                      px-3
+                      py-1.5
+                      text-base
+                      font-normal
+                      text-gray-700
+                      bg-white bg-clip-padding
+                      border border-solid border-gray-300
+                      rounded
+                      transition
+                      ease-in-out
+                      m-0
+                  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                    id="entityCnpj"
+                    aria-describedby="productOldPrice"
+                    onChange={(e) =>
+                      setValueFromFormInput({
+                        p_stock: e.target.value,
                       })
                     }
                   />
@@ -328,7 +374,7 @@ export function CreateProduct() {
                   <span className="text-red-500 font-bold"> *</span>:
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   className="form-control
                   block
                   w-full
@@ -352,7 +398,7 @@ export function CreateProduct() {
                   {...register("productWhatsApp", {
                     required: "Campo Obrigatório",
                     minLength: {
-                      value: 12,
+                      value: 11,
                       message: "informe o DDD + Nº do celular",
                     },
                     maxLength: {
@@ -441,7 +487,7 @@ export function CreateProduct() {
                 terão desse produto{" "}
               </p>
 
-              <div className="w-full flex flex-col md:flex-row justify-start items-center">
+              <div className="w-full flex flex-col md:flex-row justify-start items-center mb-4">
                 {filesData.map((item, index) => (
                   <ImgPreview
                     key={index}

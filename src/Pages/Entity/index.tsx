@@ -1,18 +1,48 @@
 import { DotsThreeVertical, Funnel } from "phosphor-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 import { CardProduct } from "../../Components/CardProduct";
 import { Dropdrown } from "../../Components/Dropdrown";
 import { Filter_category } from "../../Components/Filter_category";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
+import { Product } from "../../Types/product.type";
+import { User } from "../../Types/user.type";
 import entity_profile from "../../assets/images/img_entity_profile_exemple.png";
 import header_background from "../../assets/images/img_header_exemple.png";
 import Star from "../../assets/images/star_icon.png";
+import { api } from "../../hook/useApi";
 
 export function Entity() {
+  const [productData, setProductData] = useState<Product[]>();
+  const [entityData, setEntityData] = useState<User>();
+
   const [toggleFilterVisibility, SetToggleFilterVisibility] =
     useState<boolean>(false);
+
+  const { userId } = useParams();
+
+  useEffect(() => {
+    api
+      .get(`/all-products/${userId}`)
+      .then((response) => {
+        // console.log("response.data", response.data);
+        setEntityData(response.data.entity[0]);
+        setProductData(response.data.products);
+
+        // setProductData(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        Swal.fire({
+          icon: "error",
+          title: "Oppss",
+          text: "Desculpe, não foi possível  exibir as organizações da sua região.",
+        });
+      });
+  }, []);
+  // console.log("productDatacdcs", productData.entity[0].u_city);
 
   return (
     <>
@@ -33,15 +63,16 @@ export function Entity() {
               />
             </div>
             <div className="flex flex-col items-center md:items-start justify-evenly px-4 pb-4">
-              <h4 className="text-sm md:text-lg text-center md:text-left text-gray-800 font-display font-semibold">
+              <h4 className="text-sm md:text-lg text-center md:text-left text-palm-700 font-display font-semibold md:mb-2">
                 {" "}
-                Associação dos Produtores Rurais do Pau D´arco
-              </h4>
-              <p className="text-xs md:text-sm text-gray-400 font-semibold">
+                {entityData?.u_entity_name
+                  ? entityData?.u_entity_name
+                  : entityData?.u_full_name}
+              </h4>{" "}
+              <p className="text-xs md:text-sm text-gray-400 font-semibold md:mb-2">
                 {" "}
-                Pau D´arco
+                {entityData?.u_city}
               </p>
-
               <div className="flex w-1/4 items-center justify-start">
                 <span className="text-xs md:text-sm text-gray-400"> 4.6 </span>
                 <img
@@ -193,14 +224,9 @@ export function Entity() {
               </button>
             </div>
             <div className="w-full flex flex-wrap justify-around mt-4">
-              <CardProduct />
-              <CardProduct />
-              <CardProduct />
-              <CardProduct />
-              <CardProduct />
-              <CardProduct />
-              <CardProduct />
-              <CardProduct />
+              {productData?.map((product, index) => (
+                <CardProduct product={product} key={index} />
+              ))}
             </div>
           </div>
         </div>

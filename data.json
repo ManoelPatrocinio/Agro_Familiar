@@ -2,78 +2,25 @@
     "TABLE ": "tabela de produtos ",
     "id":"61dc8bb4f2616b1f289a4c74",
     "farmer_id":"61dc8bb4f2616b1f289a4c73",
-    "p_name":"arroz",
-    "p_categoey":"grãos",
+    "p_name":"Maço de Coentro fresco",
+    "p_categoey":"",
     "p_price":"3.00",
     "p_old_price":"3.54",
     "p_raiting": 4,
     "p_n_contact":"74988748381",
-    "p_description":"saca de arroz de 50 kilos",
+    "p_description":"Maço de Coentro cultivados e colhidos toda manhã na cumunidade do pau d`arco.É adotoda a prático de cultuvo tradicional sem a adição de produtos químico",
     "p_main_image":"http://portalbackend/ims/products/image.jpg",
     "p_optional_images":{
         "p_image_2":"http://portalbackend/ims/products/image.jpg",
         "p_image_3":"http://portalbackend/ims/products/image.jpg",
         "p_image_4":"http://portalbackend/ims/products/image.jpg"
-    }
-
-
-}
-
-
-{
-    "TABLE ": "table de produtor individual ",
-    "id":"61dc8bb4f2616b1f289a4c74",
-    "f_email": "paulo@gmail.com",
-    "f_password":"12345",
-    "f_full_name":"Paulo luiz",
-    "f_CPF":"98987865645",
-    "c_addrees":{
-        "c_UF":"BA",
-        "c_city":"Barra",
-        "c_district":"centro",
-        "c_street":"rua castelo branco",
-        "c_number": "4",
     },
-    "f_main_contact":"74988748381",
-    "f_secondary_contact":"74988748381",
-   
-}
-{
-    "TABLE ": "table de cliente ",
-    "id":"61dc8bb4f2616b1f289a4c74",
-    "C_name":"Paulo luiz",
-    "C_email": "paulo@gmail.com",
-    "C_password":"12345",
-    "c_addrees":{
-        "c_UF":"BA",
-        "c_city":"Barra",
-        "c_district":"centro",
-        "c_street":"rua castelo branco",
-        "c_number": "4",
-    },
+
+    "p_name":"Bandeija de tomado de ilha - 1Kl",
+    "p_description":"Bandeija de tomado de ilha, cultivado e colhidos toda manhã nas ilhas paulistas. É adotoda a prático de cultuvo tradicional sem a adição de produtos químico",
+
+     "p_name":"Maço de Alface",
+     "p_description":"Alface cultivado e colhidos toda manhã na cumunidade do pau d`arco. É adotoda a prático de cultuvo tradicional sem a adição de produtos químico",
     
-    "e_main_contact":"74988748381",
-    "e_secondary_contact":"74988748381",
-   
 }
 
-{
-    "TABLE ": "table de entidade coop/ assoc ",
-    "id":"61dc8bb4f2616b1f289a4c74",
-    "user_type": "assoc/coop",
-    "e_email": "paulo@gmail.com",
-    "e_password":"12345",
-    "e_president_name":"Paulo luiz",
-    "e_entity_name":"Associação dos Produtores Rurais do Pau D´arco",
-    "e_CNPJ":"98987865645",
-    "c_addrees":{
-        "c_UF":"BA",
-        "c_city":"Barra",
-        "c_district":"centro",
-        "c_street":"rua castelo branco",
-        "c_number": "4",
-    },
-    "e_main_contact":"74988748381",
-    "e_secondary_contact":"74988748381",
-   
-}

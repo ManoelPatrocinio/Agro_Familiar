@@ -1,13 +1,43 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 import { CardEntity } from "../../Components/CardEntity";
 import { Carrousel } from "../../Components/Carrousel";
 import { Dropdrown } from "../../Components/Dropdrown";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
-import iconEntityWhite from "../../assets/images/icone-entity-white.png";
+import { User } from "../../Types/user.type";
 import iconFarmeWhite from "../../assets/images/icon-farmer-white.png";
+import iconEntityWhite from "../../assets/images/icone-entity-white.png";
+import { api } from "../../hook/useApi";
+
 export function Entities() {
+  const [entityData, setEntityData] = useState<User[]>();
+  const [filtedEntityList, setFiltedEntityList] = useState<
+    "farmer" | "coop" | "assoc"
+  >("assoc");
+
+  useEffect(() => {
+    api
+      .get("/all-entity")
+      .then((response) => {
+        setEntityData(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        Swal.fire({
+          icon: "error",
+          title: "Oppss",
+          text: "Desculpe, não foi possível  exibir as organizações da sua região.",
+        });
+      });
+  }, []);
+
+  function filtedEntity() {
+    return entityData?.filter((entity) => entity.u_type === filtedEntityList);
+  }
+
   return (
     <>
       <Header />
@@ -16,28 +46,35 @@ export function Entities() {
         <SectionTitle title="Entidades" className={"my-6 w-full"} />
 
         <div className="w-full flex justify-around py-3 ">
-          <h4 className="mx-2 md:mx-0 text-sm md:text-lg font-display text-center text-gray-800">
+          <button
+            onClick={() => setFiltedEntityList("assoc")}
+            className="mx-2 md:mx-0 text-sm md:text-lg font-display text-center text-gray-800"
+          >
             Associações
-          </h4>
-          <h4 className="mx-2 md:mx-0 text-sm md:text-lg font-display text-center text-gray-800">
+          </button>
+          <button
+            onClick={() => setFiltedEntityList("farmer")}
+            className="mx-2 md:mx-0 text-sm md:text-lg font-display text-center text-gray-800"
+          >
             Produtores Individuais
-          </h4>
-          <h4 className="mx-2 md:mx-0 text-sm md:text-lg font-display text-center text-gray-800">
+          </button>
+          <button
+            onClick={() => setFiltedEntityList("coop")}
+            className="mx-2 md:mx-0 text-sm md:text-lg font-display text-center text-gray-800"
+          >
             Cooperativas
-          </h4>
+          </button>
         </div>
         <Dropdrown items={["De A a Z", "De Z a A"]} />
 
         <div className="w-full flex flex-wrap justify-around ">
-          <CardEntity type="entity" />
-          <CardEntity type="entity" />
-          <CardEntity type="entity" />
-          <CardEntity type="entity" />
-          <CardEntity type="entity" />
-          <CardEntity type="entity" />
-          <CardEntity type="entity" />
-          <CardEntity type="entity" />
-          <CardEntity type="entity" />
+          {filtedEntity() && (
+            <>
+              {filtedEntity()?.map((entity, index) => (
+                <CardEntity entity={entity} key={index} />
+              ))}
+            </>
+          )}
         </div>
         <div className="w-full  h-auto  bg-[url('https://i.ibb.co/2MRTyb9/banner-join-Us.jpg')] bg-no-repeat bg-[length:100%_100%] rounded">
           <div className="bg-[rgba(0,0,0,0.7)] w-full h-auto px-2 py-8 rounded ">
@@ -82,7 +119,6 @@ export function Entities() {
                   Cadastro como Produtor Individual
                 </span>
               </Link>
-              
             </div>
           </div>
         </div>

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Funnel } from "phosphor-react";
+import Swal from "sweetalert2";
 import { CardProduct } from "../../Components/CardProduct";
 import { Carrousel } from "../../Components/Carrousel";
 import { Dropdrown } from "../../Components/Dropdrown";
@@ -8,10 +9,32 @@ import { Filter_category } from "../../Components/Filter_category";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
+import { Product } from "../../Types/product.type";
+import { api } from "../../hook/useApi";
 
 export function Products() {
   const [toggleFilterVisibility, SetToggleFilterVisibility] =
     useState<boolean>(false);
+
+  const [productData, setProductData] = useState<Product[]>();
+
+  useEffect(() => {
+    api
+      .get("/all-products")
+      .then((response) => {
+        console.log("response.data", response.data);
+        setProductData(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        Swal.fire({
+          icon: "error",
+          title: "Oppss",
+          text: "Desculpe, não foi possível  exibir as informações do produto.",
+        });
+      });
+  }, []);
+
   return (
     <>
       <Header />
@@ -40,14 +63,9 @@ export function Products() {
               </button>
             </div>
             <div className="w-full flex flex-wrap justify-around mt-4">
-              <CardProduct />
-              <CardProduct />
-              <CardProduct />
-              <CardProduct />
-              <CardProduct />
-              <CardProduct />
-              <CardProduct />
-              <CardProduct />
+              {productData?.map((product, index) => (
+                <CardProduct product={product} key={index} />
+              ))}
             </div>
           </div>
         </div>

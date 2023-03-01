@@ -20,10 +20,10 @@ export const SystemRoutes = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/Entities" element={<Entities />} />
-        <Route path="/Entity" element={<Entity />} />
+        <Route path="/my-shop/:userId" element={<Entity />} />
         <Route path="/Entity-info" element={<InfoEntity />} />
         <Route path="/Products" element={<Products />} />
-        <Route path="/Product-detail" element={<ProductDetail />} />
+        <Route path="/Product-detail/:productId" element={<ProductDetail />} />
         <Route path="/Farmers" element={<Farmers />} />
         <Route path="/AboutUs" element={<AboutUs />} />
         <Route path="/ContactUs" element={<ContactUs />} />
@@ -31,7 +31,7 @@ export const SystemRoutes = () => {
         <Route path="/Register-farmer" element={<RegisterFarmer />} />
         <Route path="/WaitPage" element={<WaitPage />} />
         <Route path="/Admin/create-product" element={<CreateProduct />} />
-        <Route path="/Admin/manage-product" element={<ManageProducts   />} />
+        <Route path="/Admin/manage-product" element={<ManageProducts />} />
         {/* <Route path="/login" element={<Login/>} />
             <Route path="/register" element={<Register/>} />
    */}

@@ -10,7 +10,7 @@ export const CheckLocalStorage = {
 
     // Função para salvar o usuário logado no local storage
     setLoggedUser(data:User){
-        let parsedData = JSON.stringify(data)
+        let parsedData =  JSON.stringify(data)
         localStorage.setItem("user", parsedData)
     },
 

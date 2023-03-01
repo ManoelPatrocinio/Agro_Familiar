@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 import { CardProduct } from "../../Components/CardProduct";
 import { Carrousel } from "../../Components/Carrousel";
 import { Dropdrown } from "../../Components/Dropdrown";
@@ -5,9 +7,29 @@ import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { ModalRegister } from "../../Components/ModalRegister";
 import { SectionTitle } from "../../Components/SectionTitle";
-import imgHomePromation1 from "../../assets/images/header_slide_2.jpg"
+import { Product } from "../../Types/product.type";
+import { api } from "../../hook/useApi";
 
 export function Home() {
+  const [productData, setProductData] = useState<Product[]>();
+
+  useEffect(() => {
+    api
+      .get("/all-products")
+      .then((response) => {
+        console.log("response.data", response.data);
+        setProductData(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        Swal.fire({
+          icon: "error",
+          title: "Oppss",
+          text: "Desculpe, não foi possível  exibir as informações do produto.",
+        });
+      });
+  }, []);
+
   return (
     <>
       <Header />
@@ -19,14 +41,9 @@ export function Home() {
           items={["Menor Preço", "Maior Preço", "De A a Z", "De Z a A"]}
         />
         <div className="w-full flex flex-wrap justify-around pt-4 px-0 ">
-          <CardProduct />
-          <CardProduct />
-          <CardProduct />
-          <CardProduct />
-          <CardProduct />
-          <CardProduct />
-          <CardProduct />
-          <CardProduct />
+          {productData?.map((product, index) => (
+            <CardProduct product={product} key={index} />
+          ))}
         </div>
         <div className="w-full  h-48 md:h-80 flex md:flex-col md:justify-center  items-end md:items-start bg-homePromotional-1 bg-no-repeat bg-[length:100%_100%] rounded">
           <div className="w-full md:w-1/2 md:ml-8 p-2 md:p-0 ">
@@ -37,8 +54,8 @@ export function Home() {
               Encontre aqui os principais produtores da sua região.{" "}
             </p>
             <p className="w-[80%] text-left text-xs md:text-md  text-white md:leading-8 font-semibold drop-shadow-xl">
-              Além de informações e contato direto, para negociar preço e entrega. Tudo
-              rápido, fácil e gratuito !
+              Além de informações e contato direto, para negociar preço e
+              entrega. Tudo rápido, fácil e gratuito !
             </p>
           </div>
         </div>

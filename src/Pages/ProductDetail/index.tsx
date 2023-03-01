@@ -1,17 +1,42 @@
+import classNames from "classnames";
 import { WhatsappLogo } from "phosphor-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 import { Carrousel } from "../../Components/Carrousel";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { IconAddList } from "../../Components/IconAddList";
 import { SectionTitle } from "../../Components/SectionTitle";
+import { Product } from "../../Types/product.type";
 import Star from "../../assets/images/star_icon.png";
+import { api } from "../../hook/useApi";
 
 export function ProductDetail() {
+  const { productId } = useParams();
   const [productQTD, setProductQTD] = useState<number>(1);
+  const [productData, setProductData] = useState<Product>();
+
   const [viewProdDetail, setViewProdDetail] = useState<
     "description" | "reviews"
   >("description");
+
+  useEffect(() => {
+    api
+      .get(`/product/${productId}`)
+      .then((response) => {
+        console.log("response.data", response.data[0]);
+        setProductData(response.data[0]);
+      })
+      .catch((error) => {
+        console.error(error);
+        Swal.fire({
+          icon: "error",
+          title: "Oppss",
+          text: "Desculpe, não foi possível  exibir as informações do produto.",
+        });
+      });
+  }, []);
 
   const hendleQuantityIncrement = (item: any) => {
     alert("Sorry, ainda em construção");
@@ -221,12 +246,14 @@ export function ProductDetail() {
       <h4 className="w-full text-start  text-md text-palm-700 mb-8">
         Descrição do Produto{" "}
       </h4>
-      <p className="w-full text-justify text-sm text-gray-800">
-        Produto fresco e bem cuidado, retirado assim que a compra é confirmada.
+      <p className="w-full text-justify text-sm text-gray-700">
+        {/* Produto fresco e bem cuidado, retirado assim que a compra é confirmada.
         plantado na roça de seu Zé Borges Com disponibilidade de entrega a cada
         semana, a partir de terça-feira Conseguimos atender até uma demanda de
         200 maços por semana A depender da quantidade podemos entregar em sua
-        casa se morar na mesma cidade.
+        casa se morar na mesma cidade. */}
+
+        {productData?.p_description}
       </p>
     </div>
   );
@@ -235,10 +262,7 @@ export function ProductDetail() {
     <>
       <Header />
       <Carrousel />
-      <SectionTitle
-        title={"Associação dos Produtores Rurais do Pau D´arco"}
-        className={"my-10"}
-      />
+      <SectionTitle title={productData?.farmer_id!} className={"my-10"} />
       <main className="w-full h-full md:h-[22rem]  flex flex-col md:flex-row px-4 md:px-20">
         <div
           id="carouselProductImg"
@@ -247,27 +271,21 @@ export function ProductDetail() {
           data-bs-interval="false"
         >
           <div className="carousel-inner relative w-full h-full overflow-hidden rounded">
-            <div className="carousel-item active float-left w-full h-full">
-              <img
-                src="https://mdbcdn.b-cdn.net/img/new/slides/041.webp"
-                className="block w-full h-full"
-                alt="Wild Landscape"
-              />
-            </div>
-            <div className="carousel-item float-left w-full h-full">
-              <img
-                src="https://mdbcdn.b-cdn.net/img/new/slides/042.webp"
-                className="block w-full h-full"
-                alt="Camera"
-              />
-            </div>
-            <div className="carousel-item float-left w-full h-full">
-              <img
-                src="https://mdbcdn.b-cdn.net/img/new/slides/043.webp"
-                className="block w-full h-full"
-                alt="Exotic Fruits"
-              />
-            </div>
+            {productData?.p_images?.map((img, index) => (
+              <div
+                className={classNames("carousel-item float-left h-full", {
+                  "active  w-full": index === 0,
+                  " w-full": index != 0,
+                })}
+                key={index}
+              >
+                <img
+                  src={img}
+                  className="block w-full h-full"
+                  alt="imagem do produto"
+                />
+              </div>
+            ))}
           </div>
           <button
             className="carousel-control-prev absolute top-0 bottom-0 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline left-0"
@@ -298,7 +316,7 @@ export function ProductDetail() {
         <div className="w-full md:w-1/2 h-100 pt-4 md:pt-0 md:pl-8 md:pr-20">
           <div className="w-full flex flex-col items-center md:items-start ">
             <h2 className="w-full text-center md:text-start text-palm-700 text-lg md:text-xl font-medium mb-1 ">
-              Maço de ruculo
+              {productData?.p_name}
             </h2>
             <div className="flex w-1/4 items-center justify-center md:justify-start mb-6">
               <span className="text-sm text-gray-400"> 4.6 </span>
@@ -351,13 +369,14 @@ export function ProductDetail() {
                 Adicionar a lista
               </button>
             </div>
-            <button
-              type="button"
+            <a
+              href={`http://api.whatsapp.com/send?l=pt_BR&phone=+${productData?.p_n_contact}&text=Olá jú ! Eu Tenho interesse no produto: ${productData?.p_name}, de preço: ${productData?.p_price} reais. Ainda estar disponível ?`}
+              target="_blank"
               className="w-full flex justify-center items-center px-2 py-2.5 bg-green-600 text-white  text-sm leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out"
             >
               <WhatsappLogo size={32} color="#fff" />
               Conversar
-            </button>
+            </a>
           </div>
         </div>
       </main>
