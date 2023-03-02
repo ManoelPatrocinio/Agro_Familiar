@@ -82,6 +82,7 @@ export function CreateProduct() {
     data.append("p_category", prodData.p_category);
     data.append("p_price", priceFormated);
     data.append("p_old_price", oldPriceFormated);
+    data.append("p_stock", prodData.p_stock);
     data.append("p_n_contact", prodData.p_n_contact);
     data.append("p_description", prodData.p_description);
 

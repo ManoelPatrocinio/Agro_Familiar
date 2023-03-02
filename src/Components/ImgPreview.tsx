@@ -24,10 +24,13 @@ export function ImgPreview({ filesUploaded, deleteFile }: Props) {
         Excluir
       </button> */}
 
-      <div className="absolute bottom-0 left-0 w-full h-full flex flex-col items-center justify-center bg-black opacity-0 hover:opacity-80 rounded">
+      <div
+        className="absolute bottom-0 left-0 w-full h-full flex flex-col items-center justify-center bg-black opacity-0 hover:opacity-80 rounded transition
+          ease-in-out animation animate-spin"
+      >
         <button
           onClick={() => deleteFile(filesUploaded.name!)}
-          className="text-sm text-center font-semibold text-palm-700 flex flex-col items-center justify-center "
+          className="text-sm text-center font-semibold text-palm-700 flex flex-col items-center justify-center   "
         >
           <Trash size={42} color="#789B3D" weight="light" />
           Excluir

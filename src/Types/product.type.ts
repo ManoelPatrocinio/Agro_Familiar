@@ -6,7 +6,7 @@ export type Product = {
     p_category?: string;
     p_price?: number;
     p_old_price?: number;
-    p_stokc?: number;
+    p_stock?: number;
     p_raiting?:  number;
     p_n_contact?: string;
     p_description?: string;

@@ -26,6 +26,9 @@ export function CardEntity({ entity }: Props) {
           >
             {entity.u_full_name}
           </Link>
+          <span className="w-full text-center text-gray-400 font-sans text-xs pt-2 pb-4">
+            {entity.u_city}
+          </span>
         </>
       ) : (
         <>

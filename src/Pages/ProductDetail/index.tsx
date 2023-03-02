@@ -240,7 +240,6 @@ export function ProductDetail() {
       </div>
     </div>
   );
-
   const description = (
     <div className="w-full">
       <h4 className="w-full text-start  text-md text-palm-700 mb-8">
@@ -251,13 +250,14 @@ export function ProductDetail() {
         plantado na roça de seu Zé Borges Com disponibilidade de entrega a cada
         semana, a partir de terça-feira Conseguimos atender até uma demanda de
         200 maços por semana A depender da quantidade podemos entregar em sua
-        casa se morar na mesma cidade. */}
+      casa se morar na mesma cidade. */}
 
         {productData?.p_description}
       </p>
     </div>
   );
 
+  console.log("productData", productData);
   return (
     <>
       <Header />
@@ -313,20 +313,28 @@ export function ProductDetail() {
           </button>
         </div>
 
-        <div className="w-full md:w-1/2 h-100 pt-4 md:pt-0 md:pl-8 md:pr-20">
-          <div className="w-full flex flex-col items-center md:items-start ">
-            <h2 className="w-full text-center md:text-start text-palm-700 text-lg md:text-xl font-medium mb-1 ">
-              {productData?.p_name}
-            </h2>
-            <div className="flex w-1/4 items-center justify-center md:justify-start mb-6">
-              <span className="text-sm text-gray-400"> 4.6 </span>
-              <img
-                src={Star}
-                className="w-4 h-4 md:w-[17px] md:h-[17px] ml-1 mr-2"
-              />
-              <span className="text-xs md:text-xs text-gray-400">(202)</span>
+        <div className="w-full md:w-1/2 h-100 flex flex-col justify-between items-start  pt-4 md:pt-0 md:pl-8 md:pr-20">
+          <div className="w-full   flex flex-col items-center md:items-start justify-between ">
+            <div className="text-left">
+              <h2 className="w-full text-center md:text-start text-palm-700 text-lg md:text-xl font-medium mb-3 ">
+                {productData?.p_name}
+              </h2>
+              <div className="flex w-[100%] items-center justify-center md:justify-start mb-2">
+                <span className="text-sm text-gray-400"> 4.6 </span>
+                <img
+                  src={Star}
+                  className="w-4 h-4 md:w-[17px] md:h-[17px] ml-1 mr-1"
+                />
+                <span className="text-xs md:text-xs text-gray-400">(202)</span>
+                <span className="text-left text-gray-500 text-xs ml-4">
+                  Em estoque: {productData?.p_stock}
+                </span>
+              </div>
             </div>
-            <div className="w-full flex justify-center md:justify-start items-start text-base mb-4">
+          </div>
+
+          <div>
+            <div className="w-full flex justify-center md:justify-start items-start text-base mb-2">
               <span className=" text-lg text-green-600">
                 {" "}
                 R$ {productData?.p_price}
@@ -335,10 +343,7 @@ export function ProductDetail() {
                 R$ {productData?.p_old_price}
               </span>
             </div>
-          </div>
-
-          <div>
-            <p className="w-full text-justify md:text-start text-xs md:text-sm text-gray-400 pt-4 md:pt-16 pb-4">
+            <p className="w-full text-justify md:text-start text-xs md:text-sm text-gray-400 pt-4  pb-8">
               <span className="text-red-500"> Aviso:</span> Todo o processo de
               negociação e entrega , deve ser feito entre o cliente e
               responsavel por este produto.
@@ -369,7 +374,7 @@ export function ProductDetail() {
                 className="w-full flex items-center justify-center px-2 py-3.5 md:px-0 md:py-2.5 bg-palm-700 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-palm-500 hover:shadow-lg focus:bg-palm-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-palm-500 active:shadow-lg transition duration-150 ease-in-out"
               >
                 <IconAddList w={"20"} h={"20"} color="#fff" className="mr-1" />
-                Adicionar a lista
+                Adicionar na lista
               </button>
             </div>
             <a
