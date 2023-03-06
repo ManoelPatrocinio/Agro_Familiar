@@ -3,6 +3,7 @@ import { ClipboardText, MagnifyingGlass, User } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Product } from "../Types/product.type";
 import { User as UserType } from "../Types/user.type";
 import Logo from "../assets/images/Logo.png";
 import { CheckLocalStorage } from "../service/localStorage";
@@ -10,11 +11,20 @@ import { FormUserAccess } from "./FormUserAccess";
 import { Menu_Sidebar } from "./Menu_Sidebar";
 import { PurchaseList } from "./PurchaseList";
 
+interface IPuchaseList {
+  product: Product;
+  quantity: number;
+}
+
 export function Header() {
   const [userStatus, setUserStatus] = useState<UserType | null>(null);
+  const [puchaseListForQtd, setPuchaseListForQtf] = useState<IPuchaseList[]>(
+    []
+  );
 
   useEffect(() => {
     setUserStatus(CheckLocalStorage.getLoggedUser());
+    setPuchaseListForQtf(CheckLocalStorage.getItemPurchaseList());
   }, []);
 
   const UserFirstName = userStatus?.u_full_name!.split(" ", 1);
@@ -91,10 +101,22 @@ export function Header() {
             >
               {UserFirstName ? (
                 <div className="w-full h-full">
-                  <button className="w-full text-center text-palm-700 text-sm py-2">
+                  <Link
+                    to={`/my-shop/${userStatus?._id}`}
+                    className="flex justify-center items-center w-full text-center text-palm-700 text-sm py-2"
+                  >
                     {" "}
                     Meu Perfil
-                  </button>
+                  </Link>
+                  {userStatus?.u_type != "customer" && (
+                    <Link
+                      to="/Admin/create-product"
+                      className="flex justify-center items-center  w-full text-center text-palm-700 text-sm py-2 m-0"
+                    >
+                      {" "}
+                      Dashboard
+                    </Link>
+                  )}
                   <button
                     className="w-full text-center text-palm-700 text-sm py-2"
                     onClick={() => CheckLogout()}
@@ -118,7 +140,7 @@ export function Header() {
           >
             <ClipboardText size={40} color="#789B3D" />
             <span className="w-5 h-5 rounded-2xl bg-palm-700 text-white text-xs text-center leading-5 absolute top-[-6px] right-[-2px]">
-              2
+              {puchaseListForQtd?.length}
             </span>{" "}
           </button>
           <PurchaseList />

@@ -5,7 +5,7 @@ import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
 
-const emailContact = import.meta.env.VITE_EMAIL_CONTACT;
+const emailContact = import.meta.env.VITE_PORTAL_EMAIL;
 
 export function ContactUs() {
   return (

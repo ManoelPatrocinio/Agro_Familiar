@@ -13,10 +13,15 @@ import entity_profile from "../../assets/images/img_entity_profile_exemple.png";
 import header_background from "../../assets/images/img_header_exemple.png";
 import Star from "../../assets/images/star_icon.png";
 import { api } from "../../hook/useApi";
-
+import { CheckLocalStorage } from "../../service/localStorage";
+interface IPuchaseList {
+  product: Product;
+  quantity: number;
+}
 export function Entity() {
   const [productData, setProductData] = useState<Product[]>();
   const [entityData, setEntityData] = useState<User>();
+  const [purchaseList, setPurchaseList] = useState<IPuchaseList[]>([]);
 
   const [toggleFilterVisibility, SetToggleFilterVisibility] =
     useState<boolean>(false);
@@ -41,9 +46,40 @@ export function Entity() {
           text: "Desculpe, não foi possível  exibir as organizações da sua região.",
         });
       });
+    setPurchaseList(CheckLocalStorage.getItemPurchaseList());
   }, []);
-  // console.log("productDatacdcs", productData.entity[0].u_city);
 
+  const useAddToPuchaseList = (product: Product) => {
+    // const item = products.find((product) => product._id === id);
+
+    const alreadyInPuchaseList = purchaseList.find(
+      (item) => item.product._id === product._id
+    );
+
+    if (alreadyInPuchaseList) {
+      const newPuchaseList: IPuchaseList[] = purchaseList.map((item) => {
+        if (item.product._id === product._id)
+          ({
+            ...item,
+            quantity: item.quantity++,
+          });
+        return item;
+      });
+      setPurchaseList(newPuchaseList);
+      localStorage.setItem("@PAF:purchase", JSON.stringify(newPuchaseList));
+      console.log("adiconado alreadyInPuchaseList", newPuchaseList);
+      return;
+    }
+    //if product is not already in puchase list
+    const listItem: IPuchaseList = {
+      product: product!,
+      quantity: 1,
+    };
+    const newPuchaseList: IPuchaseList[] = [...purchaseList, listItem];
+    setPurchaseList(newPuchaseList);
+    localStorage.setItem("@PAF:purchase", JSON.stringify(newPuchaseList));
+    console.log("adiconado ", newPuchaseList);
+  };
   return (
     <>
       <Header />
@@ -225,7 +261,11 @@ export function Entity() {
             </div>
             <div className="w-full flex flex-wrap justify-around mt-4">
               {productData?.map((product, index) => (
-                <CardProduct product={product} key={index} />
+                <CardProduct
+                  product={product}
+                  key={index}
+                  addPurchaseList={useAddToPuchaseList}
+                />
               ))}
             </div>
           </div>

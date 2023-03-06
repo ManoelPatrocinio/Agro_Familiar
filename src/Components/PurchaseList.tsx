@@ -1,13 +1,7 @@
 import { Trash } from "phosphor-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Product } from "../Types/product.type";
-import productExemple from "../assets/images/product-exemple.png";
-
-const product = [
-  { _id: "163eaf9b4f2536575309672e3", p_name: "maço de coentro", p_price: 4.5 },
-  { _id: "63eaf9b4f2536575309672e4", p_name: "maço de alface", p_price: 2.5 },
-  { _id: "63eaf9b4f25365753096725", p_name: "maço de couve", p_price: 1.5 },
-];
+import { CheckLocalStorage } from "../service/localStorage";
 
 interface IPuchaseList {
   product: Product;
@@ -16,8 +10,10 @@ interface IPuchaseList {
 export function PurchaseList() {
   const [puchaseList, setPuchaseList] = useState<IPuchaseList[]>([]);
 
+  useEffect(() => {
+    setPuchaseList(CheckLocalStorage.getItemPurchaseList());
+  }, []);
   const handleAddToPuchaseList = (id: string) => {
-    const item = product.find((product) => product._id === id);
     const alreadyInPuchaseList = puchaseList.find(
       (item) => item.product._id === id
     );
@@ -32,15 +28,10 @@ export function PurchaseList() {
         return item;
       });
       setPuchaseList(newPuchaseList);
+      CheckLocalStorage.setItemOnPurchaseList(newPuchaseList);
+
       return;
     }
-    //if product is not already in puchase list
-    const listItem: IPuchaseList = {
-      product: item!,
-      quantity: 1,
-    };
-    const newPuchaseList: IPuchaseList[] = [...puchaseList, listItem];
-    setPuchaseList(newPuchaseList);
   };
   const handleRemoveToPuchaseList = (id: string) => {
     const alreadyInPuchaseList = puchaseList.find(
@@ -56,6 +47,8 @@ export function PurchaseList() {
         return item;
       });
       setPuchaseList(newPuchaseList);
+      CheckLocalStorage.setItemOnPurchaseList(newPuchaseList);
+
       return;
     }
     const newPuchaseList: IPuchaseList[] = puchaseList.filter(
@@ -68,6 +61,7 @@ export function PurchaseList() {
       (item) => item.product._id !== id
     );
     setPuchaseList(newPuchaseList);
+    CheckLocalStorage.setItemOnPurchaseList(newPuchaseList);
   };
 
   const TotalPuchaseList = puchaseList.reduce((total, current) => {
@@ -102,26 +96,29 @@ export function PurchaseList() {
                 key={index}
                 className="w-full h-auto min-h-[8rem] flex items-center flex-wrap justify-evenly md:justify-between border-b-2 border-b-green-400 py-3 mb-2"
               >
-                <div className="w-32 h-32 max-w-[47%] rounded mr-3 md:mr-0 ">
+                <a
+                  href={`/Product-detail/${item.product._id}`}
+                  className="w-32 h-32 max-w-[47%] rounded mr-3 md:mr-0 "
+                >
                   <img
-                    src={productExemple}
-                    alt=""
+                    src={item.product.p_images![0]}
+                    alt={item.product.p_name}
                     className="w-full h-full rounded"
                   />
-                </div>
+                </a>
                 <div className="max-w-[50%] h-32 flex flex-col justify-around items-start">
                   <div>
                     <h4 className="w-full text-left  text-md text-palm-700">
                       {item.product.p_name}
                     </h4>
-                    <p className="w-full text-left text-xs text-gray-400 ">
-                      Associação de produtores de Barra
-                    </p>
+                    {/* <p className="w-full text-left text-xs text-gray-400 ">
+                      {item.product.farmer_id}
+                    </p> */}
                   </div>
                   <span className="w-full text-left text-lg text-green-600">
-                    {item?.product.p_price! * item.quantity}
+                    R$: {item?.product.p_price! * item.quantity}
                   </span>
-                  <small>{item.quantity}</small>
+                  <small>QTD: {item.quantity}</small>
                 </div>
                 <div className="md:min-w-[6rem] md:w-auto w-1/2 flex justify-start  rounded border border-palm-700  mt-4 md:mt-0">
                   <button
@@ -154,16 +151,6 @@ export function PurchaseList() {
         ) : (
           <h1>Lista vazia</h1>
         )}
-
-        {product.map((item, index) => (
-          <div key={index} className="w-full">
-            <p className="w-full">{item.p_name}</p>
-            <p className="w-full">{item.p_price}</p>
-            <button onClick={() => handleAddToPuchaseList(item._id)}>
-              add
-            </button>
-          </div>
-        ))}
       </div>
       <div className="w-full h-[23%] flex flex-col justify-between border-t border-gray-200">
         <div className="w-full h-[40%] flex justify-between px-3 py-5">

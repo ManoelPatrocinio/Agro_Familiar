@@ -8,6 +8,7 @@ import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
 import { User } from "../../Types/user.type";
+import entitiesPromotionImage1 from "../../assets/images/banner_joinUs.jpeg";
 import iconFarmeWhite from "../../assets/images/icon-farmer-white.png";
 import iconEntityWhite from "../../assets/images/icone-entity-white.png";
 import { api } from "../../hook/useApi";
@@ -76,7 +77,10 @@ export function Entities() {
             </>
           )}
         </div>
-        <div className="w-full  h-auto  bg-[url('https://i.ibb.co/2MRTyb9/banner-join-Us.jpg')] bg-no-repeat bg-[length:100%_100%] rounded">
+        <div
+          className="w-full  h-auto  bg-no-repeat bg-[length:100%_100%] rounded"
+          style={{ backgroundImage: `url(${entitiesPromotionImage1})` }}
+        >
           <div className="bg-[rgba(0,0,0,0.7)] w-full h-auto px-2 py-8 rounded ">
             <h3 className="w-full text-center text-md text-white font-bold mb-4">
               Faça parte do Potal Agro Familiar

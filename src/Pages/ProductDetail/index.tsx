@@ -11,11 +11,18 @@ import { SectionTitle } from "../../Components/SectionTitle";
 import { Product } from "../../Types/product.type";
 import Star from "../../assets/images/star_icon.png";
 import { api } from "../../hook/useApi";
+import { CheckLocalStorage } from "../../service/localStorage";
+
+interface IPuchaseList {
+  product: Product;
+  quantity: number;
+}
 
 export function ProductDetail() {
   const { productId } = useParams();
   const [productQTD, setProductQTD] = useState<number>(1);
   const [productData, setProductData] = useState<Product>();
+  const [thePurchaseList, setThePurchaseList] = useState<IPuchaseList[]>([]);
 
   const [viewProdDetail, setViewProdDetail] = useState<
     "description" | "reviews"
@@ -25,7 +32,7 @@ export function ProductDetail() {
     api
       .get(`/product/${productId}`)
       .then((response) => {
-        console.log("response.data", response.data[0]);
+        // console.log("response.data", response.data[0]);
         setProductData(response.data[0]);
       })
       .catch((error) => {
@@ -36,15 +43,55 @@ export function ProductDetail() {
           text: "Desculpe, não foi possível  exibir as informações do produto.",
         });
       });
+    setThePurchaseList(CheckLocalStorage.getItemPurchaseList());
+    updateInputProductQtd();
   }, []);
 
-  const hendleQuantityIncrement = (item: any) => {
-    alert("Sorry, ainda em construção");
-  };
-  const hendleQuantityDecrement = (item: any) => {
-    alert("Sorry, ainda em construção");
+  const useAddToPuchaseList = (product: Product, qtd: number) => {
+    // const item = products.find((product) => product._id === id);
+
+    const alreadyInPuchaseList = thePurchaseList.find(
+      (item) => item.product._id === product._id
+    );
+
+    if (alreadyInPuchaseList) {
+      //percorrer a de produtos na lista de compra, acha o produto, altera a quantity e salva no localstorage
+      const newPuchaseList: IPuchaseList[] = thePurchaseList
+        .filter((item) => {
+          return item.product._id === product._id;
+        })
+        .map((item) => ({
+          ...item,
+          quantity: qtd,
+        }));
+
+      setThePurchaseList(newPuchaseList);
+      localStorage.setItem("@PAF:purchase", JSON.stringify(newPuchaseList));
+      console.log("adiconado alreadyInPuchaseList", newPuchaseList);
+      return;
+    }
+    //if product is not already in puchase list
+    const listItem: IPuchaseList = {
+      product: product!,
+      quantity: qtd,
+    };
+    const newPuchaseList: IPuchaseList[] = [...thePurchaseList, listItem];
+    setThePurchaseList(newPuchaseList);
+    localStorage.setItem("@PAF:purchase", JSON.stringify(newPuchaseList));
+    console.log("adiconado ", newPuchaseList);
   };
 
+  const handleProdQtd = (arg: boolean) => {
+    if (arg) {
+      // if (productData?.p_stock && productQTD <= productData?.p_stock) {
+      // }
+      setProductQTD(productQTD! + 1);
+    } else {
+      if (productQTD! > 1) {
+        setProductQTD(productQTD! - 1);
+      }
+    }
+  };
   const reviews = (
     <div className="w-full max-h-[25rem] overflow-y-auto  ">
       <h4 className="w-full text-start  text-md text-palm-700 mb-8">
@@ -257,7 +304,23 @@ export function ProductDetail() {
     </div>
   );
 
-  console.log("productData", productData);
+  function updateInputProductQtd() {
+    console.log("updateInputProductQtd ");
+
+    const result = thePurchaseList.filter((item) => {
+      if (item.product._id === productData?._id) {
+        console.log("if ", item.quantity);
+
+        setProductQTD(item.quantity);
+        return item.quantity;
+      } else {
+        console.log("else", item.quantity);
+        setProductQTD(1);
+        return 1;
+      }
+    });
+    console.log("result ", result);
+  }
   return (
     <>
       <Header />
@@ -354,7 +417,7 @@ export function ProductDetail() {
                 <button
                   className="w-1/4 h-full text-center text-xl text-palm-700"
                   type="button"
-                  onClick={() => hendleQuantityDecrement(productQTD)}
+                  onClick={() => handleProdQtd(false)}
                 >
                   -
                 </button>
@@ -364,7 +427,7 @@ export function ProductDetail() {
                 <button
                   className="w-1/4 h-full text-center text-xl text-palm-700"
                   type="button"
-                  onClick={() => hendleQuantityIncrement(productQTD)}
+                  onClick={() => handleProdQtd(true)}
                 >
                   +
                 </button>
@@ -372,6 +435,7 @@ export function ProductDetail() {
               <button
                 type="button"
                 className="w-full flex items-center justify-center px-2 py-3.5 md:px-0 md:py-2.5 bg-palm-700 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-palm-500 hover:shadow-lg focus:bg-palm-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-palm-500 active:shadow-lg transition duration-150 ease-in-out"
+                onClick={() => useAddToPuchaseList(productData!, productQTD!)}
               >
                 <IconAddList w={"20"} h={"20"} color="#fff" className="mr-1" />
                 Adicionar na lista
