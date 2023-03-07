@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
+import { User } from "../Types/user.type";
 import Logo from "../assets/images/Logo.png";
-
-export function MenuOfDashboard() {
+interface IProp {
+  userLogged?: User;
+}
+export function MenuOfDashboard({ userLogged }: IProp) {
   return (
     <div className="w-full h-full flex flex-col justify-start items-center relative">
       <button
@@ -12,7 +15,12 @@ export function MenuOfDashboard() {
       ></button>
       <Link to="/" className="w-[11rem] h-20 mt-4 mb-8">
         {" "}
-        <img src={Logo} alt="Logo" className="w-full object-cover" />
+        <img
+          src={Logo}
+          alt="Logo"
+          className="w-full object-cover"
+          loading="lazy"
+        />
       </Link>
       <ul className=" w-full h-full px-2 ">
         <li className="w-full  bg-palm-700  my-2  rounded hover:bg-palm-500">
@@ -33,7 +41,7 @@ export function MenuOfDashboard() {
         </li>
         <li className="w-full  bg-palm-700  my-2  rounded hover:bg-palm-500">
           <Link
-            to="/Admin/manage-product"
+            to={`/Admin/manager/${userLogged?._id}`}
             className="block w-full h-full px-4 py-3 text-left text-white text-md  font-semibold"
           >
             Gerenciar produtos

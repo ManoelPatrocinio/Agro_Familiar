@@ -17,7 +17,8 @@ export function CardEntity({ entity }: Props) {
             <img
               src={UserPhoto}
               alt="foto de perfil"
-              className="w-full h-fusll"
+              className="w-full h-full"
+              loading="lazy"
             />
           </div>
           <Link
@@ -48,6 +49,7 @@ export function CardEntity({ entity }: Props) {
                 className="object-cover w-full h-full"
                 src={IconAgriculture}
                 alt="agricultura icone"
+                loading="lazy"
               />
             </div>
             <div className="w-12 h-12 ">
@@ -56,6 +58,7 @@ export function CardEntity({ entity }: Props) {
                 className="object-cover w-full h-full"
                 src={IconAgropecuary}
                 alt="agropecuaria icone"
+                loading="lazy"
               />
             </div>
             <div className="w-12 h-12 ">
@@ -64,6 +67,7 @@ export function CardEntity({ entity }: Props) {
                 className="object-cover w-full h-full"
                 src={IconAgroIndut}
                 alt="agroindustria icone"
+                loading="lazy"
               />
             </div>
           </div>

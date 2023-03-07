@@ -104,6 +104,7 @@ export function PurchaseList() {
                     src={item.product.p_images![0]}
                     alt={item.product.p_name}
                     className="w-full h-full rounded"
+                    loading="lazy"
                   />
                 </a>
                 <div className="max-w-[50%] h-32 flex flex-col justify-around items-start">

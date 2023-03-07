@@ -1,16 +1,15 @@
 import { ArrowLeft } from "phosphor-react";
-import {  useState } from "react";
+import { useState } from "react";
+import { FormUserAccess } from "../Components/FormUserAccess";
 import iconEntity from "../assets/images/icon-entity.svg";
 import iconFarmer from "../assets/images/icon-farmer.svg";
 import iconUser2 from "../assets/images/icon-user2.svg";
 import registerImgBackgroun from "../assets/images/registerImgBackgroun.png";
-import { FormUserAccess } from "../Components/FormUserAccess";
 
 export function ModalRegister() {
   const [typeContent, setTypeContent] = useState<
     "ChooseTypeRegister" | "userRegister" | null
   >("ChooseTypeRegister");
-
 
   return (
     <div
@@ -31,6 +30,7 @@ export function ModalRegister() {
               src={registerImgBackgroun}
               alt="imagem de fundo verduras exportas"
               className="w-full h-full  rounded-l"
+              loading="lazy"
             />
           </div>
           <div className="w-full md:w-3/5 h-full relative flex flex-col justify-around  px-8 py-6  md:pb-2  md:pt-0">
@@ -65,6 +65,7 @@ export function ModalRegister() {
                         src={iconUser2}
                         alt="icone comprador"
                         className="h-24 max-h-24 mx-auto"
+                        loading="lazy"
                       />
                       <h5 className="w-full text-center text-sm text-palm-700 font-semibold pb-2">
                         Comprador
@@ -74,14 +75,14 @@ export function ModalRegister() {
                       </p>
                     </button>
                     <a
-                   
-                       href= "Register-entity"
+                      href="Register-entity"
                       className="w-[11rem] p-3 border border-gray-200 rounded my-4 md:my-0 cursor-pointer hover:scale-110 transition duration-300 ease-in-out"
                     >
                       <img
                         src={iconEntity}
                         alt="icone comprador"
                         className="h-[5.5rem] max-h-24 mx-auto"
+                        loading="lazy"
                       />
                       <h5 className="w-full text-center text-sm text-palm-700 font-semibold pb-2 pt-1">
                         Assoc/Coop
@@ -91,13 +92,14 @@ export function ModalRegister() {
                       </p>
                     </a>
                     <a
-                      href= "Register-farmer"
+                      href="Register-farmer"
                       className="w-[11rem] p-3 border border-gray-200 rounded  hover:scale-110 transition duration-300 ease-in-out"
                     >
                       <img
                         src={iconFarmer}
                         alt="icone comprador"
                         className="h-24 max-h-24 mx-auto"
+                        loading="lazy"
                       />
                       <h5 className="w-full text-center text-sm text-palm-700 font-semibold pb-2">
                         Produtor Individual

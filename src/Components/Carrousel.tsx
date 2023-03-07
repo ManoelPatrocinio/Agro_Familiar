@@ -1,4 +1,4 @@
-import ImgHeaderCarousel_1 from "../assets/images/header_slide_1.png"
+import ImgHeaderCarousel_1 from "../assets/images/header_slide_1.png";
 export function Carrousel() {
   return (
     <div
@@ -34,6 +34,7 @@ export function Carrousel() {
             src={ImgHeaderCarousel_1}
             className="block w-full h-full"
             alt="slide o melhor da agricultura familiar da sua região "
+            loading="lazy"
           />
         </div>
         <div className="carousel-item float-left w-full h-full">
@@ -41,6 +42,7 @@ export function Carrousel() {
             src="https://mdbcdn.b-cdn.net/img/new/slides/042.webp"
             className="block w-full h-full"
             alt="Camera"
+            loading="lazy"
           />
         </div>
         <div className="carousel-item float-left w-full h-full">
@@ -48,6 +50,7 @@ export function Carrousel() {
             src="https://mdbcdn.b-cdn.net/img/new/slides/043.webp"
             className="block w-full h-full"
             alt="Exotic Fruits"
+            loading="lazy"
           />
         </div>
       </div>

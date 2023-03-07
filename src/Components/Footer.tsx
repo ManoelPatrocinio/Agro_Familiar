@@ -84,6 +84,7 @@ export function Footer() {
                 className="w-full h-full"
                 src={IconWhatsapp}
                 alt="whatsApp"
+                loading="lazy"
               />
             </a>
             <a href={instagram} className="w-9 h-9 mx-8" target={"_blank"}>
@@ -91,9 +92,15 @@ export function Footer() {
                 className="w-full h-full"
                 src={IconInstagram}
                 alt="Instagram"
+                loading="lazy"
               />
             </a>
-            <img className="w-9 h-9" src={IconFacebook} alt="Facebook" />
+            <img
+              className="w-9 h-9"
+              src={IconFacebook}
+              alt="Facebook"
+              loading="lazy"
+            />
           </div>
         </div>
       </div>

@@ -18,6 +18,7 @@ export function ImgPreview({ filesUploaded, deleteFile }: Props) {
           src={filesUploaded.preview}
           alt={filesUploaded.name}
           className="w-full h-full rounded"
+          loading="lazy"
         />
       </li>
       {/* <button className="w-full text-center text-sm text-red-600 font-normal py-1 my-3">

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import Swal from "sweetalert2";
 import { CardProduct } from "../../Components/CardProduct";
 import { Carrousel } from "../../Components/Carrousel";
 import { Dropdrown } from "../../Components/Dropdrown";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
-import { ModalRegister } from "../../Components/ModalRegister";
 import { SectionTitle } from "../../Components/SectionTitle";
 import { Product } from "../../Types/product.type";
 import homePromotionImage1 from "../../assets/images/header_slide_2.jpg";
@@ -16,24 +16,32 @@ interface IPuchaseList {
   quantity: number;
 }
 export function Home() {
-  const [productData, setProductData] = useState<Product[]>();
   const [purchaseList, setPurchaseList] = useState<IPuchaseList[]>([]);
 
+  const {
+    data: apiProducts,
+    isFetching,
+    error,
+  } = useQuery<Product[]>(
+    "homeGetAllProd",
+    async () => {
+      const response = await api.get("/all-products");
+      return response.data;
+    },
+    {
+      staleTime: 1000 * 60, // 1 minute
+    }
+  );
+
+  if (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oppss",
+      text: "Desculpe, não foi possível  exibir os produtos, tente novamente, por favor",
+    });
+  }
+
   useEffect(() => {
-    api
-      .get("/all-products")
-      .then((response) => {
-        // console.log("response.data", response.data);
-        setProductData(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-        Swal.fire({
-          icon: "error",
-          title: "Oppss",
-          text: "Desculpe, não foi possível  exibir as informações do produto.",
-        });
-      });
     setPurchaseList(CheckLocalStorage.getItemPurchaseList());
   }, []);
   const useAddToPuchaseList = (product: Product) => {
@@ -54,7 +62,6 @@ export function Home() {
       });
       setPurchaseList(newPuchaseList);
       localStorage.setItem("@PAF:purchase", JSON.stringify(newPuchaseList));
-      console.log("adiconado alreadyInPuchaseList", newPuchaseList);
       return;
     }
     //if product is not already in puchase list
@@ -65,7 +72,6 @@ export function Home() {
     const newPuchaseList: IPuchaseList[] = [...purchaseList, listItem];
     setPurchaseList(newPuchaseList);
     localStorage.setItem("@PAF:purchase", JSON.stringify(newPuchaseList));
-    console.log("adiconado ", newPuchaseList);
   };
   return (
     <>
@@ -77,8 +83,25 @@ export function Home() {
         <Dropdrown
           items={["Menor Preço", "Maior Preço", "De A a Z", "De Z a A"]}
         />
+        {isFetching && (
+          <div className="w-full h-[50vh] flex flex-col justify-center items-center">
+            <div className="flex items-center justify-center">
+              <div
+                className="inline-block h-20 w-20 animate-spin rounded-full text-palm-700 border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] mb-8"
+                role="status"
+              >
+                <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                  Loading...
+                </span>
+              </div>
+            </div>
+            <h3 className="text-lg font-semibold text-palm-700">
+              Carregando produtos
+            </h3>
+          </div>
+        )}
         <div className="w-full flex flex-wrap justify-around pt-4 px-0 ">
-          {productData?.map((product, index) => (
+          {apiProducts?.map((product, index) => (
             <CardProduct
               product={product}
               key={index}
@@ -91,12 +114,10 @@ export function Home() {
           style={{ backgroundImage: `url(${homePromotionImage1})` }}
         >
           <div className="w-full md:w-1/2 md:ml-8 p-2 md:p-0 ">
-            <h3 className="w-full  text-left text-sm md:text-xl text-white font-bold mb-4  drop-shadow-xl">
-              Encontre e negocie diretamente com os produtores do sua região
+            <h3 className="w-full  text-left text-sm md:text-xl text-white font-bold mb-8  drop-shadow-xl">
+              Encontre e negocie diretamente com os produtores da sua região
             </h3>
-            <p className="w-[80%] text-left text-xs md:text-md  text-white font-semibold mb-3 drop-shadow-xl ">
-              Encontre aqui os principais produtores da sua região.{" "}
-            </p>
+
             <p className="w-[80%] text-left text-xs md:text-md  text-white md:leading-8 font-semibold drop-shadow-xl">
               Além de informações e contato direto, para negociar preço e
               entrega. Tudo rápido, fácil e gratuito !
@@ -104,7 +125,6 @@ export function Home() {
           </div>
         </div>
       </main>
-      <ModalRegister />
 
       <Footer />
     </>

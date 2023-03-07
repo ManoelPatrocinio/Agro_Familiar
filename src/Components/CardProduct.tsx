@@ -17,11 +17,12 @@ export function CardProduct({ product, addPurchaseList }: Prop) {
         <img
           className="rounded-t-lg w-full h-full"
           src={product.p_images![0]}
-          alt=""
+          alt={product.p_name}
+          loading="lazy"
         />
       </Link>
       <div className="py-4 px-3 w-full h-[43%]">
-        <h5 className="w-full text-center text-gray-700 text-sm font-medium mb-2">
+        <h5 className="w-full h-[1.25rem] overflow-y-auto text-center text-gray-700 text-sm font-medium mb-2">
           {product.p_name}
         </h5>
 
@@ -34,7 +35,7 @@ export function CardProduct({ product, addPurchaseList }: Prop) {
         </div>
         <button
           type="button"
-          className="w-full flex items-center justify-center py-4 md:py-2.5 bg-green-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out"
+          className="checked:bg-blue-500 w-full flex items-center justify-center py-4 md:py-2.5 bg-green-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-slate-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out"
           onClick={() => addPurchaseList(product)}
         >
           <IconAddList w={"20"} h={"20"} color="#fff" className="mr-1" />

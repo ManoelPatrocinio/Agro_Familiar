@@ -105,6 +105,7 @@ export function Entities() {
                   src={iconEntityWhite}
                   alt="icon Cadastro como Associação"
                   className="h-[5.5rem] max-h-24 mx-auto"
+                  loading="lazy"
                 />
                 <span className="w-full text-center text-sm text-white font-bold">
                   Cadastro de Assoc/Coop
@@ -118,6 +119,7 @@ export function Entities() {
                   src={iconFarmeWhite}
                   alt="icon Cadastro como Associação"
                   className="h-[5.5rem] max-h-24 mx-auto"
+                  loading="lazy"
                 />
                 <span className="w-full text-center text-sm text-white font-bold">
                   Cadastro como Produtor Individual

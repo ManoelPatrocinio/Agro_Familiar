@@ -59,7 +59,12 @@ export function Header() {
         </div>
         <Link to="/" className="w-[11rem]  mt-2">
           {" "}
-          <img src={Logo} alt="Logo" className="w-full object-cover" />
+          <img
+            src={Logo}
+            alt="Logo"
+            className="w-full object-cover"
+            loading="lazy"
+          />
         </Link>
         <div className="header-icons-left w-10 md:w-[25%] flex  justify-end">
           <div className="dropdown relative  h-10 mr-6 hidden md:flex items-center">

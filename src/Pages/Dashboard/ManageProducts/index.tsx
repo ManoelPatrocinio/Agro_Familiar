@@ -1,24 +1,71 @@
 import { MagnifyingGlass, Question } from "phosphor-react";
-import { Menu_Sidebar } from "../../../Components/Menu_Sidebar";
-import Logo from "../../../assets/images/Logo.png";
+import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
+import { Link, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 import { MenuOfDashboard } from "../../../Components/MenuOfDashboard";
+import { Menu_Sidebar } from "../../../Components/Menu_Sidebar";
 import { ProductInList } from "../../../Components/ProductInList";
-import { Link } from "react-router-dom";
+import { Product } from "../../../Types/product.type";
+import { User } from "../../../Types/user.type";
+import Logo from "../../../assets/images/Logo.png";
+import { api } from "../../../hook/useApi";
+import { CheckLocalStorage } from "../../../service/localStorage";
 
+type productAndEntityInfo = {
+  products: Product[];
+  entity: User;
+};
 export function ManageProducts() {
+  const [userStatus, setUserStatus] = useState<User | null>(null);
+
+  const { idUserLogged } = useParams();
+
+  const {
+    data: apiProducts,
+    isFetching,
+    error,
+  } = useQuery<productAndEntityInfo>(
+    "homeGetAllProd",
+    async () => {
+      const response = await api.get(`/all-products/${idUserLogged}`);
+      return response.data;
+    },
+    {
+      staleTime: 1000 * 60, // 1 minute
+    }
+  );
+
+  if (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oppss",
+      text: "Desculpe, não foi possível  exibir os produtos, tente novamente, por favor",
+    });
+  }
+
+  useEffect(() => {
+    setUserStatus(CheckLocalStorage.getLoggedUser());
+  }, []);
+
   return (
     <>
       <header className="w-full md:hidden h-auto px-3 flex justify-between items-end">
         <Question size={40} color="#89B045" />
         <Link to="/" className="w-[9rem]  mt-4">
           {" "}
-          <img src={Logo} alt="Logo" className="w-full object-cover" />
+          <img
+            src={Logo}
+            alt="Logo"
+            className="w-full object-cover"
+            loading="lazy"
+          />
         </Link>
         <Menu_Sidebar type="admin" />
       </header>
       <div className="flex ">
         <div className="hidden md:block w-[30%] min-h-full border-r border-gray-200 ">
-          <MenuOfDashboard />
+          <MenuOfDashboard userLogged={userStatus!} />
         </div>
         <div className="w-full md:w-[70%] h-full px-8">
           <h1 className="w-full text-center md:text-left text-md md:text-xl text-palm-700 font-semibold my-8">
@@ -75,12 +122,12 @@ export function ManageProducts() {
                       focus:text-gray-700 focus:bg-white focus:outline-none"
                 aria-label="Default select example"
               >
-                <option selected>Selecione</option>
+                <option value="">Selecione</option>
                 <optgroup label="Agricultura">
                   <option value="Milho">Milho</option>
                   <option value="Feijão">Feijão</option>
                   <option value="Mandioca">Mandioca</option>
-                  <option value="Hotaliças">Hotaliças</option>
+                  <option value="Hortaliças">Hortaliças</option>
                   <option value="Frutas">Frutas</option>
                 </optgroup>
                 <optgroup label="Deriados">
@@ -102,17 +149,28 @@ export function ManageProducts() {
               </select>
             </div>
           </div>
+
+          {isFetching && (
+            <div className="w-full h-[50vh] flex flex-col justify-center items-center">
+              <div className="flex items-center justify-center">
+                <div
+                  className="inline-block h-20 w-20 animate-spin rounded-full text-palm-700 border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] mb-8"
+                  role="status"
+                >
+                  <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                    Loading...
+                  </span>
+                </div>
+              </div>
+              <h3 className="text-lg font-semibold text-palm-700">
+                Carregando produtos
+              </h3>
+            </div>
+          )}
           <div className="w-full md:[30%] h-screen overflow-y-auto flex flex-col justify-start items-start pr-2">
-            <ProductInList />
-            <ProductInList />
-            <ProductInList />
-            <ProductInList />
-            <ProductInList />
-            <ProductInList />
-            <ProductInList />
-            <ProductInList />
-            <ProductInList />
-            <ProductInList />
+            {apiProducts?.products.map((product, index) => (
+              <ProductInList product={product} key={index} />
+            ))}
           </div>
         </div>
       </div>

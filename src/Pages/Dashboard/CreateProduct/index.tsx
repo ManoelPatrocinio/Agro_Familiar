@@ -119,7 +119,7 @@ export function CreateProduct() {
       </header>
       <div className="flex">
         <div className="hidden md:block w-[30%] min-h-full border-r border-gray-200 ">
-          <MenuOfDashboard />
+          <MenuOfDashboard userLogged={userStatus!} />
         </div>
         <div className="w-full md:w-[70%] h-full px-8">
           <h1 className="w-full text-center md:text-left text-md md:text-xl text-palm-700 font-semibold my-8">
@@ -216,7 +216,7 @@ export function CreateProduct() {
                     <optgroup label="Agricultura">
                       <option value="Feijão">Grãos</option>
                       <option value="Mandioca">Mandioca</option>
-                      <option value="Hotaliças">Hortaliças</option>
+                      <option value="Hortaliças">Hortaliças</option>
                       <option value="Frutas">Frutas</option>
                     </optgroup>
                     <optgroup label="Deriados">
