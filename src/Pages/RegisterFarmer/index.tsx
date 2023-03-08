@@ -532,7 +532,7 @@ export function RegisterFarmer() {
             </div>
             <div className="flex flex-col justify-center  items-center  my-4 ">
               <button
-                type="submit"
+                type="button"
                 className="
                 
                 w-full
@@ -663,7 +663,7 @@ export function RegisterFarmer() {
             </p>
             <button
               onClick={() => setToggleForm(!toggleForm)}
-              className="relative text-center text-sm text-gray-500 mx-auto"
+              className="block relative text-center text-sm text-gray-500 mx-auto"
             >
               Voltar
             </button>

@@ -3,6 +3,7 @@ import { AboutUs } from "../Pages/AboutUs";
 import { ContactUs } from "../Pages/ContactUs";
 import { CreateProduct } from "../Pages/Dashboard/CreateProduct";
 import { ManageProducts } from "../Pages/Dashboard/ManageProducts";
+import { ManageProfile } from "../Pages/Dashboard/manageProfile";
 import { Entities } from "../Pages/Entities";
 import { Entity } from "../Pages/Entity";
 import { Farmers } from "../Pages/Farmers";
@@ -31,6 +32,7 @@ export const SystemRoutes = () => {
       <Route path="/WaitPage" element={<WaitPage />} />
       <Route path="/Admin/create-product" element={<CreateProduct />} />
       <Route path="/Admin/manager/:idUserLogged" element={<ManageProducts />} />
+      <Route path="/Admin/my-profile/:entityId" element={<ManageProfile />} />
       {/* <Route path="/login" element={<Login/>} />
             <Route path="/register" element={<Register/>} />
    */}

@@ -18,7 +18,6 @@ type productAndEntityInfo = {
 };
 export function ManageProducts() {
   const [userStatus, setUserStatus] = useState<User | null>(null);
-
   const { idUserLogged } = useParams();
 
   const {
@@ -26,7 +25,7 @@ export function ManageProducts() {
     isFetching,
     error,
   } = useQuery<productAndEntityInfo>(
-    "homeGetAllProd",
+    "manageProducts",
     async () => {
       const response = await api.get(`/all-products/${idUserLogged}`);
       return response.data;
@@ -69,7 +68,7 @@ export function ManageProducts() {
         </div>
         <div className="w-full md:w-[70%] h-full px-8">
           <h1 className="w-full text-center md:text-left text-md md:text-xl text-palm-700 font-semibold my-8">
-            Gerenciar de Produtos
+            Gerenciar Produtos
           </h1>
           <div className="w-full flex flex-col md:flex-row justify-between items-end mb-4 md:mb-10">
             <div className="form-search hidden w-[33%] md:flex items-end ">

@@ -483,7 +483,7 @@ export function CreateProduct() {
               <h3 className="w-full text-center md:text-left text-palm-700 text-md md:text-lg font-semibold mb-2">
                 Escolha as imagens do produto
               </h3>
-              <p className="w-full text-left text-gray-500 mb-8">
+              <p className="w-full text-center md:text-left text-gray-500 mb-8">
                 Lembre-se, essas imagens serão a primeira visão que os clientes
                 terão desse produto{" "}
               </p>
@@ -498,26 +498,36 @@ export function CreateProduct() {
                 ))}
 
                 {!filesData[0] && (
-                  <DropzoneInput
-                    onUpload={handleUpload}
-                    typeFile="image"
-                    text="Imagem de capa"
-                  />
+                  <div className="dropzone w-4/5 md:w-1/5 h-[14rem] ">
+                    <DropzoneInput
+                      onUpload={handleUpload}
+                      typeFile="image"
+                      text="Imagem de capa"
+                      classNameAdditional={
+                        " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0 rounded"
+                      }
+                    />
+                  </div>
                 )}
 
                 {!!filesData[0] && filesData.length < 4 && (
-                  <DropzoneInput
-                    onUpload={handleUpload}
-                    typeFile="image"
-                    text="Adicionar outra imagem"
-                  />
+                  <div className="dropzone w-4/5 md:w-1/5 h-[14rem] ">
+                    <DropzoneInput
+                      onUpload={handleUpload}
+                      typeFile="image"
+                      text="Adicionar outra imagem"
+                      classNameAdditional={
+                        " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0  rounded"
+                      }
+                    />
+                  </div>
                 )}
               </div>
             </div>
             <button
               onClick={handleSubmit(() => sendNewProduct())}
               type="submit"
-              className="w-[60%] md:w-1/4 mx-[20%] md:mx-0 my-4 py-3 px-3 text-white text-md font-semibold  bg-palm-700 rounded "
+              className="block w-[90%] md:w-1/4 mx-auto md:mx-0 my-8 py-3 px-3 text-white text-md font-semibold  bg-palm-700 rounded "
             >
               Cadastrar produto
             </button>

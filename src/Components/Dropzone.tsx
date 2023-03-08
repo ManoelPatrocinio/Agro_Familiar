@@ -7,8 +7,14 @@ type Props = {
   onUpload: (files: FileUploaded[]) => void;
   typeFile: string;
   text: string;
+  classNameAdditional: string;
 };
-export function DropzoneInput({ onUpload, typeFile, text }: Props) {
+export function DropzoneInput({
+  onUpload,
+  typeFile,
+  text,
+  classNameAdditional,
+}: Props) {
   const { getRootProps, getInputProps, isDragActive, isDragReject } =
     typeFile === "image"
       ? useDropzone({
@@ -53,12 +59,12 @@ export function DropzoneInput({ onUpload, typeFile, text }: Props) {
 
   return (
     <div
-      className="
-        dropzone w-4/5 md:w-1/5 h-[14rem]  flex justify-center items-center
-        bg-gray-100 border border-dashed border-gray-400 rounded
-         mb-4 md:mb-0
-         cursor-pointer
-        "
+      className={
+        classNameAdditional
+          ? `dropzone w-full h-full  flex justify-center items-center cursor-pointer ` +
+            classNameAdditional
+          : "dropzone w-full h-full  flex justify-center items-center cursor-pointer right-0"
+      }
       {...getRootProps()}
     >
       <input className="w-full h-full" {...getInputProps()} />

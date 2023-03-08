@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import {
   House,
   List,
@@ -6,7 +7,11 @@ import {
   User,
   UsersThree,
 } from "phosphor-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
+import { User as UserType } from "../Types/user.type";
+import { CheckLocalStorage } from "../service/localStorage";
 import { FormUserAccess } from "./FormUserAccess";
 import { MenuOfDashboard } from "./MenuOfDashboard";
 
@@ -14,6 +19,27 @@ type Prop = {
   type: "default" | "admin";
 };
 export function Menu_Sidebar({ type }: Prop) {
+  const [userStatus, setUserStatus] = useState<UserType | null>(null);
+
+  useEffect(() => {
+    setUserStatus(CheckLocalStorage.getLoggedUser());
+  }, []);
+
+  const UserFirstName = userStatus?.u_full_name!.split(" ", 1);
+  const CheckLogout = () => {
+    Swal.fire({
+      icon: "question",
+      title: "Sair",
+      showCancelButton: true,
+      confirmButtonText: "Sim",
+      text: "Deseja mesmo nos deixar ?",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        CheckLocalStorage.logout();
+        window.location.reload();
+      }
+    });
+  };
   return (
     <div className="md:hidden m-0 p-0">
       <button
@@ -37,7 +63,7 @@ export function Menu_Sidebar({ type }: Prop) {
         {type === "default" ? (
           <>
             <div className="w-full h-auto flex items-center justify-between border-b-[1px] py-6 px-2 border-palm-700">
-              <div className="dropdown relative   items-center">
+              {/* <div className="dropdown relative   items-center">
                 <button
                   className="
                 flex  
@@ -88,6 +114,75 @@ export function Menu_Sidebar({ type }: Prop) {
                   aria-labelledby="dropdownLogin"
                 >
                   <FormUserAccess type="userLogin" />
+                </div>
+              </div> */}
+
+              <div className="dropdown relative items-center">
+                <button
+                  className="
+                    flex  
+                    items-end
+                    text-left
+                    font-body
+                    text-xs 
+                    font-semibold
+                    text-palm-700 ml-2  
+                    capitalize  
+                  "
+                  type="button"
+                  id="dropdownLogin"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <User size={32} color="#789B3D" className="mr-2" />
+                  {UserFirstName ? (
+                    UserFirstName
+                  ) : (
+                    <>
+                      Login / <br /> Registre-se
+                    </>
+                  )}
+                </button>
+                <div
+                  className={classNames(
+                    " dropdown-menu min-w-max absolute  top-[3rem]   bg-white z-50 float-left  text-left  rounded-lg  shadow-lg mt-1  hidden   m-0   bg-clip-padding                border                border-gray-200               ",
+                    {
+                      " w-[20rem]  min-h-[26rem] h-auto left-[-8rem] px-4  py-8":
+                        !UserFirstName,
+                      " w-[10rem]   h-auto py-2": UserFirstName,
+                    }
+                  )}
+                  aria-labelledby="dropdownLogin"
+                >
+                  {UserFirstName ? (
+                    <div className="w-full h-full">
+                      <Link
+                        to={`/my-shop/${userStatus?._id}`}
+                        className="flex justify-center items-center w-full text-center text-palm-700 text-sm py-2"
+                      >
+                        {" "}
+                        Meu Perfil
+                      </Link>
+                      {userStatus?.u_type != "customer" && (
+                        <Link
+                          to="/Admin/create-product"
+                          className="flex justify-center items-center  w-full text-center text-palm-700 text-sm py-2 m-0"
+                        >
+                          {" "}
+                          Dashboard
+                        </Link>
+                      )}
+                      <button
+                        className="w-full text-center text-palm-700 text-sm py-2"
+                        onClick={() => CheckLogout()}
+                      >
+                        {" "}
+                        Sair da conta
+                      </button>
+                    </div>
+                  ) : (
+                    <FormUserAccess type="userLogin" />
+                  )}
                 </div>
               </div>
               <button
