@@ -1,19 +1,20 @@
 import { PlusCircle } from "phosphor-react";
 import { useDropzone } from "react-dropzone";
 import Swal from "sweetalert2";
-import { FileUploaded } from "../Types/fileUploaded.types";
 
 type Props = {
-  onUpload: (files: FileUploaded[]) => void;
+  onUpload: (files: File, whereSave?: string) => void;
   typeFile: string;
   text: string;
   classNameAdditional: string;
+  whereSave?: string;
 };
 export function DropzoneInput({
   onUpload,
   typeFile,
   text,
   classNameAdditional,
+  whereSave,
 }: Props) {
   const { getRootProps, getInputProps, isDragActive, isDragReject } =
     typeFile === "image"
@@ -31,7 +32,7 @@ export function DropzoneInput({
                   preview: URL.createObjectURL(file),
                 })
               );
-              onUpload(acceptedFiles);
+              onUpload(acceptedFiles[0], whereSave);
             } else {
               Swal.fire({
                 icon: "error",

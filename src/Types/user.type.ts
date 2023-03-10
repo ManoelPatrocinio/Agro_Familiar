@@ -14,4 +14,6 @@ export type User = {
   u_number?: string;
   u_main_contact?: string;
   u_secondary_contact?: string;
+  u_img_profile?:string;
+  u_cover_photo?:string;
 };

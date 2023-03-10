@@ -8,11 +8,11 @@ import Swal from "sweetalert2";
 import { DropzoneInput } from "../../../Components/Dropzone";
 import { MenuOfDashboard } from "../../../Components/MenuOfDashboard";
 import { Menu_Sidebar } from "../../../Components/Menu_Sidebar";
-import { FileUploaded } from "../../../Types/fileUploaded.types";
 import { User } from "../../../Types/user.type";
 import Logo from "../../../assets/images/Logo.png";
 import Star from "../../../assets/images/star_icon.png";
 import { api, useApiPost } from "../../../hook/useApi";
+import { FirebaseUploadFile } from "../../../service/firebase";
 import { CheckLocalStorage } from "../../../service/localStorage";
 
 const InitialUserState: User = {
@@ -30,15 +30,19 @@ const InitialUserState: User = {
   u_number: "",
   u_main_contact: "",
   u_secondary_contact: "",
+  u_img_profile: "",
+  u_cover_photo: "",
 };
 
 export function ManageProfile() {
-  const [userStatus, setUserStatus] = useState<User | null>(null);
   const { entityId } = useParams();
-
   const navigate = useNavigate();
+
+  const [userStatus, setUserStatus] = useState<User | null>(null);
   const [FormData, setFormData] = useState<User>(InitialUserState);
   const [toggleForm, setToggleForm] = useState<boolean>(false);
+  const [uploadProgress, setUploadProgress] = useState<boolean>();
+
   const {
     register,
     formState: { errors },
@@ -91,18 +95,33 @@ export function ManageProfile() {
     setUserStatus(CheckLocalStorage.getLoggedUser());
   }, []);
 
-  const handleUpload = (files: FileUploaded[]) => {
-    const uploadedFiles = files.map((file, index) => ({
-      file,
-      name: file.name,
-      preview: file.preview,
-      isUploaded: true,
-      itsError: false,
-    }));
-    console.log("uploadedFiles", uploadedFiles);
+  const handleUpload = async (file: File, whereSave?: string) => {
+    setUploadProgress(true);
+
+    const url = await FirebaseUploadFile(file, "/userImages");
+
+    if (url instanceof Error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oppss",
+        text: "Desculpe, não foi possível upload dessa imagem, tente novamente, por favor",
+      });
+    }
+
+    if (whereSave === "coverPhoto") {
+      setValueFromFormInput({
+        u_cover_photo: url,
+      });
+      setUploadProgress(false);
+    } else if (whereSave === "profile") {
+      setValueFromFormInput({
+        u_img_profile: url,
+      });
+      setUploadProgress(false);
+    }
   };
 
-  // console.log("FormData", FormData);
+  console.log("FormData", FormData);
   return (
     <>
       <header className="w-full md:hidden h-auto px-3 flex justify-between items-end">
@@ -139,37 +158,45 @@ export function ManageProfile() {
           {entityData && (
             <main className="w-full h-full  flex flex-col justify-between items-start pt-8 md:pt-0">
               <div className="w-full h-[35vh] md:h-[15rem] md:min-h-[40vh] relative ">
-                {/* <img
-                src={header_background}
-                alt="foto de capa"
-                className="w-full h-full  "
-              /> */}
-                <div className="w-full h-full">
-                  <DropzoneInput
-                    onUpload={handleUpload}
-                    typeFile="image"
-                    text="Clique ou arraste sua imagem de capa aqui..."
-                    classNameAdditional={
-                      " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0 "
-                    }
+                {!FormData.u_cover_photo ? (
+                  <div className="w-full h-full">
+                    <DropzoneInput
+                      onUpload={handleUpload}
+                      typeFile="image"
+                      text="Clique ou arraste sua imagem de capa aqui..."
+                      classNameAdditional={
+                        " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0 "
+                      }
+                      whereSave="coverPhoto"
+                    />
+                  </div>
+                ) : (
+                  <img
+                    src={FormData.u_cover_photo}
+                    alt=""
+                    className="w-full h-full  "
                   />
-                </div>
+                )}
                 <div className=" w-full absolute top-[80%] md:top-[87%] block   md:left-8 ">
                   <div className="w-full flex flex-col md:flex-row items-center md:items-end">
                     <div className="w-[7rem] h-[7rem] md:w-[8rem] md:h-[8rem] rounded-[50%]">
-                      {/* <img
-                      src={entity_profile}
-                      alt=""
-                      className="w-full h-full object-cover "
-                    /> */}
-                      <DropzoneInput
-                        onUpload={handleUpload}
-                        typeFile="image"
-                        text="imagem de perfil"
-                        classNameAdditional={
-                          " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0 rounded-[50%]"
-                        }
-                      />
+                      {FormData.u_img_profile ? (
+                        <img
+                          src={FormData.u_img_profile}
+                          alt="foto de perfil"
+                          className="w-full h-full object-cover rounded-[50%]"
+                        />
+                      ) : (
+                        <DropzoneInput
+                          onUpload={handleUpload}
+                          typeFile="image"
+                          text="imagem de perfil"
+                          classNameAdditional={
+                            " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0 rounded-[50%]"
+                          }
+                          whereSave="profile"
+                        />
+                      )}
                     </div>
                     <div className=" text-center md:text-left px-2 md:px-4 py-4">
                       <h4 className="text-sm md:text-lg  text-palm-700 font-display font-semibold md:mb-2 ">

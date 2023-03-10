@@ -48,15 +48,8 @@ export function CreateProduct() {
     setProductData((inputValue) => ({ ...inputValue, ...newValue }));
   };
   //receive the file from dropzone component and set news props to display on other component ex: ImgPreview
-  const handleUpload = (files: FileUploaded[]) => {
-    const uploadedFiles = files.map((file, index) => ({
-      file,
-      name: file.name,
-      preview: file.preview,
-      isUploaded: true,
-      itsError: false,
-    }));
-    let finalListFile = filesData.concat(uploadedFiles);
+  const handleUpload = (file: File) => {
+    let finalListFile = filesData.concat(file);
     if (finalListFile.length <= 4) {
       setFileData(finalListFile);
     }
@@ -75,7 +68,7 @@ export function CreateProduct() {
     const oldPriceFormated = prodData.p_old_price.replace(",", ".");
     // set all images on prop uploads
     filesData.forEach((file, index) => {
-      data.append("uploads", file.file);
+      data.append("uploads", file);
     });
     data.append("farmer_id", userStatus?._id);
     data.append("p_name", prodData.p_name);
@@ -98,12 +91,12 @@ export function CreateProduct() {
         showConfirmButton: false,
         timer: 1500,
       });
+
       setTimeout(() => {
         window.location.reload();
       }, 2000);
     }
   };
-  console.log("filesData", filesData);
 
   return (
     <>

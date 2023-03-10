@@ -730,6 +730,7 @@ export function RegisterEntity() {
                 className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                 placeholder="exemplo@gmail.com"
                 id="inputRegisterUserEmail"
+                defaultValue={""}
                 {...register("inputRegisterUserEmail", {
                   required: "Campo obrigatório",
                   pattern: {
