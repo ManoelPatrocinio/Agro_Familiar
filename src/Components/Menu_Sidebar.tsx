@@ -145,9 +145,9 @@ export function Menu_Sidebar({ type }: Prop) {
                 </button>
                 <div
                   className={classNames(
-                    " dropdown-menu min-w-max absolute  top-[3rem]   bg-white z-50 float-left  text-left  rounded-lg  shadow-lg mt-1  hidden   m-0   bg-clip-padding                border                border-gray-200               ",
+                    " dropdown-menu min-w-max absolute  top-[3rem]   bg-white z-50 float-left  text-left  rounded-lg  shadow-lg mt-1 hidden bg-clip-padding border border-gray-200",
                     {
-                      " w-[20rem]  min-h-[26rem] h-auto left-[-8rem] px-4  py-8":
+                      "  min-h-[26rem] h-auto left-0 top-[4rem] px-4  py-8":
                         !UserFirstName,
                       " w-[10rem]   h-auto py-2": UserFirstName,
                     }

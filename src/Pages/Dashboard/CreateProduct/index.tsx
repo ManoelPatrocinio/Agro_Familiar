@@ -483,11 +483,15 @@ export function CreateProduct() {
 
               <div className="w-full flex flex-col md:flex-row justify-start items-center mb-4">
                 {filesData.map((item, index) => (
-                  <ImgPreview
-                    key={index}
-                    filesUploaded={item}
-                    deleteFile={handleDelete}
-                  />
+                  <div className="relative w-4/5 md:w-1/5 h-[14rem] rounded mb-4 md:mb-0 md:mr-6 ">
+                    <ImgPreview
+                      key={index}
+                      imgName={item.name!}
+                      url={item.preview}
+                      deleteFile={handleDelete}
+                      classNameAdditionalForImg={"rounded  "}
+                    />
+                  </div>
                 ))}
 
                 {!filesData[0] && (

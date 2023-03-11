@@ -6,13 +6,14 @@ import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { DropzoneInput } from "../../../Components/Dropzone";
+import { ImgPreview } from "../../../Components/ImgPreview";
 import { MenuOfDashboard } from "../../../Components/MenuOfDashboard";
 import { Menu_Sidebar } from "../../../Components/Menu_Sidebar";
+import { FileUploaded } from "../../../Types/fileUploaded.types";
 import { User } from "../../../Types/user.type";
 import Logo from "../../../assets/images/Logo.png";
 import Star from "../../../assets/images/star_icon.png";
-import { api, useApiPost } from "../../../hook/useApi";
-import { FirebaseUploadFile } from "../../../service/firebase";
+import { api } from "../../../hook/useApi";
 import { CheckLocalStorage } from "../../../service/localStorage";
 
 const InitialUserState: User = {
@@ -41,7 +42,10 @@ export function ManageProfile() {
   const [userStatus, setUserStatus] = useState<User | null>(null);
   const [FormData, setFormData] = useState<User>(InitialUserState);
   const [toggleForm, setToggleForm] = useState<boolean>(false);
-  const [uploadProgress, setUploadProgress] = useState<boolean>();
+
+  useEffect(() => {
+    setUserStatus(CheckLocalStorage.getLoggedUser());
+  }, []);
 
   const {
     register,
@@ -53,22 +57,6 @@ export function ManageProfile() {
     setFormData((inputValue) => ({ ...inputValue, ...newValue }));
   };
 
-  const formSubmit = async () => {
-    const { apiResponse } = await useApiPost<User>("/register", FormData);
-    if (apiResponse != null) {
-      Swal.fire({
-        icon: "success",
-        title: "Success !",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      CheckLocalStorage.setLoggedUser(apiResponse!);
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
-    }
-  };
-
   const {
     data: entityData,
     isFetching,
@@ -77,6 +65,7 @@ export function ManageProfile() {
     "manageProfile",
     async () => {
       const response = await api.get(`/entity/${entityId}`);
+      setFormData(response.data);
       return response.data;
     },
     {
@@ -91,37 +80,59 @@ export function ManageProfile() {
       text: "Desculpe, não foi possível  exibir suas informações, tente novamente, por favor",
     });
   }
-  useEffect(() => {
-    setUserStatus(CheckLocalStorage.getLoggedUser());
-  }, []);
 
-  const handleUpload = async (file: File, whereSave?: string) => {
-    setUploadProgress(true);
-
-    const url = await FirebaseUploadFile(file, "/userImages");
-
-    if (url instanceof Error) {
-      Swal.fire({
-        icon: "error",
-        title: "Oppss",
-        text: "Desculpe, não foi possível upload dessa imagem, tente novamente, por favor",
-      });
-    }
+  const handleUpload = async (file: FileUploaded, whereSave?: string) => {
+    // const { name, url } = await FirebaseUploadFile(file, "/userImages");
+    // if (!url) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     title: "Oppss",
+    //     text: "Desculpe, não foi possível upload dessa imagem, tente novamente, por favor",
+    //   });
+    // }
 
     if (whereSave === "coverPhoto") {
       setValueFromFormInput({
-        u_cover_photo: url,
+        u_cover_photo: file.preview,
       });
-      setUploadProgress(false);
     } else if (whereSave === "profile") {
       setValueFromFormInput({
-        u_img_profile: url,
+        u_img_profile: file.preview,
       });
-      setUploadProgress(false);
     }
   };
 
-  console.log("FormData", FormData);
+  const formSubmit = async () => {
+    console.log("FormData", FormData);
+
+    // const { apiResponse } = await useApiPost<User>("/register", FormData);
+    // if (apiResponse != null) {
+    //   Swal.fire({
+    //     icon: "success",
+    //     title: "Success !",
+    //     showConfirmButton: false,
+    //     timer: 1500,
+    //   });
+    //   CheckLocalStorage.setLoggedUser(apiResponse!);
+    //   setTimeout(() => {
+    //     navigate("/");
+    //   }, 2000);
+    // }
+  };
+
+  const handleDeleteImg = (imgRef: string) => {
+    if (FormData.u_cover_photo === imgRef) {
+      setValueFromFormInput({
+        u_cover_photo: "",
+      });
+    }
+    if (FormData.u_img_profile === imgRef) {
+      setValueFromFormInput({
+        u_img_profile: "",
+      });
+    }
+  };
+
   return (
     <>
       <header className="w-full md:hidden h-auto px-3 flex justify-between items-end">
@@ -171,20 +182,21 @@ export function ManageProfile() {
                     />
                   </div>
                 ) : (
-                  <img
-                    src={FormData.u_cover_photo}
-                    alt=""
-                    className="w-full h-full  "
+                  <ImgPreview
+                    imgName={FormData.u_cover_photo}
+                    url={FormData.u_cover_photo}
+                    deleteFile={handleDeleteImg}
                   />
                 )}
-                <div className=" w-full absolute top-[80%] md:top-[87%] block   md:left-8 ">
+                <div className=" w-auto absolute top-[80%] md:top-[87%] block   md:left-8 ">
                   <div className="w-full flex flex-col md:flex-row items-center md:items-end">
                     <div className="w-[7rem] h-[7rem] md:w-[8rem] md:h-[8rem] rounded-[50%]">
                       {FormData.u_img_profile ? (
-                        <img
-                          src={FormData.u_img_profile}
-                          alt="foto de perfil"
-                          className="w-full h-full object-cover rounded-[50%]"
+                        <ImgPreview
+                          imgName={FormData.u_img_profile}
+                          url={FormData.u_img_profile}
+                          deleteFile={handleDeleteImg}
+                          classNameAdditionalForImg="rounded-[50%]"
                         />
                       ) : (
                         <DropzoneInput
@@ -199,15 +211,15 @@ export function ManageProfile() {
                       )}
                     </div>
                     <div className=" text-center md:text-left px-2 md:px-4 py-4">
-                      <h4 className="text-sm md:text-lg  text-palm-700 font-display font-semibold md:mb-2 ">
+                      <h4 className="text-sm md:text-lg  text-palm-700 font-display font-semibold md:mb-2  ">
                         {" "}
-                        {entityData?.u_entity_name
-                          ? entityData?.u_entity_name
-                          : entityData?.u_full_name}
+                        {FormData?.u_entity_name
+                          ? FormData?.u_entity_name
+                          : FormData?.u_full_name}
                       </h4>{" "}
                       <p className="text-xs md:text-sm text-gray-400 font-semibold md:mb-2">
                         {" "}
-                        {entityData?.u_city}
+                        {FormData?.u_city}
                       </p>
                       <div className="flex w-1/4 items-center justify-start">
                         <span className="text-xs md:text-sm text-gray-400">
@@ -227,7 +239,14 @@ export function ManageProfile() {
                 </div>
               </div>
               {!toggleForm ? (
-                <div className="w-full  h-full px-4 md:py-10 md:p-10  mt-[12rem]">
+                <div className="w-full  h-full px-4 md:py-10 md:p-10  mt-[11rem] md:mt-[8rem]">
+                  <h4 className="w-full text-center md:text-left  text-md md:text-lg font-semibold text-palm-700 mb-1">
+                    Informações de registro
+                  </h4>
+                  <p className="w-full text-center md:text-left text-xs md:text-sm  text-gray-400 mb-10">
+                    Caso deseje editar alguma informação,selecione o campo e
+                    siga as instruções
+                  </p>
                   <div className="grid grid-col-2 md:grid-cols-2  md:gap-8">
                     <div className="form-group mb-6">
                       <label
@@ -257,9 +276,9 @@ export function ManageProfile() {
                         aria-describedby="entityName"
                         placeholder="Digite aqui"
                         defaultValue={
-                          entityData.u_type === "farmer"
-                            ? entityData.u_full_name
-                            : entityData.u_entity_name
+                          FormData.u_type === "farmer"
+                            ? FormData.u_full_name
+                            : FormData.u_entity_name
                         }
                         {...register("inputRegisterEntityName", {
                           required: "Campo obrigatório",
@@ -313,7 +332,7 @@ export function ManageProfile() {
                         placeholder="XXX.XXX.XXX-XX"
                         max={14}
                         maxLength={14}
-                        defaultValue={entityData.u_CNPJ_CPF}
+                        defaultValue={FormData.u_CNPJ_CPF}
                         {...register("inputRegisterEntityCnpj", {
                           required: "Informe um CPF válido para continuar",
                           minLength: {
@@ -368,7 +387,7 @@ export function ManageProfile() {
                         maxLength={40}
                         max={40}
                         aria-describedby="entity City"
-                        defaultValue={entityData.u_city}
+                        defaultValue={FormData.u_city}
                         placeholder="Digite aqui"
                         {...register("iputRegisterEntityCity", {
                           required: "Campo Obrigatório",
@@ -425,7 +444,7 @@ export function ManageProfile() {
                         id="inputRegisterEntityDistrict"
                         aria-describedby="inputRegisterEntityDistrict"
                         placeholder="Digite aqui"
-                        defaultValue={entityData.u_district}
+                        defaultValue={FormData.u_district}
                         max={40}
                         maxLength={40}
                         onChange={(e) =>
@@ -468,7 +487,7 @@ export function ManageProfile() {
                         placeholder="Digite aqui"
                         max={70}
                         maxLength={70}
-                        defaultValue={entityData.u_street}
+                        defaultValue={FormData.u_street}
                         onChange={(e) =>
                           setValueFromFormInput({
                             u_street: e.target.value,
@@ -507,7 +526,7 @@ export function ManageProfile() {
                           m-0
                           focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                         id="inputRegisterEntityNumber"
-                        defaultValue={entityData.u_number}
+                        defaultValue={FormData.u_number}
                         max={6}
                         maxLength={6}
                         {...register("inputRegisterEntityNumber", {
@@ -559,7 +578,7 @@ export function ManageProfile() {
                             focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                           aria-label="select entity Uf"
                           id="inputRegisterEntityUf"
-                          defaultValue={entityData.u_UF}
+                          defaultValue={FormData.u_UF}
                           {...register("inputRegisterEntityUf", {
                             required: "Campo obrigatório",
                           })}
@@ -641,7 +660,7 @@ export function ManageProfile() {
                         max={12}
                         maxLength={12}
                         placeholder="(DDD) 9XXXX-XXXX"
-                        defaultValue={entityData.u_main_contact}
+                        defaultValue={FormData.u_main_contact}
                         {...register("inputEntityMainPhone", {
                           required: "Campo Obrigatório",
                           minLength: {
@@ -702,7 +721,7 @@ export function ManageProfile() {
                         placeholder="(DDD) 9XXXX-XXXX"
                         max={12}
                         maxLength={12}
-                        defaultValue={entityData.u_secondary_contact}
+                        defaultValue={FormData.u_secondary_contact}
                         aria-describedby="entity phone 2"
                         {...register("inputRegisterEntitySecondaryPhone", {
                           minLength: {
@@ -767,7 +786,7 @@ export function ManageProfile() {
                   </p>
                 </div>
               ) : (
-                <div className="w-full md:w-[80%]  h-full px-4 md:px-0 md:py-10 md:p-10 mx-auto mt-[12rem]">
+                <div className="w-full md:w-[70%]  h-full px-4 md:px-0 md:py-10 md:p-10 mx-auto  mt-[11rem] md:mt-[7rem]">
                   <h4 className="w-full text-center text-lg font-semibold text-palm-700 mb-3">
                     Seus dados de acesso
                   </h4>
@@ -784,7 +803,7 @@ export function ManageProfile() {
                       className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                       placeholder="exemplo@gmail.com"
                       id="inputRegisterUserEmail"
-                      defaultValue={entityData.u_email}
+                      defaultValue={FormData.u_email}
                       {...register("inputRegisterUserEmail", {
                         required: "Campo obrigatório",
                         pattern: {
@@ -849,17 +868,15 @@ export function ManageProfile() {
                     />
                   </div>
 
-                  <div className="flex flex-col justify-center  text-center lg:text-left mt-6">
-                    <button
-                      type="button"
-                      onClick={handleSubmit(() => formSubmit())}
-                      className="w-full inline-block px-7 py-2 bg-palm-700 text-white font-medium text-sm 
+                  <button
+                    type="button"
+                    onClick={handleSubmit(() => formSubmit())}
+                    className="block mx-auto  px-6   py-2.5 bg-palm-700 text-white font-medium text-sm 
                       leading-snug uppercase rounded shadow-md hover:bg-palm-500 hover:shadow-lg focus:bg-palm-700
                        focus:shadow-lg focus:outline-none focus:ring-0 active:bg-palm-700 active:shadow-lg transition duration-150 ease-in-out"
-                    >
-                      Cadastrar
-                    </button>
-                  </div>
+                  >
+                    Atualizar dados
+                  </button>
                   <p className="w-full text-center text-sm text-gray-500 my-3">
                     {" "}
                     Etapa{" "}
@@ -868,7 +885,7 @@ export function ManageProfile() {
                   </p>
                   <button
                     onClick={() => setToggleForm(!toggleForm)}
-                    className="block relative text-center text-sm text-gray-500 mx-auto"
+                    className="block relative text-center text-sm text-gray-500 mx-auto px-2 py-3"
                   >
                     Voltar
                   </button>

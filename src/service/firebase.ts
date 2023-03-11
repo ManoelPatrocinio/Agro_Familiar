@@ -17,10 +17,16 @@ export async function FirebaseUploadFile(file: File, firebasePaste: string) {
     let upload = await uploadBytes(newFile, file); // faz o upload
     let photoUrl = await getDownloadURL(upload.ref);
 
-    return photoUrl
+     return {
+      name: upload.ref.name,
+      url: photoUrl,
+    }
     
   } else {
-    return new Error("Tipo de arquivo não permitido");
+   return {
+      name: null,
+      url: null,
+    }
   }
 }
 
