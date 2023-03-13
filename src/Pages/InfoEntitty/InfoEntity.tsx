@@ -48,10 +48,10 @@ export function InfoEntity() {
           Informações sobre a Associação
         </h1>
 
-        <p className="w-full md:text-left text-justify text-sm text-gray-800">
+        <p className="w-full md:text-left text-justify text-sm text-gray-800 indent-12">
           A associação foi fundada em 2002 , como resposta da união dos
           moradores do povoado de Curral Novo, na cidade de Barra Bahia. Hoje já
-          comtamos com mais de 23 colaboradores, que atuam em conjunto no
+          contamos com mais de 23 colaboradores, que atuam em conjunto no
           plantio e cultivo de milho, feijão,mandioca e hortaliças. Prezamos
           pela qualidade de todos os produtos, através de um cultivo
           tradicional, sem adição de produtos químicos.

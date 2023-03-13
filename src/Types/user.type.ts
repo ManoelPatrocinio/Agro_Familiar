@@ -4,6 +4,7 @@ export type User = {
   u_full_name: string;
   u_email: string;
   u_password: string;
+  u_newPassword ?: string;
   u_president_name?: string;
   u_entity_name?: string;
   u_CNPJ_CPF?: string;
@@ -16,4 +17,5 @@ export type User = {
   u_secondary_contact?: string;
   u_img_profile?:string;
   u_cover_photo?:string;
+  u_description?:string;
 };

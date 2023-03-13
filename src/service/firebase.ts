@@ -1,4 +1,4 @@
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 as createId } from "uuid";
 import { storage } from "../libs/firebase";
 
@@ -28,5 +28,22 @@ export async function FirebaseUploadFile(file: File, firebasePaste: string) {
       url: null,
     }
   }
+}
+
+
+export async function FirebaseDeleteFile(imgName: string, firebasePaste: string) {
+console.log("imgName",imgName)
+
+// Create a reference to the file to delete
+const desertRef = ref(storage, `${firebasePaste}/${imgName}`)
+
+// Delete the file
+deleteObject(desertRef).then(() => {
+  console.log("success delete Object")
+}).catch((error) => {
+      console.log("erro on delete Object",error)
+
+
+});
 }
 

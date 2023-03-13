@@ -18,6 +18,7 @@ interface IPuchaseList {
 
 export function Header() {
   const [userStatus, setUserStatus] = useState<UserType | null>(null);
+  const [showForm, setShowForm] = useState<boolean>(false);
   const [puchaseListForQtd, setPuchaseListForQtf] = useState<IPuchaseList[]>(
     []
   );
@@ -66,9 +67,10 @@ export function Header() {
             loading="lazy"
           />
         </Link>
-        <div className="header-icons-left w-10 md:w-[25%] flex  justify-end">
+        <div className="header-icons-right w-10 md:w-[25%] flex  justify-end">
           <div className="dropdown relative  h-10 mr-6 hidden md:flex items-center">
             <button
+              onClick={() => setShowForm(!showForm)}
               className="
               flex  
               items-end

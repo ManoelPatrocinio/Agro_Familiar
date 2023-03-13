@@ -29,7 +29,7 @@ export function ImgPreview({
           ease-in-out "
       >
         <button
-          onClick={() => deleteFile(imgName)}
+          onClick={() => deleteFile(url)}
           className="text-sm text-center font-semibold text-palm-700 flex flex-col items-center justify-center   "
         >
           <Trash size={42} color="#789B3D" weight="light" />

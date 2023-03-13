@@ -1,5 +1,5 @@
 import { ErrorMessage } from "@hookform/error-message";
-import { Question } from "phosphor-react";
+import { ArrowRight, Question } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
@@ -9,11 +9,14 @@ import { DropzoneInput } from "../../../Components/Dropzone";
 import { ImgPreview } from "../../../Components/ImgPreview";
 import { MenuOfDashboard } from "../../../Components/MenuOfDashboard";
 import { Menu_Sidebar } from "../../../Components/Menu_Sidebar";
-import { FileUploaded } from "../../../Types/fileUploaded.types";
 import { User } from "../../../Types/user.type";
 import Logo from "../../../assets/images/Logo.png";
 import Star from "../../../assets/images/star_icon.png";
-import { api } from "../../../hook/useApi";
+import { api, useApiPut } from "../../../hook/useApi";
+import {
+  FirebaseDeleteFile,
+  FirebaseUploadFile,
+} from "../../../service/firebase";
 import { CheckLocalStorage } from "../../../service/localStorage";
 
 const InitialUserState: User = {
@@ -21,6 +24,7 @@ const InitialUserState: User = {
   u_full_name: "",
   u_email: "",
   u_password: "",
+  u_newPassword: "",
   u_president_name: "",
   u_entity_name: "",
   u_CNPJ_CPF: "",
@@ -33,6 +37,7 @@ const InitialUserState: User = {
   u_secondary_contact: "",
   u_img_profile: "",
   u_cover_photo: "",
+  u_description: "",
 };
 
 export function ManageProfile() {
@@ -81,58 +86,88 @@ export function ManageProfile() {
     });
   }
 
-  const handleUpload = async (file: FileUploaded, whereSave?: string) => {
-    // const { name, url } = await FirebaseUploadFile(file, "/userImages");
-    // if (!url) {
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: "Oppss",
-    //     text: "Desculpe, não foi possível upload dessa imagem, tente novamente, por favor",
-    //   });
-    // }
+  const handleImgUpload = async (file: File, whereSave?: string) => {
+    const { name, url } = await FirebaseUploadFile(file, "/userImages");
+    if (!url) {
+      Swal.fire({
+        icon: "error",
+        title: "Oppss",
+        text: "Desculpe, não foi possível carregar essa imagem, tente novamente, por favor",
+      });
+    }
 
     if (whereSave === "coverPhoto") {
       setValueFromFormInput({
-        u_cover_photo: file.preview,
+        u_cover_photo: url,
       });
     } else if (whereSave === "profile") {
       setValueFromFormInput({
-        u_img_profile: file.preview,
+        u_img_profile: url,
       });
     }
   };
 
-  const formSubmit = async () => {
+  const formSubmit = async (type: string) => {
     console.log("FormData", FormData);
 
-    // const { apiResponse } = await useApiPost<User>("/register", FormData);
-    // if (apiResponse != null) {
-    //   Swal.fire({
-    //     icon: "success",
-    //     title: "Success !",
-    //     showConfirmButton: false,
-    //     timer: 1500,
-    //   });
-    //   CheckLocalStorage.setLoggedUser(apiResponse!);
-    //   setTimeout(() => {
-    //     navigate("/");
-    //   }, 2000);
-    // }
+    if (type === "basicInfo") {
+      const { apiResponse } = await useApiPut<User>(
+        `/admin/update-user/${FormData._id}`,
+        FormData
+      );
+      if (apiResponse != null) {
+        Swal.fire({
+          icon: "success",
+          title: "Success !",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        CheckLocalStorage.setLoggedUser(apiResponse!);
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      }
+    } else if (type === "accessData") {
+      const { apiResponse } = await useApiPut<User>(
+        `/admin/update-user-access-data/${FormData._id}`,
+        FormData
+      );
+      if (apiResponse != null) {
+        Swal.fire({
+          icon: "success",
+          title: "Success !",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        CheckLocalStorage.logout();
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      }
+    }
   };
 
-  const handleDeleteImg = (imgRef: string) => {
+  const handleDeleteImg = async (imgRef: string) => {
+    let imgName: string[];
+
     if (FormData.u_cover_photo === imgRef) {
+      const splits = FormData.u_cover_photo!.split("%2F");
+      imgName = splits[1].split("?alt");
       setValueFromFormInput({
         u_cover_photo: "",
       });
     }
     if (FormData.u_img_profile === imgRef) {
+      const splits = FormData.u_img_profile!.split("%2F");
+      imgName = splits[1].split("?alt");
       setValueFromFormInput({
         u_img_profile: "",
       });
     }
+    await FirebaseDeleteFile(imgName![0], "userImages");
   };
 
+  console.log("FormData", FormData);
   return (
     <>
       <header className="w-full md:hidden h-auto px-3 flex justify-between items-end">
@@ -172,7 +207,7 @@ export function ManageProfile() {
                 {!FormData.u_cover_photo ? (
                   <div className="w-full h-full">
                     <DropzoneInput
-                      onUpload={handleUpload}
+                      onUpload={handleImgUpload}
                       typeFile="image"
                       text="Clique ou arraste sua imagem de capa aqui..."
                       classNameAdditional={
@@ -200,7 +235,7 @@ export function ManageProfile() {
                         />
                       ) : (
                         <DropzoneInput
-                          onUpload={handleUpload}
+                          onUpload={handleImgUpload}
                           typeFile="image"
                           text="imagem de perfil"
                           classNameAdditional={
@@ -239,7 +274,7 @@ export function ManageProfile() {
                 </div>
               </div>
               {!toggleForm ? (
-                <div className="w-full  h-full px-4 md:py-10 md:p-10  mt-[11rem] md:mt-[8rem]">
+                <form className="w-full  h-full px-4 md:py-10 md:p-10  mt-[11rem] md:mt-[8rem]">
                   <h4 className="w-full text-center md:text-left  text-md md:text-lg font-semibold text-palm-700 mb-1">
                     Informações de registro
                   </h4>
@@ -750,9 +785,91 @@ export function ManageProfile() {
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col justify-center  items-center  my-4 ">
+                  <div className="form-group mb-6 w-full md:w-1/2">
+                    <label
+                      htmlFor="InputUpdateUserInformation"
+                      className="form-label inline-block mb-2 text-palm-700 mr-3"
+                    >
+                      Informações Sobre Você
+                      {/* <span className="text-red-500 font-bold"> *</span>: */}
+                    </label>
+                    <textarea
+                      className="
+                        form-control
+                        block
+                        w-full
+                        px-3
+                        py-1.5
+                        text-base
+                        text-gray-700
+                        bg-white bg-clip-padding
+                        border border-solid border-gray-300
+                        rounded
+                        transition
+                        ease-in-out
+                        m-0
+                        focus:text-gray-700 focus:outline-none
+                      "
+                      id="InputUpdateUserInformation"
+                      rows={3}
+                      placeholder="Descreva aqui o que os cliente precisam ou querem saber sobre voçê, e, sobre o que produz."
+                      defaultValue={FormData.u_description}
+                      {...register("InputUpdateUserInformation", {
+                        minLength: {
+                          value: 30,
+                          message:
+                            "A descrição deve ter pelo menos 30 caracteres",
+                        },
+                      })}
+                      onChange={(e) =>
+                        setValueFromFormInput({
+                          u_description: e.target.value,
+                        })
+                      }
+                    />
+                    <ErrorMessage
+                      errors={errors}
+                      name="InputUpdateUserInformation"
+                      render={({ message }) => (
+                        <small className="text-red-500 text-xs">
+                          {message}
+                        </small>
+                      )}
+                    />
+                  </div>
+
+                  <div className="flex flex-col justify-start  items-start  my-4 text-left ">
                     <button
                       type="button"
+                      className="
+                        flex
+                        items-end
+                        justify-start
+                        w-full
+                        md:w-1/4
+                        
+                        pt-2.5
+                        bg-transparent
+                        text-palm-700
+                        font-normal
+                        text-sm
+                        text-left
+           
+                     "
+                      onClick={handleSubmit(() => setToggleForm(!toggleForm))}
+                    >
+                      Alterar dados de acesso
+                      <ArrowRight size={20} />
+                    </button>
+                    <span className=" text-xs text-gray-500">
+                      {" "}
+                      (E-mail e senha)
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col justify-center  items-center  my-4 ">
+                    <button
+                      type="submit"
                       className="
                         w-full
                         md:w-1/4
@@ -772,28 +889,21 @@ export function ManageProfile() {
                         transition
                         duration-150
                         ease-in-out"
-                      onClick={handleSubmit(() => setToggleForm(!toggleForm))}
+                      onClick={handleSubmit(() => formSubmit("basicInfo"))}
                     >
-                      Próximo
+                      Salvar
                     </button>
                   </div>
-
-                  <p className="w-full text-center text-sm text-gray-500 mt-3">
-                    {" "}
-                    Etapa{" "}
-                    <span className="text-palm-700 font-semibold"> 1 </span> de
-                    2
-                  </p>
-                </div>
+                </form>
               ) : (
-                <div className="w-full md:w-[70%]  h-full px-4 md:px-0 md:py-10 md:p-10 mx-auto  mt-[11rem] md:mt-[7rem]">
+                <form className="w-full md:w-[70%]  h-full px-4 md:px-0 md:py-10 md:p-10 mx-auto  mt-[11rem] md:mt-[7rem]">
                   <h4 className="w-full text-center text-lg font-semibold text-palm-700 mb-3">
                     Seus dados de acesso
                   </h4>
 
                   <div className="w-full mb-6">
                     <label
-                      htmlFor="inputRegisterUserEmail"
+                      htmlFor="inputUpdateUserEmail"
                       className="form-label inline-block text-sm mb-2 text-gray-700"
                     >
                       Seu E-mail
@@ -802,9 +912,9 @@ export function ManageProfile() {
                       type="email"
                       className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                       placeholder="exemplo@gmail.com"
-                      id="inputRegisterUserEmail"
+                      id="inputUpdateUserEmail"
                       defaultValue={FormData.u_email}
-                      {...register("inputRegisterUserEmail", {
+                      {...register("inputUpdateUserEmail", {
                         required: "Campo obrigatório",
                         pattern: {
                           value: /\S+@\S+\.\S+/,
@@ -823,7 +933,7 @@ export function ManageProfile() {
                     />
                     <ErrorMessage
                       errors={errors}
-                      name="inputRegisterUserEmail"
+                      name="inputUpdateUserEmail"
                       render={({ message }) => (
                         <small className="text-red-500 text-xs">
                           {message}
@@ -837,15 +947,16 @@ export function ManageProfile() {
                       htmlFor="inputRegisterUserPassword"
                       className="form-label inline-block text-sm mb-2 text-gray-700"
                     >
-                      Sua senha
+                      Senha Atual
                     </label>
                     <input
                       type="password"
                       className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                       placeholder="******"
+                      autoComplete="off"
                       id="inputRegisterUserPassword"
                       {...register("inputRegisterUserPassword", {
-                        required: "Campo obrigatório",
+                        required: "Campo Obrigatório",
                         minLength: {
                           value: 6,
                           message: "O senha deve ter no mínimo 6 caracteres",
@@ -867,29 +978,60 @@ export function ManageProfile() {
                       )}
                     />
                   </div>
+                  <div className="w-full mb-4">
+                    <label
+                      htmlFor="inputUpdateNewPassword"
+                      className="form-label inline-block text-sm mb-2 text-gray-700"
+                    >
+                      Nova Senha
+                    </label>
+                    <input
+                      type="password"
+                      className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
+                      placeholder="******"
+                      autoComplete="off"
+                      id="inputUpdateNewPassword"
+                      {...register("inputUpdateNewPassword", {
+                        required: "Campo Obrigatório",
+                        minLength: {
+                          value: 6,
+                          message: "O senha deve ter no mínimo 6 caracteres",
+                        },
+                      })}
+                      onChange={(e) =>
+                        setValueFromFormInput({
+                          u_newPassword: e.target.value,
+                        })
+                      }
+                    />
+                    <ErrorMessage
+                      errors={errors}
+                      name="inputUpdateNewPassword"
+                      render={({ message }) => (
+                        <small className="text-red-500 text-xs">
+                          {message}
+                        </small>
+                      )}
+                    />
+                  </div>
 
                   <button
                     type="button"
-                    onClick={handleSubmit(() => formSubmit())}
+                    onClick={handleSubmit(() => formSubmit("accessData"))}
                     className="block mx-auto  px-6   py-2.5 bg-palm-700 text-white font-medium text-sm 
                       leading-snug uppercase rounded shadow-md hover:bg-palm-500 hover:shadow-lg focus:bg-palm-700
                        focus:shadow-lg focus:outline-none focus:ring-0 active:bg-palm-700 active:shadow-lg transition duration-150 ease-in-out"
                   >
-                    Atualizar dados
+                    Salvar
                   </button>
-                  <p className="w-full text-center text-sm text-gray-500 my-3">
-                    {" "}
-                    Etapa{" "}
-                    <span className="text-palm-700 font-semibold"> 2 </span> de
-                    2
-                  </p>
+
                   <button
-                    onClick={() => setToggleForm(!toggleForm)}
+                    onClick={() => window.location.reload()}
                     className="block relative text-center text-sm text-gray-500 mx-auto px-2 py-3"
                   >
                     Voltar
                   </button>
-                </div>
+                </form>
               )}
             </main>
           )}
