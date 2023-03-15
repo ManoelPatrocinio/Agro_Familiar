@@ -89,16 +89,16 @@ export function PurchaseList() {
         ></button>
       </div>
       <div className="offcanvas-body max-h-[70%] flex-grow p-4 overflow-y-auto">
-        {puchaseList.length > 0 ? (
+        {puchaseList.length > 0 && (
           <>
             {puchaseList?.map((item, index) => (
               <div
                 key={index}
-                className="w-full h-auto min-h-[8rem] flex items-center flex-wrap justify-evenly md:justify-between border-b-2 border-b-green-400 py-3 mb-2"
+                className="w-full h-auto min-h-[8rem] flex items-center flex-wrap  justify-evenly md:justify-between border-b-2 border-b-green-400 py-3 mb-2"
               >
                 <a
                   href={`/Product-detail/${item.product._id}`}
-                  className="w-32 h-32 max-w-[47%] rounded mr-3 md:mr-0 "
+                  className="w-[35%] md:w-[25%] h-32 md:max-w-[30%] rounded mr-[1%] md:mr-0 "
                 >
                   <img
                     src={item.product.p_images![0]}
@@ -107,7 +107,7 @@ export function PurchaseList() {
                     loading="lazy"
                   />
                 </a>
-                <div className="max-w-[50%] h-32 flex flex-col justify-around items-start">
+                <div className="w-[64%] md:w-[50%] md:min-w-[50%] h-32 flex flex-col justify-around items-start px-2">
                   <div>
                     <h4 className="w-full text-left  text-md text-palm-700">
                       {item.product.p_name}
@@ -119,38 +119,40 @@ export function PurchaseList() {
                   <span className="w-full text-left text-lg text-green-600">
                     R$: {item?.product.p_price! * item.quantity}
                   </span>
-                  <small>QTD: {item.quantity}</small>
+                  {/* <small>QTD: {item.quantity}</small> */}
                 </div>
-                <div className="md:min-w-[6rem] md:w-auto w-1/2 flex justify-start  rounded border border-palm-700  mt-4 md:mt-0">
-                  <button
-                    onClick={() => handleRemoveToPuchaseList(item.product._id)}
-                    className="w-1/4 h-full text-center text-xl text-palm-700 py-2"
-                    type="button"
-                  >
-                    -
-                  </button>
-                  <div className="w-1/2 h-full text-center text-sm text-palm-700 py-3">
-                    1
+                <div className="w-full md:w-[25%] flex justify-evenly md:justify-between items-center">
+                  <div className="w-[35%]  md:w-[57%] flex justify-start  rounded border border-palm-700  mt-4 md:mt-0">
+                    <button
+                      onClick={() =>
+                        handleRemoveToPuchaseList(item.product._id)
+                      }
+                      className=" h-full text-center text-xl text-palm-700 p-2"
+                      type="button"
+                    >
+                      -
+                    </button>
+                    <div className="w-1/2 h-full text-center text-sm text-palm-700 py-3">
+                      {item.quantity}
+                    </div>
+                    <button
+                      onClick={() => handleAddToPuchaseList(item.product._id)}
+                      className=" h-full text-center text-xl text-palm-700 p-2"
+                      type="button"
+                    >
+                      +
+                    </button>
                   </div>
                   <button
-                    onClick={() => handleAddToPuchaseList(item.product._id)}
-                    className="w-1/4 h-full text-center text-xl text-palm-700 py-2"
-                    type="button"
+                    onClick={() => removeProductToPuchaseList(item.product._id)}
+                    className="w-12  h-12  rounded-[100%]  flex justift-center items-end mt-4 md:mt-0"
                   >
-                    +
+                    <Trash size={42} color="#789B3D" weight="light" />
                   </button>
                 </div>
-                <button
-                  onClick={() => removeProductToPuchaseList(item.product._id)}
-                  className="w-12  h-12  rounded-[100%]  flex justift-center items-end mt-4 md:mt-0"
-                >
-                  <Trash size={42} color="#789B3D" weight="light" />
-                </button>
               </div>
             ))}
           </>
-        ) : (
-          <h1>Lista vazia</h1>
         )}
       </div>
       <div className="w-full h-[23%] flex flex-col justify-between border-t border-gray-200">

@@ -4,10 +4,12 @@ import { X } from "phosphor-react";
 type FilterProps = {
   ToggleFilterVisibility: any;
   mobileVisiblity: boolean;
+  filterByCategory: (category: string) => void;
 };
 export function Filter_category({
   ToggleFilterVisibility,
   mobileVisiblity,
+  filterByCategory,
 }: FilterProps) {
   return (
     <div
@@ -31,11 +33,43 @@ export function Filter_category({
         <h5 className="w-full text-left text-sm font-semibold text-palm-700 mb-4">
           Agricultura
         </h5>
-        <ul className="w-full text-left pl-2">
-          <li className="w-full text-left text-sm my-1 py-3">Grãos</li>
-          <li className="w-full text-left text-sm my-1 py-3">Mandioca</li>
-          <li className="w-full text-left text-sm my-1 py-3">Hortaliças</li>
-          <li className="w-full text-left text-sm my-1 py-3">Frutas</li>
+        <ul className="w-full text-left ">
+          <li className="w-full  text-sm my-1 ">
+            <button
+              onClick={() => filterByCategory("Graos")}
+              className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
+            >
+              {" "}
+              Grãos{" "}
+            </button>
+          </li>
+          <li className="w-full  text-sm my-1 ">
+            <button
+              onClick={() => filterByCategory("Mandioca")}
+              className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
+            >
+              {" "}
+              Mandioca{" "}
+            </button>
+          </li>
+          <li className="w-full  text-sm my-1 ">
+            <button
+              onClick={() => filterByCategory("Hortalicas")}
+              className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
+            >
+              {" "}
+              Hortaliças{" "}
+            </button>
+          </li>
+          <li className="w-full  text-sm my-1 ">
+            <button
+              onClick={() => filterByCategory("Frutas")}
+              className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
+            >
+              {" "}
+              Frutas{" "}
+            </button>
+          </li>
         </ul>
       </div>
       <div className="w-full my-4">
@@ -43,13 +77,50 @@ export function Filter_category({
           Derivados
         </h5>
         <ul className="w-full text-left pl-2">
-          <li className="w-full text-left text-sm my-1 py-1">
-            Pães/Bolos/Biscoitos
+          <li className="w-full  text-sm my-1 ">
+            <button
+              onClick={() => filterByCategory("Pães/Bolos/Biscoitos")}
+              className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
+            >
+              Pães/Bolos/Biscoitos
+            </button>
           </li>
-          <li className="w-full text-left text-sm my-1 py-3">Doces</li>
-          <li className="w-full text-left text-sm my-1 py-3">Bebidas</li>
-          <li className="w-full text-left text-sm my-1 py-3">Tempores</li>
-          <li className="w-full text-left text-sm my-1 py-3">Outros</li>
+          <li className="w-full  text-sm my-1 ">
+            <button
+              onClick={() => filterByCategory("Doces")}
+              className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
+            >
+              {" "}
+              Doces{" "}
+            </button>
+          </li>
+          <li className="w-full  text-sm my-1 ">
+            <button
+              onClick={() => filterByCategory("Bebidas")}
+              className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
+            >
+              {" "}
+              Bebidas{" "}
+            </button>
+          </li>
+          <li className="w-full  text-sm my-1 ">
+            <button
+              onClick={() => filterByCategory("")}
+              className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
+            >
+              {" "}
+              Temperos{" "}
+            </button>
+          </li>
+          <li className="w-full  text-sm my-1 ">
+            <button
+              onClick={() => filterByCategory("Outros")}
+              className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
+            >
+              {" "}
+              Outros{" "}
+            </button>
+          </li>
         </ul>
       </div>
       <div className="w-full my-4">
@@ -57,11 +128,51 @@ export function Filter_category({
           Pecuária
         </h5>
         <ul className="w-full text-left pl-2">
-          <li className="w-full text-left text-sm my-1 py-3">Bovinos</li>
-          <li className="w-full text-left text-sm my-1 py-3">Capríno/Ovínos</li>
-          <li className="w-full text-left text-sm my-1 py-3">Suínos</li>
-          <li className="w-full text-left text-sm my-1 py-3"> Áves</li>
-          <li className="w-full text-left text-sm my-1 py-3">Piscícultura</li>
+          <li className="w-full  text-sm my-1 ">
+            <button
+              onClick={() => filterByCategory("Bovinos")}
+              className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
+            >
+              {" "}
+              Bovinos{" "}
+            </button>
+          </li>
+          <li className="w-full  text-sm my-1 ">
+            <button
+              onClick={() => filterByCategory(" Caprino/Ovinos")}
+              className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
+            >
+              {" "}
+              Capríno/Ovínos{" "}
+            </button>
+          </li>
+          <li className="w-full  text-sm my-1 ">
+            <button
+              onClick={() => filterByCategory("Suinos")}
+              className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
+            >
+              {" "}
+              Suínos{" "}
+            </button>
+          </li>
+          <li className="w-full  text-sm my-1 ">
+            <button
+              onClick={() => filterByCategory("Aves")}
+              className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
+            >
+              {" "}
+              Áves{" "}
+            </button>
+          </li>
+          <li className="w-full  text-sm my-1 ">
+            <button
+              onClick={() => filterByCategory("Piscicultura")}
+              className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
+            >
+              {" "}
+              Piscícultura{" "}
+            </button>
+          </li>
         </ul>
       </div>
     </div>

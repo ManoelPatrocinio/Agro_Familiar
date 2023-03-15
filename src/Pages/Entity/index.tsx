@@ -22,12 +22,13 @@ export function Entity() {
   const [productData, setProductData] = useState<Product[]>();
   const [entityData, setEntityData] = useState<User>();
   const [purchaseList, setPurchaseList] = useState<IPuchaseList[]>([]);
-
+  const [productFiltedByCategory, setProductFiltedByCategory] = useState<
+    Product[]
+  >([]);
   const [toggleFilterVisibility, SetToggleFilterVisibility] =
     useState<boolean>(false);
 
   const { userId } = useParams();
-
   useEffect(() => {
     api
       .get(`/all-products/${userId}`)
@@ -47,8 +48,14 @@ export function Entity() {
         });
       });
     setPurchaseList(CheckLocalStorage.getItemPurchaseList());
-  }, []);
+  }, [userId]);
 
+  function filterByCategory(category: string) {
+    const filtedList = productData?.filter(
+      (item) => item.p_category === category
+    );
+    setProductFiltedByCategory(filtedList!);
+  }
   const useAddToPuchaseList = (product: Product) => {
     // const item = products.find((product) => product._id === id);
 
@@ -243,6 +250,7 @@ export function Entity() {
           <Filter_category
             ToggleFilterVisibility={SetToggleFilterVisibility}
             mobileVisiblity={toggleFilterVisibility}
+            filterByCategory={filterByCategory}
           />
           <div className="w-full md:w-3/4 flex flex-col  items-start">
             <div className="w-full flex justify-between md:justify-start ">
@@ -260,13 +268,27 @@ export function Entity() {
               </button>
             </div>
             <div className="w-full flex flex-wrap justify-around mt-4">
-              {productData?.map((product, index) => (
-                <CardProduct
-                  product={product}
-                  key={index}
-                  addPurchaseList={useAddToPuchaseList}
-                />
-              ))}
+              {productFiltedByCategory.length === 0 ? (
+                <>
+                  {productData?.map((product, index) => (
+                    <CardProduct
+                      product={product}
+                      key={index}
+                      addPurchaseList={useAddToPuchaseList}
+                    />
+                  ))}
+                </>
+              ) : (
+                <>
+                  {productFiltedByCategory?.map((product, index) => (
+                    <CardProduct
+                      product={product}
+                      key={index}
+                      addPurchaseList={useAddToPuchaseList}
+                    />
+                  ))}
+                </>
+              )}
             </div>
           </div>
         </div>

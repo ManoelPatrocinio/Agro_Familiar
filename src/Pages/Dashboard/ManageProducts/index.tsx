@@ -135,7 +135,7 @@ export function ManageProducts() {
                   </option>
                   <option value="Doces">Doces </option>
                   <option value="Bebidas">Bebidas </option>
-                  <option value="Tempores">Tempores</option>
+                  <option value="Temperos">Temperos</option>
                   <option value="Outros">Outros</option>
                 </optgroup>
                 <optgroup label="Pecuária">
