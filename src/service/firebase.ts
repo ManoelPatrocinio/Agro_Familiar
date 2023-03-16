@@ -32,18 +32,18 @@ export async function FirebaseUploadFile(file: File, firebasePaste: string) {
 
 
 export async function FirebaseDeleteFile(imgName: string, firebasePaste: string) {
-console.log("imgName",imgName)
+    console.log("imgName",imgName)
 
-// Create a reference to the file to delete
-const desertRef = ref(storage, `${firebasePaste}/${imgName}`)
+    // Create a reference to the file to delete
+    const desertRef = ref(storage, `${firebasePaste}/${imgName}`)
 
-// Delete the file
-deleteObject(desertRef).then(() => {
-  console.log("success delete Object")
-}).catch((error) => {
-      console.log("erro on delete Object",error)
+  // Delete the file
+  deleteObject(desertRef).then(() => {
+    console.log("success delete Object")
+  }).catch((error) => {
+    console.log("erro on delete Object",error)
 
 
-});
+  });
 }
 

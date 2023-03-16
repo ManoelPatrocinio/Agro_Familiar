@@ -87,7 +87,8 @@ export function ManageProfile() {
   }
 
   const handleImgUpload = async (file: File, whereSave?: string) => {
-    const { name, url } = await FirebaseUploadFile(file, "/userImages");
+    let newData;
+    const { url } = await FirebaseUploadFile(file, "/userImages");
     if (!url) {
       Swal.fire({
         icon: "error",
@@ -97,23 +98,27 @@ export function ManageProfile() {
     }
 
     if (whereSave === "coverPhoto") {
-      setValueFromFormInput({
+      newData = {
+        ...entityData,
         u_cover_photo: url,
-      });
+      };
     } else if (whereSave === "profile") {
-      setValueFromFormInput({
+      newData = {
+        ...entityData,
         u_img_profile: url,
-      });
+      };
     }
+
+    formSubmit("basicInfo", newData as User);
   };
 
-  const formSubmit = async (type: string) => {
-    console.log("FormData", FormData);
+  const formSubmit = async (type: string, UpdatedEntity: User) => {
+    console.log("UpdatedEntity", UpdatedEntity);
 
     if (type === "basicInfo") {
       const { apiResponse } = await useApiPut<User>(
-        `/admin/update-user/${FormData._id}`,
-        FormData
+        `/admin/update-user/${UpdatedEntity._id}`,
+        UpdatedEntity
       );
       if (apiResponse != null) {
         Swal.fire({
@@ -129,8 +134,8 @@ export function ManageProfile() {
       }
     } else if (type === "accessData") {
       const { apiResponse } = await useApiPut<User>(
-        `/admin/update-user-access-data/${FormData._id}`,
-        FormData
+        `/admin/update-user-access-data/${UpdatedEntity._id}`,
+        UpdatedEntity
       );
       if (apiResponse != null) {
         Swal.fire({
@@ -149,25 +154,39 @@ export function ManageProfile() {
 
   const handleDeleteImg = async (imgRef: string) => {
     let imgName: string[];
+    let newData: User;
 
     if (FormData.u_cover_photo === imgRef) {
       const splits = FormData.u_cover_photo!.split("%2F");
       imgName = splits[1].split("?alt");
-      setValueFromFormInput({
+
+      newData = {
+        ...entityData!,
         u_cover_photo: "",
-      });
+      };
     }
     if (FormData.u_img_profile === imgRef) {
       const splits = FormData.u_img_profile!.split("%2F");
       imgName = splits[1].split("?alt");
-      setValueFromFormInput({
+      newData = {
+        ...entityData!,
         u_img_profile: "",
-      });
+      };
     }
-    await FirebaseDeleteFile(imgName![0], "userImages");
+    await FirebaseDeleteFile(imgName![0], "userImages")
+      .then(() => {
+        formSubmit("basicInfo", newData as User);
+      })
+      .catch((err) => {
+        console.log("error on delete image on forebase");
+        Swal.fire({
+          icon: "error",
+          title: "Oppss",
+          text: "Desculpe, não foi possível excluir essa imagem, tente novamente, por favor",
+        });
+      });
   };
 
-  console.log("FormData", FormData);
   return (
     <>
       <header className="w-full md:hidden h-auto px-3 flex justify-between items-end">
@@ -204,7 +223,7 @@ export function ManageProfile() {
           {entityData && (
             <main className="w-full h-full  flex flex-col justify-between items-start pt-8 md:pt-0">
               <div className="w-full h-[35vh] md:h-[15rem] md:min-h-[40vh] relative ">
-                {!FormData.u_cover_photo ? (
+                {!entityData.u_cover_photo ? (
                   <div className="w-full h-full">
                     <DropzoneInput
                       onUpload={handleImgUpload}
@@ -218,18 +237,18 @@ export function ManageProfile() {
                   </div>
                 ) : (
                   <ImgPreview
-                    imgName={FormData.u_cover_photo}
-                    url={FormData.u_cover_photo}
+                    imgName={entityData.u_cover_photo}
+                    url={entityData.u_cover_photo}
                     deleteFile={handleDeleteImg}
                   />
                 )}
                 <div className=" w-auto absolute top-[80%] md:top-[87%] block   md:left-8 ">
                   <div className="w-full flex flex-col md:flex-row items-center md:items-end">
                     <div className="w-[7rem] h-[7rem] md:w-[8rem] md:h-[8rem] rounded-[50%]">
-                      {FormData.u_img_profile ? (
+                      {entityData.u_img_profile ? (
                         <ImgPreview
-                          imgName={FormData.u_img_profile}
-                          url={FormData.u_img_profile}
+                          imgName={entityData.u_img_profile}
+                          url={entityData.u_img_profile}
                           deleteFile={handleDeleteImg}
                           classNameAdditionalForImg="rounded-[50%]"
                         />
@@ -248,13 +267,13 @@ export function ManageProfile() {
                     <div className=" text-center md:text-left px-2 md:px-4 py-4">
                       <h4 className="text-sm md:text-lg  text-palm-700 font-display font-semibold md:mb-2  ">
                         {" "}
-                        {FormData?.u_entity_name
-                          ? FormData?.u_entity_name
-                          : FormData?.u_full_name}
+                        {entityData?.u_entity_name
+                          ? entityData?.u_entity_name
+                          : entityData?.u_full_name}
                       </h4>{" "}
                       <p className="text-xs md:text-sm text-gray-400 font-semibold md:mb-2">
                         {" "}
-                        {FormData?.u_city}
+                        {entityData?.u_city}
                       </p>
                       <div className="flex w-1/4 items-center justify-start">
                         <span className="text-xs md:text-sm text-gray-400">
@@ -311,9 +330,9 @@ export function ManageProfile() {
                         aria-describedby="entityName"
                         placeholder="Digite aqui"
                         defaultValue={
-                          FormData.u_type === "farmer"
-                            ? FormData.u_full_name
-                            : FormData.u_entity_name
+                          entityData.u_type === "farmer"
+                            ? entityData.u_full_name
+                            : entityData.u_entity_name
                         }
                         {...register("inputRegisterEntityName", {
                           required: "Campo obrigatório",
@@ -367,7 +386,7 @@ export function ManageProfile() {
                         placeholder="XXX.XXX.XXX-XX"
                         max={14}
                         maxLength={14}
-                        defaultValue={FormData.u_CNPJ_CPF}
+                        defaultValue={entityData.u_CNPJ_CPF}
                         {...register("inputRegisterEntityCnpj", {
                           required: "Informe um CPF válido para continuar",
                           minLength: {
@@ -422,7 +441,7 @@ export function ManageProfile() {
                         maxLength={40}
                         max={40}
                         aria-describedby="entity City"
-                        defaultValue={FormData.u_city}
+                        defaultValue={entityData.u_city}
                         placeholder="Digite aqui"
                         {...register("iputRegisterEntityCity", {
                           required: "Campo Obrigatório",
@@ -479,7 +498,7 @@ export function ManageProfile() {
                         id="inputRegisterEntityDistrict"
                         aria-describedby="inputRegisterEntityDistrict"
                         placeholder="Digite aqui"
-                        defaultValue={FormData.u_district}
+                        defaultValue={entityData.u_district}
                         max={40}
                         maxLength={40}
                         onChange={(e) =>
@@ -522,7 +541,7 @@ export function ManageProfile() {
                         placeholder="Digite aqui"
                         max={70}
                         maxLength={70}
-                        defaultValue={FormData.u_street}
+                        defaultValue={entityData.u_street}
                         onChange={(e) =>
                           setValueFromFormInput({
                             u_street: e.target.value,
@@ -561,7 +580,7 @@ export function ManageProfile() {
                           m-0
                           focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                         id="inputRegisterEntityNumber"
-                        defaultValue={FormData.u_number}
+                        defaultValue={entityData.u_number}
                         max={6}
                         maxLength={6}
                         {...register("inputRegisterEntityNumber", {
@@ -613,7 +632,7 @@ export function ManageProfile() {
                             focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                           aria-label="select entity Uf"
                           id="inputRegisterEntityUf"
-                          defaultValue={FormData.u_UF}
+                          defaultValue={entityData.u_UF}
                           {...register("inputRegisterEntityUf", {
                             required: "Campo obrigatório",
                           })}
@@ -695,7 +714,7 @@ export function ManageProfile() {
                         max={12}
                         maxLength={12}
                         placeholder="(DDD) 9XXXX-XXXX"
-                        defaultValue={FormData.u_main_contact}
+                        defaultValue={entityData.u_main_contact}
                         {...register("inputEntityMainPhone", {
                           required: "Campo Obrigatório",
                           minLength: {
@@ -756,7 +775,7 @@ export function ManageProfile() {
                         placeholder="(DDD) 9XXXX-XXXX"
                         max={12}
                         maxLength={12}
-                        defaultValue={FormData.u_secondary_contact}
+                        defaultValue={entityData.u_secondary_contact}
                         aria-describedby="entity phone 2"
                         {...register("inputRegisterEntitySecondaryPhone", {
                           minLength: {
@@ -813,7 +832,7 @@ export function ManageProfile() {
                       id="InputUpdateUserInformation"
                       rows={3}
                       placeholder="Descreva aqui o que os cliente precisam ou querem saber sobre voçê, e, sobre o que produz."
-                      defaultValue={FormData.u_description}
+                      defaultValue={entityData.u_description}
                       {...register("InputUpdateUserInformation", {
                         minLength: {
                           value: 30,
@@ -889,7 +908,9 @@ export function ManageProfile() {
                         transition
                         duration-150
                         ease-in-out"
-                      onClick={handleSubmit(() => formSubmit("basicInfo"))}
+                      onClick={handleSubmit(() =>
+                        formSubmit("basicInfo", FormData)
+                      )}
                     >
                       Salvar
                     </button>
@@ -913,7 +934,7 @@ export function ManageProfile() {
                       className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                       placeholder="exemplo@gmail.com"
                       id="inputUpdateUserEmail"
-                      defaultValue={FormData.u_email}
+                      defaultValue={entityData.u_email}
                       {...register("inputUpdateUserEmail", {
                         required: "Campo obrigatório",
                         pattern: {
@@ -1017,7 +1038,9 @@ export function ManageProfile() {
 
                   <button
                     type="button"
-                    onClick={handleSubmit(() => formSubmit("accessData"))}
+                    onClick={handleSubmit(() =>
+                      formSubmit("basicInfo", FormData)
+                    )}
                     className="block mx-auto  px-6   py-2.5 bg-palm-700 text-white font-medium text-sm 
                       leading-snug uppercase rounded shadow-md hover:bg-palm-500 hover:shadow-lg focus:bg-palm-700
                        focus:shadow-lg focus:outline-none focus:ring-0 active:bg-palm-700 active:shadow-lg transition duration-150 ease-in-out"

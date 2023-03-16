@@ -30,10 +30,10 @@ export function ImgPreview({
       >
         <button
           onClick={() => deleteFile(url)}
-          className="text-sm text-center font-semibold text-palm-700 flex flex-col items-center justify-center   "
+          className="text-sm text-center font-semibold text-green-500 flex flex-col items-center justify-center   "
         >
-          <Trash size={42} color="#789B3D" weight="light" />
-          Excluir
+          <Trash size={42} color="#51BB7A" weight="light" />
+          Alterar
         </button>
       </div>
     </div>
