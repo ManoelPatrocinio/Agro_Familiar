@@ -1,4 +1,6 @@
 import ImgHeaderCarousel_1 from "../assets/images/header_slide_1.png";
+import ImgHeaderCarousel_2 from "../assets/images/header_slide_2.jpg";
+
 export function Carrousel() {
   return (
     <div
@@ -28,7 +30,7 @@ export function Carrousel() {
           aria-label="Slide 3"
         ></button>
       </div>
-      <div className="carousel-inner relative w-full h-full overflow-hidden rounded">
+      <div className="carousel-inner relative w-full h-full overflow-hidden ">
         <div className="carousel-item active float-left w-full h-full">
           <img
             src={ImgHeaderCarousel_1}
@@ -38,12 +40,21 @@ export function Carrousel() {
           />
         </div>
         <div className="carousel-item float-left w-full h-full">
-          <img
-            src="https://mdbcdn.b-cdn.net/img/new/slides/042.webp"
-            className="block w-full h-full"
-            alt="Camera"
-            loading="lazy"
-          />
+          <div
+            className="w-full  h-full flex md:flex-col md:justify-start  items-center md:items-start   bg-no-repeat bg-[length:100%_100%] "
+            style={{ backgroundImage: `url(${ImgHeaderCarousel_2})` }}
+          >
+            <div className="w-full md:w-1/2  md:mt-28 md:ml-12 p-4 md:p-0 ">
+              <h3 className="w-full  text-left text-sm md:text-4xl text-palm-500 font-display  font-bold mb-4 md:mb-8  drop-shadow-xl">
+                Encontre e negocie diretamente com os produtores da sua região
+              </h3>
+
+              <p className="w-[80%] text-left text-xs md:text-md  text-white md:leading-8 font-semibold drop-shadow-xl">
+                Além de informações e contato direto, para negociar preço e
+                entrega. Tudo rápido, fácil e gratuito !
+              </p>
+            </div>
+          </div>
         </div>
         <div className="carousel-item float-left w-full h-full">
           <img

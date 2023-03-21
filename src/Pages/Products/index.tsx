@@ -28,6 +28,8 @@ export function Products() {
     Product[]
   >([]);
 
+  const [search, setSearch] = useState<string>("");
+
   useEffect(() => {
     api
       .get("/all-products")
@@ -79,14 +81,24 @@ export function Products() {
   };
 
   function filterByCategory(category: string) {
+    setSearch("");
+
     const filtedList = productData?.filter(
       (item) => item.p_category === category
     );
     setProductFiltedByCategory(filtedList!);
   }
+
+  const filteredProdList =
+    search.length > 0
+      ? productData?.filter((product) =>
+          product.p_name?.toLowerCase().includes(search.toLowerCase())
+        )
+      : [];
+
   return (
     <>
-      <Header />
+      <Header setSearch={setSearch} ItemSearched={search} />
       <Carrousel />
 
       <main className="flex items-start flex-col px-8 md:px-20">
@@ -113,19 +125,9 @@ export function Products() {
               </button>
             </div>
             <div className="w-full flex flex-wrap justify-around mt-4">
-              {productFiltedByCategory.length === 0 ? (
+              {search?.length > 0 && (
                 <>
-                  {productData?.map((product, index) => (
-                    <CardProduct
-                      product={product}
-                      key={index}
-                      addPurchaseList={useAddToPuchaseList}
-                    />
-                  ))}
-                </>
-              ) : (
-                <>
-                  {productFiltedByCategory?.map((product, index) => (
+                  {filteredProdList?.map((product, index) => (
                     <CardProduct
                       product={product}
                       key={index}
@@ -134,6 +136,26 @@ export function Products() {
                   ))}
                 </>
               )}
+
+              {productFiltedByCategory.length > 0 &&
+                search?.length === 0 &&
+                productFiltedByCategory?.map((product, index) => (
+                  <CardProduct
+                    product={product}
+                    key={index}
+                    addPurchaseList={useAddToPuchaseList}
+                  />
+                ))}
+
+              {productFiltedByCategory.length === 0 &&
+                search?.length === 0 &&
+                productData?.map((product, index) => (
+                  <CardProduct
+                    product={product}
+                    key={index}
+                    addPurchaseList={useAddToPuchaseList}
+                  />
+                ))}
             </div>
           </div>
         </div>

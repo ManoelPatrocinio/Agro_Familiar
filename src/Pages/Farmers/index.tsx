@@ -18,6 +18,7 @@ export function Farmers() {
   const [filtedEntityList, setFiltedEntityList] = useState<
     "farmer" | "coop" | "assoc"
   >("farmer");
+  const [search, setSearch] = useState<string>("");
 
   useEffect(() => {
     api
@@ -39,20 +40,39 @@ export function Farmers() {
     return entityData?.filter((entity) => entity.u_type === filtedEntityList);
   }
 
+  const filteredEntityList =
+    search.length > 0
+      ? entityData?.filter((product) =>
+          product.u_entity_name?.toLowerCase().includes(search.toLowerCase())
+        )
+      : [];
+
   return (
     <>
-      <Header />
+      <Header setSearch={setSearch} ItemSearched={search} />
       <Carrousel />
       <main className=" w-full flex items-start flex-col px-6 md:px-20">
         <SectionTitle title="Produtores" className={"my-6 w-full"} />
         <Dropdrown items={["De A a Z", "De Z a A"]} />
 
         <div className="w-full flex flex-wrap justify-around ">
-          {filtedEntity() && (
+          {search.length > 0 ? (
             <>
-              {filtedEntity()?.map((entity, index) => (
-                <CardEntity entity={entity} key={index} />
-              ))}
+              <>
+                {filteredEntityList?.map((entity, index) => (
+                  <CardEntity entity={entity} key={index} />
+                ))}
+              </>
+            </>
+          ) : (
+            <>
+              {filtedEntity() && (
+                <>
+                  {filtedEntity()?.map((entity, index) => (
+                    <CardEntity entity={entity} key={index} />
+                  ))}
+                </>
+              )}
             </>
           )}
         </div>

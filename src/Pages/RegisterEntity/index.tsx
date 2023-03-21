@@ -69,7 +69,7 @@ export function RegisterEntity() {
 
   return (
     <>
-      <Header />
+      <Header setSearch={() => {}} ItemSearched={""} />
       <Carrousel />
       <main className="px-8 md:px-20">
         <SectionTitle
@@ -209,13 +209,18 @@ export function RegisterEntity() {
                   id="inputRegisterEntityCnpj"
                   aria-describedby="EntityCnpj"
                   placeholder="XX.XXX.XXX/XXXX.XX"
-                  max={18}
-                  maxLength={18}
+                  max={14}
+                  min={14}
+                  maxLength={14}
                   {...register("inputRegisterEntityCnpj", {
                     required: "Informe um CNPJ válido para continuar",
                     minLength: {
                       value: 14,
                       message: "Este campo deve ter pelo menos 14 caracteres",
+                    },
+                    pattern: {
+                      value: /^[0-9]+$/,
+                      message: "Por favor, apenas números",
                     },
                   })}
                   onChange={(e) =>
@@ -558,6 +563,7 @@ export function RegisterEntity() {
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                   id="inputEntityMainPhone"
                   max={12}
+                  min={12}
                   maxLength={12}
                   placeholder="(DDD) 9XXXX-XXXX"
                   {...register("inputEntityMainPhone", {
@@ -613,6 +619,7 @@ export function RegisterEntity() {
                   id="inputRegisterEntitySecondaryPhone"
                   placeholder="(DDD) 9XXXX-XXXX"
                   max={12}
+                  min={12}
                   maxLength={12}
                   aria-describedby="entity phone 2"
                   {...register("inputRegisterEntitySecondaryPhone", {

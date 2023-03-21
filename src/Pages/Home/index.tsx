@@ -17,6 +17,7 @@ interface IPuchaseList {
 }
 export function Home() {
   const [purchaseList, setPurchaseList] = useState<IPuchaseList[]>([]);
+  const [search, setSearch] = useState<string>("");
 
   const {
     data: apiProducts,
@@ -40,6 +41,12 @@ export function Home() {
       text: "Desculpe, não foi possível  exibir os produtos, tente novamente, por favor",
     });
   }
+  const filteredProdList =
+    search.length > 0
+      ? apiProducts?.filter((product) =>
+          product.p_name?.toLowerCase().includes(search.toLowerCase())
+        )
+      : [];
 
   useEffect(() => {
     setPurchaseList(CheckLocalStorage.getItemPurchaseList());
@@ -75,7 +82,7 @@ export function Home() {
   };
   return (
     <>
-      <Header />
+      <Header setSearch={setSearch} ItemSearched={search} />
       <Carrousel />
 
       <main className="w-full flex items-start flex-col px-1 md:px-20 ">
@@ -101,20 +108,34 @@ export function Home() {
           </div>
         )}
         <div className="w-full flex flex-wrap justify-around pt-4 px-0 ">
-          {apiProducts?.map((product, index) => (
-            <CardProduct
-              product={product}
-              key={index}
-              addPurchaseList={useAddToPuchaseList}
-            />
-          ))}
+          {search?.length > 0 ? (
+            <>
+              {filteredProdList?.map((product, index) => (
+                <CardProduct
+                  product={product}
+                  key={index}
+                  addPurchaseList={useAddToPuchaseList}
+                />
+              ))}
+            </>
+          ) : (
+            <>
+              {apiProducts?.map((product, index) => (
+                <CardProduct
+                  product={product}
+                  key={index}
+                  addPurchaseList={useAddToPuchaseList}
+                />
+              ))}
+            </>
+          )}
         </div>
         <div
-          className="w-full  h-48 md:h-80 flex md:flex-col md:justify-center  items-end md:items-start  bg-no-repeat bg-[length:100%_100%] rounded"
+          className="w-full  h-48 md:h-80 flex md:flex-col md:justify-center  items-center md:items-start  bg-no-repeat bg-[length:100%_100%] rounded"
           style={{ backgroundImage: `url(${homePromotionImage1})` }}
         >
           <div className="w-full md:w-1/2 md:ml-8 p-2 md:p-0 ">
-            <h3 className="w-full  text-left text-sm md:text-xl text-white font-bold mb-8  drop-shadow-xl">
+            <h3 className="w-full  text-left text-sm md:text-xl text-palm-500 font-display  font-bold mb-4 md:mb-8  drop-shadow-xl">
               Encontre e negocie diretamente com os produtores da sua região
             </h3>
 

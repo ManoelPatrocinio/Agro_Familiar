@@ -74,13 +74,14 @@ export function CardEntity({ entity }: Props) {
         </>
       )}
 
-      <button
-        type="button"
+      <a
+        href={`http://api.whatsapp.com/send?l=pt_BR&phone=+55${entity.u_main_contact}&text=Olá, tudo bem ?`}
+        target="_blank"
         className="w-full flex justify-center items-center px-2 py-2.5 bg-green-600 text-white  text-sm leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out"
       >
         <WhatsappLogo size={32} color="#fff" />
         Conversar
-      </button>
+      </a>
     </div>
   );
 }

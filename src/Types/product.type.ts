@@ -10,13 +10,14 @@ export type Product = {
     p_raiting?:  number;
     p_n_contact?: string;
     p_description?: string;
-    p_images?: {
-        main:string,
-        secondary: string,
-        tertiary:string
-        quaternary:string
+    p_images?: [] | string[]
+    // p_images?: {
+    //     main:string,
+    //     secondary: string,
+    //     tertiary:string
+    //     quaternary:string
 
-    };
+    // };
     createdAt?: Date;
 }
 

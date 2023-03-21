@@ -7,7 +7,7 @@ import { Header } from "../../Components/Header";
 export function AboutUs() {
   return (
     <>
-      <Header />
+      <Header setSearch={() => {}} ItemSearched={""} />
       <main className="w-full h-full px-8 md:px-20 mt-10 md:mt-20">
         <div className="w-full  text-justify indent-8 md:indent-0 md:text-center font-display mb-10">
           <h3 className="w-full text-xl text-center text-palm-700 mb-8">

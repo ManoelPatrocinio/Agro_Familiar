@@ -18,6 +18,7 @@ export function Entities() {
   const [filtedEntityList, setFiltedEntityList] = useState<
     "farmer" | "coop" | "assoc"
   >("assoc");
+  const [search, setSearch] = useState<string>("");
 
   useEffect(() => {
     api
@@ -38,10 +39,16 @@ export function Entities() {
   function filtedEntity() {
     return entityData?.filter((entity) => entity.u_type === filtedEntityList);
   }
+  const filteredEntityList =
+    search.length > 0
+      ? entityData?.filter((product) =>
+          product.u_entity_name?.toLowerCase().includes(search.toLowerCase())
+        )
+      : [];
 
   return (
     <>
-      <Header />
+      <Header setSearch={setSearch} ItemSearched={search} />
       <Carrousel />
       <main className=" w-full flex items-start flex-col px-6 md:px-20">
         <SectionTitle title="Entidades" className={"my-6 w-full"} />
@@ -69,11 +76,23 @@ export function Entities() {
         <Dropdrown items={["De A a Z", "De Z a A"]} />
 
         <div className="w-full flex flex-wrap justify-around ">
-          {filtedEntity() && (
+          {search.length > 0 ? (
             <>
-              {filtedEntity()?.map((entity, index) => (
-                <CardEntity entity={entity} key={index} />
-              ))}
+              <>
+                {filteredEntityList?.map((entity, index) => (
+                  <CardEntity entity={entity} key={index} />
+                ))}
+              </>
+            </>
+          ) : (
+            <>
+              {filtedEntity() && (
+                <>
+                  {filtedEntity()?.map((entity, index) => (
+                    <CardEntity entity={entity} key={index} />
+                  ))}
+                </>
+              )}
             </>
           )}
         </div>
@@ -89,7 +108,7 @@ export function Entities() {
               Esse portal foi criado como objetivo de aumentar a visibilidade e
               os meios de divulgação das Associações, Cooperativas e produtores
               individuais, além, de trazer maior proximidade com o consumidor
-              interessado em produtos da agricultura familiar de sua região.
+              interessado em produtos da agricultura familiar da sua região.
               <br />
               <span className="underline decoration-1 ">
                 {" "}

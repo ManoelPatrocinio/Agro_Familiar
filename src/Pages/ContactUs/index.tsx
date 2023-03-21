@@ -10,7 +10,7 @@ const emailContact = import.meta.env.VITE_PORTAL_EMAIL;
 export function ContactUs() {
   return (
     <>
-      <Header />
+      <Header setSearch={() => {}} ItemSearched={""} />
       <Carrousel />
       <main className="w-full flex items-start flex-col px-8 md:px-20">
         <SectionTitle title={"Fale Conosco"} className={"my-6 w-full"} />

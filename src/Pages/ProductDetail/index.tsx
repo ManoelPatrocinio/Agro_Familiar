@@ -323,7 +323,7 @@ export function ProductDetail() {
   }
   return (
     <>
-      <Header />
+      <Header setSearch={() => {}} ItemSearched={""} />
       <Carrousel />
       <SectionTitle title={productData?.farmer_id!} className={"my-10"} />
       <main className="w-full h-full md:h-[22rem]  flex flex-col md:flex-row px-4 md:px-20">
@@ -444,7 +444,7 @@ export function ProductDetail() {
               </button>
             </div>
             <a
-              href={`http://api.whatsapp.com/send?l=pt_BR&phone=+${productData?.p_n_contact}&text=Olá jú ! Eu Tenho interesse no produto: ${productData?.p_name}, de preço: ${productData?.p_price} reais. Ainda estar disponível ?`}
+              href={`http://api.whatsapp.com/send?l=pt_BR&phone=+5574988393944&text=Olá jú ! Eu Tenho interesse no produto: ${productData?.p_name}, de preço: ${productData?.p_price} reais. Ainda estar disponível ?`}
               target="_blank"
               className="w-full flex justify-center items-center px-2 py-2.5 bg-green-600 text-white  text-sm leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out"
             >

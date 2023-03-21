@@ -62,7 +62,7 @@ export function RegisterFarmer() {
 
   return (
     <>
-      <Header />
+      <Header setSearch={() => {}} ItemSearched={""} />
       <Carrousel />
       <main className="px-8 md:px-20">
         <SectionTitle

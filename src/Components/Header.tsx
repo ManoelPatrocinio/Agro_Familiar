@@ -16,7 +16,12 @@ interface IPuchaseList {
   quantity: number;
 }
 
-export function Header() {
+interface Iprop {
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
+  ItemSearched: string;
+}
+
+export function Header({ setSearch, ItemSearched }: Iprop) {
   const [userStatus, setUserStatus] = useState<UserType | null>(null);
   const [showForm, setShowForm] = useState<boolean>(false);
   const [puchaseListForQtd, setPuchaseListForQtf] = useState<IPuchaseList[]>(
@@ -49,11 +54,13 @@ export function Header() {
       <nav className="navbar py-2  bg-white relative flex items-end w-full justify-between">
         <Menu_Sidebar type="default" />
         <div className="header-form-search hidden md:flex items-end w-[25%]">
-          <button className="w-10 h-10">
+          <div className="w-10 h-10 flex items-end">
             <MagnifyingGlass size={32} color="#789B3D" mirrored />
-          </button>
+          </div>
           <input
-            type="text"
+            onChange={(e) => setSearch(e.target.value)}
+            value={ItemSearched}
+            type="search"
             placeholder="Busque Aqui..."
             className="w-10/12 p-2 border-b-[1px] border-palm-700 rounded-br focus:outline-none"
           />
@@ -347,15 +354,17 @@ export function Header() {
 
       <div className="relative w-full h-12 mt-4 md:hidden ">
         <input
-          type="text"
+          onChange={(e) => setSearch(e.target.value)}
+          value={ItemSearched}
+          type="search"
           placeholder="Busque Aqui..."
           className="w-full h-full pl-2  border-[1px] rounded border-palm-700  focus:outline-none"
         />
-        <MagnifyingGlass
-          size={24}
-          color="#789B3D"
-          className="absolute right-2 top-2"
-        />
+        {ItemSearched !== "" && (
+          <button className="w-[15%] h-full absolute top-0 right-0 flex justify-end items-center ">
+            <MagnifyingGlass size={32} color="#789B3D" className="mr-3" />
+          </button>
+        )}
       </div>
     </header>
   );

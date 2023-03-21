@@ -68,7 +68,7 @@ export function CreateProduct() {
     const oldPriceFormated = prodData.p_old_price.replace(",", ".");
     // set all images on prop uploads
     filesData.forEach((file, index) => {
-      data.append("uploads", file);
+      data.append("files", file);
     });
     data.append("farmer_id", userStatus?._id);
     data.append("p_name", prodData.p_name);
@@ -79,10 +79,7 @@ export function CreateProduct() {
     data.append("p_n_contact", prodData.p_n_contact);
     data.append("p_description", prodData.p_description);
 
-    const { apiResponse } = await useApiPost<Product>(
-      "upload-files/image",
-      data
-    );
+    const { apiResponse } = await useApiPost<Product>("/admin/update", data);
 
     if (apiResponse != null) {
       Swal.fire({

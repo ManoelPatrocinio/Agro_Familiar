@@ -1,20 +1,47 @@
 import { ChatText } from "phosphor-react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
+import { User } from "../../Types/user.type";
 import entity_profile from "../../assets/images/img_entity_profile_exemple.png";
 import header_background from "../../assets/images/img_header_exemple.png";
 import Star from "../../assets/images/star_icon.png";
+import { api } from "../../hook/useApi";
 export function InfoEntity() {
+  const { userId } = useParams();
+  const [entityData, setEntityData] = useState<User>();
+
+  useEffect(() => {
+    api
+      .get(`/entity/${userId}`)
+      .then((response) => {
+        // console.log("response.data", response.data);
+        setEntityData(response.data);
+
+        // setProductData(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        Swal.fire({
+          icon: "error",
+          title: "Oppss",
+          text: "Desculpe, não foi possível  exibir essa informação, tente de novo.",
+        });
+      });
+  }, [userId]);
+
   return (
     <>
-      <Header />
+      <Header setSearch={() => {}} ItemSearched={""} />
       <div className="w-full h-40 md:h-[27rem] md:min-h-[60vh] relative mt-4">
         <img
           src={header_background}
           alt="foto de capa"
           className="w-full h-full  "
         />
-        <div className=" w-full absolute top-[7rem] md:top-[87%] flex flex-col md:flex-row items-center md:items-end md:pl-16 ">
+        <div className=" w-full absolute top-[7rem] md:top-[87%] flex flex-col md:flex-row items-center md:items-end md:pl-16">
           <div className="w-[7rem] h-[7rem] md:w-[9.5rem] md:h-[9.5rem] rounded-[50%]">
             <img
               src={entity_profile}
@@ -23,16 +50,17 @@ export function InfoEntity() {
             />
           </div>
           <div className="flex flex-col items-center md:items-start justify-evenly px-4 pb-4">
-            <h4 className="text-sm md:text-lg text-center md:text-left text-palm-700 font-display font-semibold">
-              {" "}
-              Associação dos Produtores Rurais do Pau D´arco
+            <h4 className="text-sm md:text-lg text-center md:text-left text-palm-700 font-display font-semibold pt-3 md:pt-0">
+              {entityData?.u_type === "farmer"
+                ? entityData.u_full_name
+                : entityData?.u_entity_name}
             </h4>
-            <p className="text-xs md:text-sm text-gray-400 font-semibold">
+            <p className="text-xs md:text-sm text-gray-400 font-semibold py-2 md:py-1">
               {" "}
-              Pau D´arco
+              {entityData?.u_city}
             </p>
 
-            <div className="flex w-1/4 items-center justify-start">
+            <div className="flex md:w-1/4 items-center justify-start">
               <span className="text-xs md:text-sm text-gray-400"> 4.6 </span>
               <img
                 src={Star}
@@ -48,25 +76,74 @@ export function InfoEntity() {
           Informações sobre a Associação
         </h1>
 
-        <p className="w-full md:text-left text-justify text-sm text-gray-800 indent-12">
-          A associação foi fundada em 2002 , como resposta da união dos
+        <p className="w-full md:text-left text-justify text-sm text-gray-800 indent-9 md:indent-12">
+          {/* A associação foi fundada em 2002 , como resposta da união dos
           moradores do povoado de Curral Novo, na cidade de Barra Bahia. Hoje já
           contamos com mais de 23 colaboradores, que atuam em conjunto no
           plantio e cultivo de milho, feijão,mandioca e hortaliças. Prezamos
           pela qualidade de todos os produtos, através de um cultivo
-          tradicional, sem adição de produtos químicos.
+          tradicional, sem adição de produtos químicos. */}
+          {entityData?.u_description
+            ? entityData.u_description
+            : "Este usuário ainda não adicionou uma descrição sobre suas atividades. Caso precise de mais informações, além das que estão apresentadas aqui, entre em contato com esse usuário pelos meios disponíveis."}
         </p>
-        <div className="w-full flex flex-col md:flex-row justify-between py-8">
-          <p className="text-sm text-left text-gray-800">
-            <span className="font-semibold">CNPJ:</span> 44.448.094/0001-31
-          </p>
-          <p className="text-sm text-left  text-gray-800 py-4 md:py-0">
-            <span className="font-semibold">Responsável Legal: </span> Manoel de
-            Jesus Moura do Patrocinio
-          </p>
-          <p className="text-sm text-left text-gray-800">
-            <span className="font-semibold">Telefone(s): </span> 74 98800-0000
-          </p>
+        <div className="w-full flex flex-col md:flex-row justify-evenly py-8">
+          {entityData?.u_type !== "farmer" ? (
+            <p className="w-full md:max-w-[25%] text-sm text-left md:text-center text-gray-600">
+              <span className="font-semibold">CNPJ: </span>
+              {entityData?.u_CNPJ_CPF?.replace(
+                /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
+                "$1.$2.$3/$4-$5"
+              )}
+            </p>
+          ) : (
+            <p className="w-full md:max-w-[25%] text-sm text-left md:text-center text-gray-600">
+              <span className="font-semibold">E-mail:</span>
+              {entityData?.u_email}
+            </p>
+          )}
+
+          {entityData?.u_type !== "farmer" && (
+            <p className="w-full md:max-w-[25%] text-sm text-left md:text-center text-gray-600 py-4 md:py-0 ">
+              <span className="font-semibold">Presidente: </span>
+              {entityData?.u_president_name}
+            </p>
+          )}
+          <div className="w-full md:max-w-[25%] flex flex-col items-start justify-start mb-3 md:md-0">
+            <p className="w-full text-sm text-left md:text-center text-gray-600">
+              <span className="font-semibold">Telefone(s): </span>{" "}
+              {entityData?.u_main_contact?.length === 12 &&
+                entityData?.u_main_contact?.replace(
+                  /^(\d{3})(\d{5})(\d{4})/,
+                  "($1)$2-$3"
+                )}
+              {entityData?.u_main_contact?.length === 11 &&
+                entityData?.u_main_contact?.replace(
+                  /^(\d{2})(\d{5})(\d{4})/,
+                  "($1)$2-$3"
+                )}
+            </p>
+            <p className="w-full text-sm text-left md:text-center text-gray-600">
+              <span className="invisible font-semibold">Telefone(s): </span>{" "}
+              {entityData?.u_secondary_contact?.length === 12 &&
+                entityData?.u_secondary_contact?.replace(
+                  /^(\d{3})(\d{5})(\d{4})/,
+                  "($1)$2-$3"
+                )}
+              {entityData?.u_secondary_contact?.length === 11 &&
+                entityData?.u_secondary_contact?.replace(
+                  /^(\d{2})(\d{5})(\d{4})/,
+                  "($1)$2-$3"
+                )}
+            </p>
+          </div>
+
+          {entityData?.u_type !== "farmer" && (
+            <p className="w-full md:max-w-[25%] text-sm text-left md:text-center text-gray-600">
+              <span className="font-semibold">E-mail: </span>
+              {entityData?.u_email}
+            </p>
+          )}
         </div>
         <div className="mt-6">
           <h4 className="w-full text-left text-sm text-gray-800 font-semibold pb-8">
