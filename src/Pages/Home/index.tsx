@@ -7,6 +7,7 @@ import { Dropdrown } from "../../Components/Dropdrown";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
+import { Load_spinner } from "../../Components/load_spinner";
 import { Product } from "../../Types/product.type";
 import homePromotionImage1 from "../../assets/images/header_slide_2.jpg";
 import { api } from "../../hook/useApi";
@@ -108,6 +109,7 @@ export function Home() {
           </div>
         )}
         <div className="w-full flex flex-wrap justify-around pt-4 px-0 ">
+          {!apiProducts && <Load_spinner adicionalClass="w-screen h-screen" />}
           {search?.length > 0 ? (
             <>
               {filteredProdList?.map((product, index) => (

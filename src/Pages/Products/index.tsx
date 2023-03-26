@@ -9,6 +9,7 @@ import { Filter_category } from "../../Components/Filter_category";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
+import { Load_spinner } from "../../Components/load_spinner";
 import { Product } from "../../Types/product.type";
 import { api } from "../../hook/useApi";
 import { CheckLocalStorage } from "../../service/localStorage";
@@ -125,6 +126,10 @@ export function Products() {
               </button>
             </div>
             <div className="w-full flex flex-wrap justify-around mt-4">
+              {!productData && (
+                <Load_spinner adicionalClass="w-screen h-screen" />
+              )}
+
               {search?.length > 0 && (
                 <>
                   {filteredProdList?.map((product, index) => (

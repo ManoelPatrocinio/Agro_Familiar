@@ -7,6 +7,7 @@ import { Dropdrown } from "../../Components/Dropdrown";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
+import { Load_spinner } from "../../Components/load_spinner";
 import { User as typeUser } from "../../Types/user.type";
 import farmersPromotionImage1 from "../../assets/images/banner_joinUs.jpeg";
 import iconFarmeWhite from "../../assets/images/icon-farmer-white.png";
@@ -56,6 +57,8 @@ export function Farmers() {
         <Dropdrown items={["De A a Z", "De Z a A"]} />
 
         <div className="w-full flex flex-wrap justify-around ">
+          {!entityData && <Load_spinner adicionalClass="w-screen h-screen" />}
+
           {search.length > 0 ? (
             <>
               <>

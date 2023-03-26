@@ -7,6 +7,7 @@ import { Dropdrown } from "../../Components/Dropdrown";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
+import { Load_spinner } from "../../Components/load_spinner";
 import { User } from "../../Types/user.type";
 import entitiesPromotionImage1 from "../../assets/images/banner_joinUs.jpeg";
 import iconFarmeWhite from "../../assets/images/icon-farmer-white.png";
@@ -68,7 +69,7 @@ export function Entities() {
           </button>
           <button
             onClick={() => setFiltedEntityList("coop")}
-            className="mx-2 md:mx-0 text-sm md:text-lg font-display text-center text-gray-800"
+            className="mx-2 md:mx-0  text-sm md:text-lg font-display text-center text-gray-800"
           >
             Cooperativas
           </button>
@@ -76,6 +77,7 @@ export function Entities() {
         <Dropdrown items={["De A a Z", "De Z a A"]} />
 
         <div className="w-full flex flex-wrap justify-around ">
+          {!entityData && <Load_spinner adicionalClass="w-screen h-screen" />}
           {search.length > 0 ? (
             <>
               <>

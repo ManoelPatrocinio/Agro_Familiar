@@ -25,8 +25,12 @@ export function ImgPreview({
         loading="lazy"
       />
       <div
-        className="absolute bottom-0 left-0 w-full h-full flex flex-col items-center justify-center bg-black opacity-0 hover:opacity-80 rounded transition
-          ease-in-out "
+        className={
+          classNameAdditionalForImg
+            ? "absolute bottom-0 left-0  flex flex-col items-center justify-center bg-black opacity-0 hover:opacity-80  transition ease-in-out " +
+              classNameAdditionalForImg
+            : "absolute bottom-0 left-0 w-full h-full flex flex-col items-center justify-center bg-black opacity-0 hover:opacity-80 rounded transition  ease-in-out"
+        }
       >
         <button
           onClick={() => deleteFile(url)}

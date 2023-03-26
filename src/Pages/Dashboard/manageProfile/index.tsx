@@ -9,6 +9,7 @@ import { DropzoneInput } from "../../../Components/Dropzone";
 import { ImgPreview } from "../../../Components/ImgPreview";
 import { MenuOfDashboard } from "../../../Components/MenuOfDashboard";
 import { Menu_Sidebar } from "../../../Components/Menu_Sidebar";
+import { Load_spinner } from "../../../Components/load_spinner";
 import { User } from "../../../Types/user.type";
 import Logo from "../../../assets/images/Logo.png";
 import Star from "../../../assets/images/star_icon.png";
@@ -203,23 +204,7 @@ export function ManageProfile() {
           <MenuOfDashboard userLogged={userStatus!} />
         </div>
         <div className="w-full md:w-[70%] h-full ">
-          {isFetching && (
-            <div className="w-full h-screen flex flex-col justify-center items-center">
-              <div className="flex items-center justify-center">
-                <div
-                  className="inline-block h-20 w-20 animate-spin rounded-full text-palm-700 border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] mb-8"
-                  role="status"
-                >
-                  <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                    Loading...
-                  </span>
-                </div>
-              </div>
-              <h3 className="text-lg font-semibold text-palm-700">
-                Carregando informações
-              </h3>
-            </div>
-          )}
+          {isFetching && <Load_spinner adicionalClass="w-full h-screen" />}
           {entityData && (
             <main className="w-full h-full  flex flex-col justify-between items-start pt-8 md:pt-0">
               <div className="w-full h-[35vh] md:h-[15rem] md:min-h-[40vh] relative ">
@@ -250,7 +235,7 @@ export function ManageProfile() {
                           imgName={entityData.u_img_profile}
                           url={entityData.u_img_profile}
                           deleteFile={handleDeleteImg}
-                          classNameAdditionalForImg="rounded-[50%]"
+                          classNameAdditionalForImg="w-full h-full rounded-[50%]"
                         />
                       ) : (
                         <DropzoneInput
@@ -298,8 +283,9 @@ export function ManageProfile() {
                     Informações de registro
                   </h4>
                   <p className="w-full text-center md:text-left text-xs md:text-sm  text-gray-400 mb-10">
-                    Caso deseje editar alguma informação,selecione o campo e
-                    siga as instruções
+                    Caso deseje alterar alguma informação, selecione o campo,
+                    insirar a nova informação e ao final, clique no botão
+                    salvar.
                   </p>
                   <div className="grid grid-col-2 md:grid-cols-2  md:gap-8">
                     <div className="form-group mb-6">
