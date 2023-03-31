@@ -91,25 +91,14 @@ export function Home() {
         <Dropdrown
           items={["Menor Preço", "Maior Preço", "De A a Z", "De Z a A"]}
         />
-        {isFetching && (
-          <div className="w-full h-[50vh] flex flex-col justify-center items-center">
-            <div className="flex items-center justify-center">
-              <div
-                className="inline-block h-20 w-20 animate-spin rounded-full text-palm-700 border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] mb-8"
-                role="status"
-              >
-                <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                  Loading...
-                </span>
-              </div>
-            </div>
-            <h3 className="text-lg font-semibold text-palm-700">
-              Carregando produtos
-            </h3>
-          </div>
-        )}
+
         <div className="w-full flex flex-wrap justify-around pt-4 px-0 ">
-          {!apiProducts && <Load_spinner adicionalClass="w-screen h-screen" />}
+          {isFetching && (
+            <Load_spinner
+              adicionalClass="w-screen h-screen"
+              message="Carregando Produtos ..."
+            />
+          )}
           {search?.length > 0 ? (
             <>
               {filteredProdList?.map((product, index) => (

@@ -77,7 +77,12 @@ export function Entities() {
         <Dropdrown items={["De A a Z", "De Z a A"]} />
 
         <div className="w-full flex flex-wrap justify-around ">
-          {!entityData && <Load_spinner adicionalClass="w-screen h-screen" />}
+          {!entityData && (
+            <Load_spinner
+              adicionalClass="w-screen h-screen"
+              message="Carregando ..."
+            />
+          )}
           {search.length > 0 ? (
             <>
               <>

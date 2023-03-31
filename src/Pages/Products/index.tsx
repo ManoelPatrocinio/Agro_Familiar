@@ -127,7 +127,10 @@ export function Products() {
             </div>
             <div className="w-full flex flex-wrap justify-around mt-4">
               {!productData && (
-                <Load_spinner adicionalClass="w-screen h-screen" />
+                <Load_spinner
+                  adicionalClass="w-screen h-screen"
+                  message="Carregando Produtos ..."
+                />
               )}
 
               {search?.length > 0 && (

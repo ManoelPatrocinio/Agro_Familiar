@@ -150,12 +150,18 @@ export function ManageProducts() {
             </div>
           </div>
 
-          {isFetching && <Load_spinner adicionalClass="w-full h-[50vh]" />}
-          <div className="w-full md:[30%] h-screen overflow-y-auto flex flex-col justify-start items-start pr-2">
-            {apiProducts?.products.map((product, index) => (
-              <ProductInList product={product} key={index} />
-            ))}
-          </div>
+          {isFetching ? (
+            <Load_spinner
+              adicionalClass="w-full h-screen"
+              message="Carregando Produtos,aguarde ..."
+            />
+          ) : (
+            <div className="w-full md:[30%] h-screen overflow-y-auto flex flex-col justify-start items-start pr-2">
+              {apiProducts?.products.map((product, index) => (
+                <ProductInList product={product} key={index} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </>

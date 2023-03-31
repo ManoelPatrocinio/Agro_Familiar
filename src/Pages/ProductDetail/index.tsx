@@ -389,7 +389,7 @@ export function ProductDetail() {
                   className="w-4 h-4 md:w-[17px] md:h-[17px] ml-1 mr-1"
                 />
                 <span className="text-xs md:text-xs text-gray-400">(202)</span>
-                {productData?.p_stock && (
+                {productData?.p_stock! > 0 && (
                   <span className="text-left text-gray-500 text-xs ml-4">
                     Em estoque: {productData?.p_stock}
                   </span>

@@ -204,7 +204,12 @@ export function ManageProfile() {
           <MenuOfDashboard userLogged={userStatus!} />
         </div>
         <div className="w-full md:w-[70%] h-full ">
-          {isFetching && <Load_spinner adicionalClass="w-full h-screen" />}
+          {isFetching && (
+            <Load_spinner
+              adicionalClass="w-full h-screen"
+              message="Carregando suas informações ..."
+            />
+          )}
           {entityData && (
             <main className="w-full h-full  flex flex-col justify-between items-start pt-8 md:pt-0">
               <div className="w-full h-[35vh] md:h-[15rem] md:min-h-[40vh] relative ">
@@ -225,6 +230,7 @@ export function ManageProfile() {
                     imgName={entityData.u_cover_photo}
                     url={entityData.u_cover_photo}
                     deleteFile={handleDeleteImg}
+                    classNameAdditionalForImg="w-full h-full rounded"
                   />
                 )}
                 <div className=" w-auto absolute top-[80%] md:top-[87%] block   md:left-8 ">

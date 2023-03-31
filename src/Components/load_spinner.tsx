@@ -1,7 +1,8 @@
 interface IProp {
   adicionalClass?: string;
+  message: string;
 }
-export function Load_spinner({ adicionalClass }: IProp) {
+export function Load_spinner({ adicionalClass, message }: IProp) {
   return (
     <div
       className={
@@ -20,9 +21,7 @@ export function Load_spinner({ adicionalClass }: IProp) {
           </span>
         </div>
       </div>
-      <h3 className="text-lg font-semibold text-palm-700">
-        Carregando produtos
-      </h3>
+      <h3 className="text-lg font-semibold text-palm-700">{message}</h3>
     </div>
   );
 }

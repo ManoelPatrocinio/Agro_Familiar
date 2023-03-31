@@ -120,7 +120,7 @@ export function Header({ setSearch, ItemSearched }: Iprop) {
                     className="flex justify-center items-center w-full text-center text-palm-700 text-sm py-2"
                   >
                     {" "}
-                    Meu Perfil
+                    Meu Espaço
                   </Link>
                   {userStatus?.u_type != "customer" && (
                     <Link
