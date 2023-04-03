@@ -64,10 +64,10 @@ export function ManageProducts() {
         <Menu_Sidebar type="admin" />
       </header>
       <div className="flex ">
-        <div className="hidden md:block w-[30%] min-h-full border-r border-gray-200 ">
+        <div className="hidden md:block w-[25%] min-h-full border-r border-gray-200 ">
           <MenuOfDashboard userLogged={userStatus!} />
         </div>
-        <div className="w-full md:w-[70%] h-full px-8">
+        <div className="w-full md:w-[75%] h-full px-8">
           <h1 className="w-full text-center md:text-left text-md md:text-xl text-palm-700 font-semibold my-8">
             Gerenciar Produtos
           </h1>

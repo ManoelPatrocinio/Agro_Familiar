@@ -86,8 +86,8 @@ export function Entities() {
           {search.length > 0 ? (
             <>
               <>
-                {filteredEntityList?.map((entity, index) => (
-                  <CardEntity entity={entity} key={index} />
+                {filteredEntityList?.map((entity) => (
+                  <CardEntity entity={entity} key={entity._id} />
                 ))}
               </>
             </>
@@ -95,8 +95,8 @@ export function Entities() {
             <>
               {filtedEntity() && (
                 <>
-                  {filtedEntity()?.map((entity, index) => (
-                    <CardEntity entity={entity} key={index} />
+                  {filtedEntity()?.map((entity) => (
+                    <CardEntity entity={entity} key={entity._id} />
                   ))}
                 </>
               )}

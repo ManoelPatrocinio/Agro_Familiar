@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { Link } from "react-router-dom";
 import { Product } from "../Types/product.type";
 import Icon_edit from "../assets/images/icon-edit.png";
 import Icon_trash from "../assets/images/icon-trash.png";
@@ -10,13 +11,6 @@ interface IProp {
 export function ProductInList({ product }: IProp) {
   return (
     <div className="w-full flex flex-col md:flex-row justify-between items-start mb-6 border border-palm-500 p-3 rounded">
-      {/* <img
-        src={ProductExemple}
-        alt=""
-        className="w-full md:w-[15rem] h-full rounded mr-4"
-        loading="lazy"
-      /> */}
-
       <div
         id={"caroulsel_prodInListImg" + `${product._id}`}
         className="carousel slide carousel-fade relative  w-full md:w-[15rem] md:h-[10.8rem] h-full rounded mr-4 "
@@ -67,14 +61,14 @@ export function ProductInList({ product }: IProp) {
       </div>
 
       <div className="w-full md:w-[70%] h-full text-left flex flex-col justify-between ">
-        <div className="w-full flex flex-col md:flex-row justify-start items-center">
-          <div className="w-full md:w-1/2 text-left my-2 md:my-0">
+        <div className="w-full flex flex-col md:flex-row justify-start md:justify-between items-center">
+          <div className="w-full md:w-1/3 text-left my-2 md:my-0">
             <h4 className="w-full  text-palm-700 text-md font-semibold">
               Nome/Título
             </h4>
             <p className="w-full text-gray-500 text-sm"> {product.p_name}</p>
           </div>
-          <div className="w-full md:w-1/2 text-left my-2 md:my-0">
+          <div className="w-full md:w-[30%] text-left my-2 md:my-0">
             <h4 className="w-full  text-palm-700 text-md font-semibold">
               Categoria
             </h4>
@@ -83,15 +77,32 @@ export function ProductInList({ product }: IProp) {
               {product.p_category}
             </p>
           </div>
+          <div className="w-full md:w-1/3 text-left my-2 md:my-0">
+            <h4 className="w-full  text-palm-700 text-md font-semibold">
+              Nº WhatsApp
+            </h4>
+            <p className="w-full text-gray-500 text-sm">
+              {product.p_n_contact?.length === 12 &&
+                product.p_n_contact.replace(
+                  /^(\d{3})(\d{5})(\d{4})/,
+                  "($1)$2-$3"
+                )}
+              {product.p_n_contact?.length === 11 &&
+                product.p_n_contact?.replace(
+                  /^(\d{2})(\d{5})(\d{4})/,
+                  "($1)$2-$3"
+                )}
+            </p>
+          </div>
         </div>
-        <div className="w-full flex justify-between md:justify-start items-center">
-          <div className="w-full md:w-1/2 text-left my-2 md:my-0">
+        <div className="w-full flex justify-between  items-center">
+          <div className="md:w-1/3 text-left my-2 md:my-0">
             <h4 className="w-full  text-palm-700 text-md font-semibold">
               Preço Atual
             </h4>
             <p className="w-full text-gray-500 text-sm">R$ {product.p_price}</p>
           </div>
-          <div className="w-full md:w-1/2 text-right md:text-left my-2 md:my-0">
+          <div className=" md:w-[30%] text-left my-2 md:my-0">
             <h4 className="w-full  text-palm-700 text-md font-semibold">
               Preço Antigo
             </h4>
@@ -99,6 +110,12 @@ export function ProductInList({ product }: IProp) {
               {" "}
               R$ {product.p_old_price}
             </p>
+          </div>
+          <div className=" md:w-1/3 text-left  my-2 md:my-0">
+            <h4 className="w-full  text-palm-700 text-md font-semibold">
+              Estoque
+            </h4>
+            <p className="w-full text-gray-500 text-sm"> {product.p_stock}</p>
           </div>
         </div>
         <div className="w-full flex justify-evenly items-center mt-4 md:mt-0">
@@ -112,7 +129,10 @@ export function ProductInList({ product }: IProp) {
             />
             Deletar
           </button>
-          <button className="text-center text-sm text-palm-700">
+          <Link
+            to={`/Admin/create-product/${product._id}`}
+            className="text-center text-sm text-palm-700"
+          >
             {" "}
             <img
               className="mx-auto"
@@ -121,7 +141,7 @@ export function ProductInList({ product }: IProp) {
               loading="lazy"
             />
             Editar
-          </button>
+          </Link>
           <button className="text-center text-sm text-palm-700">
             {" "}
             <img

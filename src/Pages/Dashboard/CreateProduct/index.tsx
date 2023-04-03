@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { Question } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { DropzoneInput } from "../../../Components/Dropzone";
 import { ImgPreview } from "../../../Components/ImgPreview";
@@ -14,7 +14,7 @@ import { FileUploaded } from "../../../Types/fileUploaded.types";
 import { Product } from "../../../Types/product.type";
 import { User } from "../../../Types/user.type";
 import Logo from "../../../assets/images/Logo.png";
-import { useApiPost } from "../../../hook/useApi";
+import { api, useApiPost } from "../../../hook/useApi";
 import { FirebaseUploadFile } from "../../../service/firebase";
 import { CheckLocalStorage } from "../../../service/localStorage";
 
@@ -25,7 +25,7 @@ const InitialProductState = {
   p_category: "",
   p_price: "",
   p_old_price: "",
-  p_stock: 0,
+  p_stock: "",
   p_raiting: 0,
   p_n_contact: "",
   p_description: "",
@@ -37,7 +37,7 @@ export function CreateProduct() {
   const [filesData, setFileData] = useState<FileUploaded[]>([]);
   const [userStatus, setUserStatus] = useState<User | null>(null);
   const [isLoading, setIsloading] = useState<boolean>(false);
-
+  const { productId } = useParams();
   const {
     register,
     formState: { errors },
@@ -45,7 +45,25 @@ export function CreateProduct() {
   } = useForm();
 
   useEffect(() => {
+    setIsloading(true);
+
     setUserStatus(CheckLocalStorage.getLoggedUser());
+    if (productId) {
+      api
+        .get(`/product/${productId}`)
+        .then((response) => {
+          setProductData(response.data.product);
+        })
+        .catch((error) => {
+          console.error(error);
+          Swal.fire({
+            icon: "error",
+            title: "Oppss",
+            text: "Desculpe, não foi possível  exibir as informações do produto.",
+          });
+        });
+    }
+    setIsloading(false);
   }, []);
 
   //function for add value input on state
@@ -145,10 +163,10 @@ export function CreateProduct() {
         <Menu_Sidebar type="admin" />
       </header>
       <div className="flex">
-        <div className="hidden md:block w-[30%] min-h-full border-r border-gray-200 ">
+        <div className="hidden md:block w-[25%] min-h-full border-r border-gray-200 ">
           <MenuOfDashboard userLogged={userStatus!} />
         </div>
-        <div className="relative w-full md:w-[70%] h-full px-8">
+        <div className="relative w-full md:w-[75%] h-full px-8">
           {isLoading ? (
             <Load_spinner
               adicionalClass="w-full h-screen bg-white "
@@ -156,13 +174,12 @@ export function CreateProduct() {
             />
           ) : (
             <>
-              <h1 className="w-full text-center md:text-left text-md md:text-xl text-palm-700 font-semibold my-8 opacity-70">
-                Cadastro de Produto
+              <h1 className="w-full text-center md:text-left text-md md:text-xl text-palm-700 font-semibold my-8 ">
+                {productId
+                  ? "Editar Informações do Produto"
+                  : "Cadastro de Produto"}
               </h1>
-              <form
-                className="w-full  h-full   md:py-10  md:mx-auto"
-                method="POST"
-              >
+              <form className="w-full  h-full   md:py-10  md:mx-auto">
                 <div className="w-full flex flex-col md:flex-row items-center ">
                   <div className="w-full md:w-1/2 md:mr-[3%] form-group mb-6">
                     <label
@@ -181,16 +198,17 @@ export function CreateProduct() {
                         py-1.5
                         text-base
                         text-gray-700
-                        bg-white bg-clip-padding
+                        bg-white 
                         border border-solid border-gray-300
                         rounded
                         transition
                         ease-in-out
                         m-0
-                        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                      focus:border-blue-600 focus:outline-none"
                       id="productName"
                       aria-describedby="productName"
                       placeholder="Digite aqui"
+                      defaultValue={prodData.p_name}
                       {...register("productName", {
                         required: "Campo Obrigatório",
                         minLength: {
@@ -226,22 +244,23 @@ export function CreateProduct() {
                     <div className=" w-full">
                       <select
                         className="form-select appearance-none
-                      block
-                      w-full
-                      px-3
-                      py-1.5
-                      text-base
-                      font-normal
-                      text-gray-700
-                      bg-white bg-clip-padding bg-no-repeat
-                      border border-solid border-gray-300
-                      rounded
-                      transition
-                      ease-in-out
-                      m-0
-                      focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                          block
+                          w-full
+                          px-3
+                          py-1.5
+                          text-base
+                          font-normal
+                          text-gray-700
+                          bg-white bg-clip-padding bg-no-repeat
+                          border border-solid border-gray-300
+                          rounded
+                          transition
+                          ease-in-out
+                          m-0
+                         focus:border-blue-600 focus:outline-none"
                         aria-label="Default select example"
                         id="productCategory"
+                        defaultValue={prodData.p_category}
                         {...register("productCategory", {
                           required: "Campo Obrigatório",
                         })}
@@ -314,10 +333,11 @@ export function CreateProduct() {
                         transition
                         ease-in-out
                         m-0
-                        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                      focus:border-blue-600 focus:outline-none"
                         id="productPrice"
                         aria-describedby="productPrice"
                         placeholder="R$"
+                        defaultValue={prodData.p_price}
                         {...register("productPrice", {
                           required: "Campo Obrigatório",
                           minLength: {
@@ -352,23 +372,24 @@ export function CreateProduct() {
                       <input
                         type="number"
                         className="form-control
-                      block
-                      w-full
-                      px-3
-                      py-1.5
-                      text-base
-                      font-normal
-                      text-gray-700
-                      bg-white bg-clip-padding
-                      border border-solid border-gray-300
-                      rounded
-                      transition
-                      ease-in-out
-                      m-0
-                  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                        id="entityCnpj"
+                        block
+                        w-full
+                        px-3
+                        py-1.5
+                        text-base
+                        font-normal
+                        text-gray-700
+                        bg-white bg-clip-padding
+                        border border-solid border-gray-300
+                        rounded
+                        transition
+                        ease-in-out
+                        m-0
+                       focus:border-blue-600 focus:outline-none"
+                        id="productOldPrice"
                         aria-describedby="productOldPrice"
                         placeholder="R$"
+                        defaultValue={prodData.p_old_price}
                         onChange={(e) =>
                           setValueFromFormInput({
                             p_old_price: e.target.value,
@@ -378,7 +399,7 @@ export function CreateProduct() {
                     </div>
                     <div className="w-full md:w-[25%]  form-group mb-6">
                       <label
-                        htmlFor="productOldPrice"
+                        htmlFor="productStock"
                         className="form-label inline-block mb-2 text-palm-700 mr-3"
                       >
                         Etoque
@@ -387,22 +408,23 @@ export function CreateProduct() {
                       <input
                         type="number"
                         className="form-control
-                      block
-                      w-full
-                      px-3
-                      py-1.5
-                      text-base
-                      font-normal
-                      text-gray-700
-                      bg-white bg-clip-padding
-                      border border-solid border-gray-300
-                      rounded
-                      transition
-                      ease-in-out
-                      m-0
-                  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                        id="entityCnpj"
-                        aria-describedby="productOldPrice"
+                        block
+                        w-full
+                        px-3
+                        py-1.5
+                        text-base
+                        font-normal
+                        text-gray-700
+                        bg-white bg-clip-padding
+                        border border-solid border-gray-300
+                        rounded
+                        transition
+                        ease-in-out
+                        m-0
+                    focus:border-blue-600 focus:outline-none"
+                        id="productStock"
+                        aria-describedby="product stock"
+                        defaultValue={prodData.p_stock}
                         onChange={(e) =>
                           setValueFromFormInput({
                             p_stock: e.target.value,
@@ -422,25 +444,26 @@ export function CreateProduct() {
                     <input
                       type="number"
                       className="form-control
-                  block
-                  w-full
-                  px-3
-                  py-1.5
-                  text-base
-                  font-normal
-                  text-gray-700
-                  bg-white bg-clip-padding
-                  border border-solid border-gray-300
-                  rounded
-                  transition
-                  ease-in-out
-                  m-0
-                  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                        block
+                        w-full
+                        px-3
+                        py-1.5
+                        text-base
+                        font-normal
+                        text-gray-700
+                        bg-white bg-clip-padding
+                        border border-solid border-gray-300
+                        rounded
+                        transition
+                        ease-in-out
+                        m-0
+                        focus:border-blue-600 focus:outline-none"
                       id="productWhatsApp"
                       max={12}
                       maxLength={12}
                       aria-describedby="productWhatsApp"
                       placeholder="(DDD)9XXXX-XXXX"
+                      defaultValue={prodData.p_n_contact}
                       {...register("productWhatsApp", {
                         required: "Campo Obrigatório",
                         minLength: {
@@ -484,24 +507,25 @@ export function CreateProduct() {
                     </label>
                     <textarea
                       className="
-                    form-control
-                    block
-                    w-full
-                    px-3
-                    py-1.5
-                    text-base
-                    text-gray-700
-                    bg-white bg-clip-padding
-                    border border-solid border-gray-300
-                    rounded
-                    transition
-                    ease-in-out
-                    m-0
-                    focus:text-gray-700 focus:outline-none
+                      form-control
+                      block
+                      w-full
+                      px-3
+                      py-1.5
+                      text-base
+                      text-gray-700
+                      bg-white bg-clip-padding
+                      border border-solid border-gray-300
+                      rounded
+                      transition
+                      ease-in-out
+                      m-0
+                      focus:text-gray-700 focus:outline-none
                      "
                       id="productDescription"
                       rows={3}
                       placeholder="Informe aqui o máximo  de informações sobre o produto."
+                      defaultValue={prodData.p_description}
                       {...register("productDescription", {
                         required:
                           "Informe os detalhes do produto para continuar",
@@ -538,44 +562,68 @@ export function CreateProduct() {
                   </p>
 
                   <div className="w-full flex flex-col md:flex-row justify-start items-center mb-4">
-                    {filesData.map((item, index) => (
-                      <div
-                        className="relative w-4/5 md:w-1/5 h-[14rem] rounded mb-4 md:mb-0 md:mr-6 "
-                        key={index}
-                      >
-                        <ImgPreview
-                          imgName={item.name!}
-                          url={item.preview}
-                          deleteFile={handleDelete}
-                          classNameAdditionalForImg={"w-full h-full rounded  "}
-                        />
-                      </div>
-                    ))}
+                    {prodData.p_images.length > 0 ? (
+                      <>
+                        {prodData.p_images.map((item) => (
+                          <div
+                            className="relative w-4/5 md:w-1/5 h-[14rem] rounded mb-4 md:mb-0 md:mr-6 "
+                            key={item}
+                          >
+                            <ImgPreview
+                              imgName={item}
+                              url={item}
+                              deleteFile={handleDelete}
+                              classNameAdditionalForImg={
+                                "w-full h-full rounded  "
+                              }
+                            />
+                          </div>
+                        ))}
+                      </>
+                    ) : (
+                      <>
+                        {filesData.map((item, index) => (
+                          <div
+                            className="relative w-4/5 md:w-1/5 h-[14rem] rounded mb-4 md:mb-0 md:mr-6 "
+                            key={index}
+                          >
+                            <ImgPreview
+                              imgName={item.name!}
+                              url={item.preview}
+                              deleteFile={handleDelete}
+                              classNameAdditionalForImg={
+                                "w-full h-full rounded  "
+                              }
+                            />
+                          </div>
+                        ))}
 
-                    {!filesData[0] && (
-                      <div className="dropzone w-4/5 md:w-1/5 h-[14rem] ">
-                        <DropzoneInput
-                          onUpload={handleUpload}
-                          typeFile="image"
-                          text="Imagem de capa"
-                          classNameAdditional={
-                            " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0 rounded"
-                          }
-                        />
-                      </div>
-                    )}
+                        {!filesData[0] && (
+                          <div className="dropzone w-4/5 md:w-1/5 h-[14rem] ">
+                            <DropzoneInput
+                              onUpload={handleUpload}
+                              typeFile="image"
+                              text="Imagem de capa"
+                              classNameAdditional={
+                                " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0 rounded"
+                              }
+                            />
+                          </div>
+                        )}
 
-                    {!!filesData[0] && filesData.length < 4 && (
-                      <div className="dropzone w-4/5 md:w-1/5 h-[14rem] ">
-                        <DropzoneInput
-                          onUpload={handleUpload}
-                          typeFile="image"
-                          text="Adicionar outra imagem"
-                          classNameAdditional={
-                            " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0  rounded"
-                          }
-                        />
-                      </div>
+                        {!!filesData[0] && filesData.length < 4 && (
+                          <div className="dropzone w-4/5 md:w-1/5 h-[14rem] ">
+                            <DropzoneInput
+                              onUpload={handleUpload}
+                              typeFile="image"
+                              text="Adicionar outra imagem"
+                              classNameAdditional={
+                                " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0  rounded"
+                              }
+                            />
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>

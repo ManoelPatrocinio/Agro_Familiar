@@ -35,7 +35,7 @@ export function MenuOfDashboard({ userLogged }: IProp) {
             to={`/Admin/my-profile/${userStatus?._id}`}
             className="block w-full h-full px-4 py-3 text-left text-white text-md  font-semibold"
           >
-            Seu Perfil
+            Meu Perfil
           </Link>{" "}
         </li>
         <li className="w-full  bg-palm-700  my-2  rounded hover:bg-palm-500">

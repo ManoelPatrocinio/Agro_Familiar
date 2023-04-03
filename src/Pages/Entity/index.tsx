@@ -9,6 +9,7 @@ import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { Product } from "../../Types/product.type";
 import { User } from "../../Types/user.type";
+import Icon_WhatsApp from "../../assets/images/icon-whatsapp.svg";
 import entity_profile from "../../assets/images/img_entity_profile_exemple.png";
 import header_background from "../../assets/images/img_header_exemple.png";
 import Star from "../../assets/images/star_icon.png";
@@ -298,13 +299,13 @@ export function Entity() {
                 Filtrar
               </button>
             </div>
-            <div className="w-full flex flex-wrap justify-around mt-4">
+            <div className="w-full flex flex-wrap justify-around mt-4 relative">
               {search?.length > 0 && (
                 <>
-                  {filteredProdList?.map((product, index) => (
+                  {filteredProdList?.map((product) => (
                     <CardProduct
                       product={product}
-                      key={index}
+                      key={product._id}
                       addPurchaseList={useAddToPuchaseList}
                     />
                   ))}
@@ -313,25 +314,32 @@ export function Entity() {
 
               {productFiltedByCategory.length > 0 &&
                 search?.length === 0 &&
-                productFiltedByCategory?.map((product, index) => (
+                productFiltedByCategory?.map((product) => (
                   <CardProduct
                     product={product}
-                    key={index}
+                    key={product._id}
                     addPurchaseList={useAddToPuchaseList}
                   />
                 ))}
 
               {productFiltedByCategory.length === 0 &&
                 search?.length === 0 &&
-                productData?.map((product, index) => (
+                productData?.map((product) => (
                   <CardProduct
                     product={product}
-                    key={index}
+                    key={product._id}
                     addPurchaseList={useAddToPuchaseList}
                   />
                 ))}
             </div>
           </div>
+          <a
+            href={`http://api.whatsapp.com/send?l=pt_BR&phone=+55${entityData?.u_main_contact}&text=Olá, tudo bem ? Encontrei seu contato no Portal Agro Familiar `}
+            className="fixed bottom-6 right-7 w-[4rem] h-[4rem]"
+            target="_blank"
+          >
+            <img src={Icon_WhatsApp} className="w-full h-full scale-x-[-1]" />
+          </a>
         </div>
       </div>
       <Footer />

@@ -431,7 +431,7 @@ export function RegisterFarmer() {
                 </label>
                 <input
                   type="text"
-                  className=" input-number-arrow-hidden
+                  className="
                   form-control  
                   w-full
                   px-3
@@ -486,7 +486,7 @@ export function RegisterFarmer() {
                 <input
                   type="text"
                   className="form-control
-                    input-number-arrow-hidden
+                 
                     w-full
                     px-3
                     py-1.5

@@ -17,13 +17,13 @@ interface IPuchaseList {
   product: Product;
   quantity: number;
 }
+let FarmerName: string;
 
 export function ProductDetail() {
   const { productId } = useParams();
   const [productQTD, setProductQTD] = useState<number>(1);
   const [productData, setProductData] = useState<Product>();
   const [thePurchaseList, setThePurchaseList] = useState<IPuchaseList[]>([]);
-
   const [viewProdDetail, setViewProdDetail] = useState<
     "description" | "reviews"
   >("description");
@@ -32,8 +32,8 @@ export function ProductDetail() {
     api
       .get(`/product/${productId}`)
       .then((response) => {
-        // console.log("response.data", response.data[0]);
-        setProductData(response.data[0]);
+        FarmerName = response.data.farmer_name;
+        setProductData(response.data.product);
       })
       .catch((error) => {
         console.error(error);
@@ -305,27 +305,21 @@ export function ProductDetail() {
   );
 
   function updateInputProductQtd() {
-    console.log("updateInputProductQtd ");
-
     const result = thePurchaseList.filter((item) => {
       if (item.product._id === productData?._id) {
-        console.log("if ", item.quantity);
-
         setProductQTD(item.quantity);
         return item.quantity;
       } else {
-        console.log("else", item.quantity);
         setProductQTD(1);
         return 1;
       }
     });
-    console.log("result ", result);
   }
   return (
     <>
       <Header setSearch={() => {}} ItemSearched={""} />
       <Carrousel />
-      <SectionTitle title={productData?.farmer_id!} className={"my-10"} />
+      <SectionTitle title={FarmerName} className={"my-10"} />
       <main className="w-full h-full md:h-[22rem]  flex flex-col md:flex-row px-4 md:px-20">
         <div
           id="carouselProductImg"
@@ -423,9 +417,13 @@ export function ProductDetail() {
                 >
                   -
                 </button>
-                <div className="w-1/2 h-full text-center text-sm text-palm-700 py-2">
-                  {productQTD}
-                </div>
+                <input
+                  type="number"
+                  className="w-1/2 h-full text-center text-sm text-palm-700 py-2 focus:border-none focus:outline-none"
+                  value={productQTD}
+                  defaultValue={productQTD}
+                />
+
                 <button
                   className="w-1/4 h-full text-center text-xl text-palm-700"
                   type="button"
@@ -444,7 +442,7 @@ export function ProductDetail() {
               </button>
             </div>
             <a
-              href={`http://api.whatsapp.com/send?l=pt_BR&phone=+5574988393944&text=Olá jú ! Eu Tenho interesse no produto: ${productData?.p_name}, de preço: ${productData?.p_price} reais. Ainda estar disponível ?`}
+              href={`http://api.whatsapp.com/send?l=pt_BR&phone=+5574988393944&text=Olá tudo bem ? Eu Tenho interesse no produto: ${productData?.p_name}, de preço: ${productData?.p_price} reais. Ainda estar disponível ?`}
               target="_blank"
               className="w-full flex justify-center items-center px-2 py-2.5 bg-green-600 text-white  text-sm leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out"
             >

@@ -200,10 +200,10 @@ export function ManageProfile() {
       </header>
 
       <div className="flex min-h-screen">
-        <div className="hidden md:block w-[30%] min-h-full border-r border-gray-200 ">
+        <div className="hidden md:block w-[25%] min-h-full border-r border-gray-200 ">
           <MenuOfDashboard userLogged={userStatus!} />
         </div>
-        <div className="w-full md:w-[70%] h-full ">
+        <div className="w-full md:w-[75%] h-full ">
           {isFetching && (
             <Load_spinner
               adicionalClass="w-full h-screen"
@@ -230,7 +230,7 @@ export function ManageProfile() {
                     imgName={entityData.u_cover_photo}
                     url={entityData.u_cover_photo}
                     deleteFile={handleDeleteImg}
-                    classNameAdditionalForImg="w-full h-full rounded"
+                    classNameAdditionalForImg="w-full h-full "
                   />
                 )}
                 <div className=" w-auto absolute top-[80%] md:top-[87%] block   md:left-8 ">
@@ -686,7 +686,7 @@ export function ManageProfile() {
                       </label>
                       <input
                         type="text"
-                        className=" input-number-arrow-hidden
+                        className="
                           form-control  
                           w-full
                           px-3
@@ -749,7 +749,7 @@ export function ManageProfile() {
                       <input
                         type="text"
                         className="form-control
-                          input-number-arrow-hidden
+                        
                           w-full
                           px-3
                           py-1.5

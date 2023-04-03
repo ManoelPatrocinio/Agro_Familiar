@@ -31,6 +31,10 @@ export const SystemRoutes = () => {
       <Route path="/Register-farmer" element={<RegisterFarmer />} />
       <Route path="/WaitPage" element={<WaitPage />} />
       <Route path="/Admin/create-product" element={<CreateProduct />} />
+      <Route
+        path="/Admin/create-product/:productId"
+        element={<CreateProduct />}
+      />
       <Route path="/Admin/manager/:idUserLogged" element={<ManageProducts />} />
       <Route path="/Admin/my-profile/:entityId" element={<ManageProfile />} />
       {/* <Route path="/login" element={<Login/>} />

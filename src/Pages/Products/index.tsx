@@ -135,10 +135,10 @@ export function Products() {
 
               {search?.length > 0 && (
                 <>
-                  {filteredProdList?.map((product, index) => (
+                  {filteredProdList?.map((product) => (
                     <CardProduct
                       product={product}
-                      key={index}
+                      key={product._id}
                       addPurchaseList={useAddToPuchaseList}
                     />
                   ))}
@@ -147,20 +147,20 @@ export function Products() {
 
               {productFiltedByCategory.length > 0 &&
                 search?.length === 0 &&
-                productFiltedByCategory?.map((product, index) => (
+                productFiltedByCategory?.map((product) => (
                   <CardProduct
                     product={product}
-                    key={index}
+                    key={product._id}
                     addPurchaseList={useAddToPuchaseList}
                   />
                 ))}
 
               {productFiltedByCategory.length === 0 &&
                 search?.length === 0 &&
-                productData?.map((product, index) => (
+                productData?.map((product) => (
                   <CardProduct
                     product={product}
-                    key={index}
+                    key={product._id}
                     addPurchaseList={useAddToPuchaseList}
                   />
                 ))}

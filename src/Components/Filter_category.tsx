@@ -40,7 +40,7 @@ export function Filter_category({
               className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
             >
               {" "}
-              Grãos{" "}
+              Grãos/Sementes
             </button>
           </li>
           <li className="w-full  text-sm my-1 ">
@@ -82,7 +82,16 @@ export function Filter_category({
               onClick={() => filterByCategory("Pães/Bolos/Biscoitos")}
               className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
             >
-              Pães/Bolos/Biscoitos
+              Pães / Bolos / Biscoitos
+            </button>
+          </li>
+          <li className="w-full  text-sm my-1 ">
+            <button
+              onClick={() => filterByCategory("derivados do leite")}
+              className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
+            >
+              {" "}
+              Derivados do Leite{" "}
             </button>
           </li>
           <li className="w-full  text-sm my-1 ">
@@ -112,15 +121,6 @@ export function Filter_category({
               Temperos{" "}
             </button>
           </li>
-          <li className="w-full  text-sm my-1 ">
-            <button
-              onClick={() => filterByCategory("Outros")}
-              className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
-            >
-              {" "}
-              Outros{" "}
-            </button>
-          </li>
         </ul>
       </div>
       <div className="w-full my-4">
@@ -139,11 +139,11 @@ export function Filter_category({
           </li>
           <li className="w-full  text-sm my-1 ">
             <button
-              onClick={() => filterByCategory(" Caprino/Ovinos")}
+              onClick={() => filterByCategory(" Caprinos/Ovinos")}
               className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
             >
               {" "}
-              Capríno/Ovínos{" "}
+              Caprínos / Ovínos{" "}
             </button>
           </li>
           <li className="w-full  text-sm my-1 ">
@@ -171,6 +171,15 @@ export function Filter_category({
             >
               {" "}
               Piscícultura{" "}
+            </button>
+          </li>
+          <li className="w-full  text-sm my-1 ">
+            <button
+              onClick={() => filterByCategory("cortes")}
+              className="w-full h-full text-left py-3 hover:border-b-2 border-palm-500 hover:text-palm-500 hover:text-[1.063rem]  pl-2 rounded"
+            >
+              {" "}
+              Cortes{" "}
             </button>
           </li>
         </ul>

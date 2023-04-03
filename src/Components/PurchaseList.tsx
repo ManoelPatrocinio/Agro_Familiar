@@ -93,7 +93,7 @@ export function PurchaseList() {
           <>
             {puchaseList?.map((item, index) => (
               <div
-                key={index}
+                key={item.product._id}
                 className="w-full h-auto min-h-[8rem] flex items-center flex-wrap  justify-evenly md:justify-between border-b-2 border-b-green-400 py-3 mb-2"
               >
                 <a
@@ -132,9 +132,13 @@ export function PurchaseList() {
                     >
                       -
                     </button>
-                    <div className="w-1/2 h-full text-center text-sm text-palm-700 py-3">
-                      {item.quantity}
-                    </div>
+                    <input
+                      type="number"
+                      className="w-1/2 h-full text-center text-sm text-palm-700 py-3 focus:border-none focus:outline-none"
+                      defaultValue={item.quantity}
+                      value={item.quantity}
+                    />
+
                     <button
                       onClick={() => handleAddToPuchaseList(item.product._id)}
                       className=" h-full text-center text-xl text-palm-700 p-2"

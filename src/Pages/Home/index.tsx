@@ -101,20 +101,20 @@ export function Home() {
           )}
           {search?.length > 0 ? (
             <>
-              {filteredProdList?.map((product, index) => (
+              {filteredProdList?.map((product) => (
                 <CardProduct
                   product={product}
-                  key={index}
+                  key={product._id}
                   addPurchaseList={useAddToPuchaseList}
                 />
               ))}
             </>
           ) : (
             <>
-              {apiProducts?.map((product, index) => (
+              {apiProducts?.map((product) => (
                 <CardProduct
                   product={product}
-                  key={index}
+                  key={product._id}
                   addPurchaseList={useAddToPuchaseList}
                 />
               ))}
