@@ -45,13 +45,13 @@ export const CheckLocalStorage = {
     },
 
     // Purchase list
-        // Função para salvar o usuário logado no local storage
+        // Função para salvar produto no local storage
     setItemOnPurchaseList(data:IPuchaseList[]){
         let parsedData =  JSON.stringify(data)
         localStorage.setItem("@PAF:purchase", parsedData)
     },
 
-    // Função responsável por recuperar o usuário logado do local storage
+    // Função responsável por recuperar lista de productos local storage
     getItemPurchaseList(){
         let data = localStorage.getItem("@PAF:purchase");
         if(!data) return [];

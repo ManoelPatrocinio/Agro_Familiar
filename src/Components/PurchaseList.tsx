@@ -1,70 +1,17 @@
 import { Trash } from "phosphor-react";
-import { useEffect, useState } from "react";
-import { Product } from "../Types/product.type";
-import { CheckLocalStorage } from "../service/localStorage";
+import { useContext } from "react";
+import { PuchaseListContextType } from "../Types/puchaseListContext.type";
+import { PuchaseListContext } from "../context/PuchaseListContext";
 
-interface IPuchaseList {
-  product: Product;
-  quantity: number;
-}
 export function PurchaseList() {
-  const [puchaseList, setPuchaseList] = useState<IPuchaseList[]>([]);
+  const {
+    AddToPuchaseList,
+    RemoveToPuchaseList,
+    DeleteProductToPuchaseList,
+    purchaseList,
+  } = useContext(PuchaseListContext) as PuchaseListContextType;
 
-  useEffect(() => {
-    setPuchaseList(CheckLocalStorage.getItemPurchaseList());
-  }, []);
-  const handleAddToPuchaseList = (id: string) => {
-    const alreadyInPuchaseList = puchaseList.find(
-      (item) => item.product._id === id
-    );
-
-    if (alreadyInPuchaseList) {
-      const newPuchaseList: IPuchaseList[] = puchaseList.map((item) => {
-        if (item.product._id === id)
-          ({
-            ...item,
-            quantity: item.quantity++,
-          });
-        return item;
-      });
-      setPuchaseList(newPuchaseList);
-      CheckLocalStorage.setItemOnPurchaseList(newPuchaseList);
-
-      return;
-    }
-  };
-  const handleRemoveToPuchaseList = (id: string) => {
-    const alreadyInPuchaseList = puchaseList.find(
-      (item) => item.product._id === id
-    );
-    if (alreadyInPuchaseList!.quantity > 1) {
-      const newPuchaseList: IPuchaseList[] = puchaseList.map((item) => {
-        if (item.product._id === id)
-          ({
-            ...item,
-            quantity: item.quantity--,
-          });
-        return item;
-      });
-      setPuchaseList(newPuchaseList);
-      CheckLocalStorage.setItemOnPurchaseList(newPuchaseList);
-
-      return;
-    }
-    const newPuchaseList: IPuchaseList[] = puchaseList.filter(
-      (item) => item.product._id !== id
-    );
-    setPuchaseList(newPuchaseList);
-  };
-  const removeProductToPuchaseList = (id: string) => {
-    const newPuchaseList: IPuchaseList[] = puchaseList.filter(
-      (item) => item.product._id !== id
-    );
-    setPuchaseList(newPuchaseList);
-    CheckLocalStorage.setItemOnPurchaseList(newPuchaseList);
-  };
-
-  const TotalPuchaseList = puchaseList.reduce((total, current) => {
+  const TotalPuchaseList = purchaseList.reduce((total, current) => {
     return total + current.product.p_price! * current.quantity;
   }, 0);
   return (
@@ -89,9 +36,9 @@ export function PurchaseList() {
         ></button>
       </div>
       <div className="offcanvas-body max-h-[70%] flex-grow p-4 overflow-y-auto">
-        {puchaseList.length > 0 && (
+        {purchaseList.length > 0 && (
           <>
-            {puchaseList?.map((item, index) => (
+            {purchaseList?.map((item, index) => (
               <div
                 key={item.product._id}
                 className="w-full h-auto min-h-[8rem] flex items-center flex-wrap  justify-evenly md:justify-between border-b-2 border-b-green-400 py-3 mb-2"
@@ -124,23 +71,18 @@ export function PurchaseList() {
                 <div className="w-full md:w-[25%] flex justify-evenly md:justify-between items-center">
                   <div className="w-[35%]  md:w-[57%] flex justify-start  rounded border border-palm-700  mt-4 md:mt-0">
                     <button
-                      onClick={() =>
-                        handleRemoveToPuchaseList(item.product._id)
-                      }
+                      onClick={() => RemoveToPuchaseList(item.product)}
                       className=" h-full text-center text-xl text-palm-700 p-2"
                       type="button"
                     >
                       -
                     </button>
-                    <input
-                      type="number"
-                      className="w-1/2 h-full text-center text-sm text-palm-700 py-3 focus:border-none focus:outline-none"
-                      defaultValue={item.quantity}
-                      value={item.quantity}
-                    />
+                    <div className="w-1/2 h-full text-center text-sm text-palm-700 py-3 ">
+                      {item.quantity}
+                    </div>
 
                     <button
-                      onClick={() => handleAddToPuchaseList(item.product._id)}
+                      onClick={() => AddToPuchaseList(item.product)}
                       className=" h-full text-center text-xl text-palm-700 p-2"
                       type="button"
                     >
@@ -148,7 +90,7 @@ export function PurchaseList() {
                     </button>
                   </div>
                   <button
-                    onClick={() => removeProductToPuchaseList(item.product._id)}
+                    onClick={() => DeleteProductToPuchaseList(item.product._id)}
                     className="w-12  h-12  rounded-[100%]  flex justift-center items-end mt-4 md:mt-0"
                   >
                     <Trash size={42} color="#789B3D" weight="light" />

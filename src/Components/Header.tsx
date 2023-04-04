@@ -1,11 +1,13 @@
 import classNames from "classnames";
 import { ClipboardText, MagnifyingGlass, User } from "phosphor-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { Product } from "../Types/product.type";
+import { PuchaseListContextType } from "../Types/puchaseListContext.type";
 import { User as UserType } from "../Types/user.type";
 import Logo from "../assets/images/Logo.png";
+import { PuchaseListContext } from "../context/PuchaseListContext";
 import { CheckLocalStorage } from "../service/localStorage";
 import { FormUserAccess } from "./FormUserAccess";
 import { Menu_Sidebar } from "./Menu_Sidebar";
@@ -24,13 +26,12 @@ interface Iprop {
 export function Header({ setSearch, ItemSearched }: Iprop) {
   const [userStatus, setUserStatus] = useState<UserType | null>(null);
   const [showForm, setShowForm] = useState<boolean>(false);
-  const [puchaseListForQtd, setPuchaseListForQtf] = useState<IPuchaseList[]>(
-    []
-  );
+  const { purchaseList } = useContext(
+    PuchaseListContext
+  ) as PuchaseListContextType;
 
   useEffect(() => {
     setUserStatus(CheckLocalStorage.getLoggedUser());
-    setPuchaseListForQtf(CheckLocalStorage.getItemPurchaseList());
   }, []);
 
   const UserFirstName = userStatus?.u_full_name!.split(" ", 1);
@@ -154,7 +155,7 @@ export function Header({ setSearch, ItemSearched }: Iprop) {
           >
             <ClipboardText size={40} color="#789B3D" />
             <span className="w-5 h-5 rounded-2xl bg-palm-700 text-white text-xs text-center leading-5 absolute top-[-6px] right-[-2px]">
-              {puchaseListForQtd?.length}
+              {purchaseList?.length}
             </span>{" "}
           </button>
           <PurchaseList />

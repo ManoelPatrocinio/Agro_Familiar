@@ -12,15 +12,8 @@ import { SectionTitle } from "../../Components/SectionTitle";
 import { Load_spinner } from "../../Components/load_spinner";
 import { Product } from "../../Types/product.type";
 import { api } from "../../hook/useApi";
-import { CheckLocalStorage } from "../../service/localStorage";
-
-interface IPuchaseList {
-  product: Product;
-  quantity: number;
-}
 
 export function Products() {
-  const [purchaseList, setPurchaseList] = useState<IPuchaseList[]>([]);
   const [toggleFilterVisibility, SetToggleFilterVisibility] =
     useState<boolean>(false);
 
@@ -35,7 +28,6 @@ export function Products() {
     api
       .get("/all-products")
       .then((response) => {
-        // console.log("response.data", response.data);
         setProductData(response.data);
       })
       .catch((error) => {
@@ -46,40 +38,7 @@ export function Products() {
           text: "Desculpe, não foi possível  exibir as informações do produto.",
         });
       });
-    setPurchaseList(CheckLocalStorage.getItemPurchaseList());
   }, []);
-
-  const useAddToPuchaseList = (product: Product) => {
-    // const item = products.find((product) => product._id === id);
-
-    const alreadyInPuchaseList = purchaseList.find(
-      (item) => item.product._id === product._id
-    );
-
-    if (alreadyInPuchaseList) {
-      const newPuchaseList: IPuchaseList[] = purchaseList.map((item) => {
-        if (item.product._id === product._id)
-          ({
-            ...item,
-            quantity: item.quantity++,
-          });
-        return item;
-      });
-      setPurchaseList(newPuchaseList);
-      localStorage.setItem("@PAF:purchase", JSON.stringify(newPuchaseList));
-      console.log("adiconado alreadyInPuchaseList", newPuchaseList);
-      return;
-    }
-    //if product is not already in puchase list
-    const listItem: IPuchaseList = {
-      product: product!,
-      quantity: 1,
-    };
-    const newPuchaseList: IPuchaseList[] = [...purchaseList, listItem];
-    setPurchaseList(newPuchaseList);
-    localStorage.setItem("@PAF:purchase", JSON.stringify(newPuchaseList));
-    console.log("adiconado ", newPuchaseList);
-  };
 
   function filterByCategory(category: string) {
     setSearch("");
@@ -136,11 +95,7 @@ export function Products() {
               {search?.length > 0 && (
                 <>
                   {filteredProdList?.map((product) => (
-                    <CardProduct
-                      product={product}
-                      key={product._id}
-                      addPurchaseList={useAddToPuchaseList}
-                    />
+                    <CardProduct product={product} key={product._id} />
                   ))}
                 </>
               )}
@@ -148,21 +103,13 @@ export function Products() {
               {productFiltedByCategory.length > 0 &&
                 search?.length === 0 &&
                 productFiltedByCategory?.map((product) => (
-                  <CardProduct
-                    product={product}
-                    key={product._id}
-                    addPurchaseList={useAddToPuchaseList}
-                  />
+                  <CardProduct product={product} key={product._id} />
                 ))}
 
               {productFiltedByCategory.length === 0 &&
                 search?.length === 0 &&
                 productData?.map((product) => (
-                  <CardProduct
-                    product={product}
-                    key={product._id}
-                    addPurchaseList={useAddToPuchaseList}
-                  />
+                  <CardProduct product={product} key={product._id} />
                 ))}
             </div>
           </div>

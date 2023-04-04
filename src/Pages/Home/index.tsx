@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuery } from "react-query";
 import Swal from "sweetalert2";
 import { CardProduct } from "../../Components/CardProduct";
@@ -11,13 +11,11 @@ import { Load_spinner } from "../../Components/load_spinner";
 import { Product } from "../../Types/product.type";
 import homePromotionImage1 from "../../assets/images/header_slide_2.jpg";
 import { api } from "../../hook/useApi";
-import { CheckLocalStorage } from "../../service/localStorage";
 interface IPuchaseList {
   product: Product;
   quantity: number;
 }
 export function Home() {
-  const [purchaseList, setPurchaseList] = useState<IPuchaseList[]>([]);
   const [search, setSearch] = useState<string>("");
 
   const {
@@ -49,38 +47,6 @@ export function Home() {
         )
       : [];
 
-  useEffect(() => {
-    setPurchaseList(CheckLocalStorage.getItemPurchaseList());
-  }, []);
-  const useAddToPuchaseList = (product: Product) => {
-    // const item = products.find((product) => product._id === id);
-
-    const alreadyInPuchaseList = purchaseList.find(
-      (item) => item.product._id === product._id
-    );
-
-    if (alreadyInPuchaseList) {
-      const newPuchaseList: IPuchaseList[] = purchaseList.map((item) => {
-        if (item.product._id === product._id)
-          ({
-            ...item,
-            quantity: item.quantity++,
-          });
-        return item;
-      });
-      setPurchaseList(newPuchaseList);
-      localStorage.setItem("@PAF:purchase", JSON.stringify(newPuchaseList));
-      return;
-    }
-    //if product is not already in puchase list
-    const listItem: IPuchaseList = {
-      product: product!,
-      quantity: 1,
-    };
-    const newPuchaseList: IPuchaseList[] = [...purchaseList, listItem];
-    setPurchaseList(newPuchaseList);
-    localStorage.setItem("@PAF:purchase", JSON.stringify(newPuchaseList));
-  };
   return (
     <>
       <Header setSearch={setSearch} ItemSearched={search} />
@@ -102,21 +68,13 @@ export function Home() {
           {search?.length > 0 ? (
             <>
               {filteredProdList?.map((product) => (
-                <CardProduct
-                  product={product}
-                  key={product._id}
-                  addPurchaseList={useAddToPuchaseList}
-                />
+                <CardProduct product={product} key={product._id} />
               ))}
             </>
           ) : (
             <>
               {apiProducts?.map((product) => (
-                <CardProduct
-                  product={product}
-                  key={product._id}
-                  addPurchaseList={useAddToPuchaseList}
-                />
+                <CardProduct product={product} key={product._id} />
               ))}
             </>
           )}

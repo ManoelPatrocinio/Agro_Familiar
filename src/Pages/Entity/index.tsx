@@ -14,15 +14,10 @@ import entity_profile from "../../assets/images/img_entity_profile_exemple.png";
 import header_background from "../../assets/images/img_header_exemple.png";
 import Star from "../../assets/images/star_icon.png";
 import { api } from "../../hook/useApi";
-import { CheckLocalStorage } from "../../service/localStorage";
-interface IPuchaseList {
-  product: Product;
-  quantity: number;
-}
+
 export function Entity() {
   const [productData, setProductData] = useState<Product[]>();
   const [entityData, setEntityData] = useState<User>();
-  const [purchaseList, setPurchaseList] = useState<IPuchaseList[]>([]);
   const [productFiltedByCategory, setProductFiltedByCategory] = useState<
     Product[]
   >([]);
@@ -51,40 +46,8 @@ export function Entity() {
           text: "Desculpe, não foi possível  exibir as organizações da sua região.",
         });
       });
-    setPurchaseList(CheckLocalStorage.getItemPurchaseList());
   }, [userId]);
 
-  const useAddToPuchaseList = (product: Product) => {
-    // const item = products.find((product) => product._id === id);
-
-    const alreadyInPuchaseList = purchaseList.find(
-      (item) => item.product._id === product._id
-    );
-
-    if (alreadyInPuchaseList) {
-      const newPuchaseList: IPuchaseList[] = purchaseList.map((item) => {
-        if (item.product._id === product._id)
-          ({
-            ...item,
-            quantity: item.quantity++,
-          });
-        return item;
-      });
-      setPurchaseList(newPuchaseList);
-      localStorage.setItem("@PAF:purchase", JSON.stringify(newPuchaseList));
-      console.log("adiconado alreadyInPuchaseList", newPuchaseList);
-      return;
-    }
-    //if product is not already in puchase list
-    const listItem: IPuchaseList = {
-      product: product!,
-      quantity: 1,
-    };
-    const newPuchaseList: IPuchaseList[] = [...purchaseList, listItem];
-    setPurchaseList(newPuchaseList);
-    localStorage.setItem("@PAF:purchase", JSON.stringify(newPuchaseList));
-    console.log("adiconado ", newPuchaseList);
-  };
   function filterByCategory(category: string) {
     setSearch("");
     const filtedList = productData?.filter(
@@ -303,11 +266,7 @@ export function Entity() {
               {search?.length > 0 && (
                 <>
                   {filteredProdList?.map((product) => (
-                    <CardProduct
-                      product={product}
-                      key={product._id}
-                      addPurchaseList={useAddToPuchaseList}
-                    />
+                    <CardProduct product={product} key={product._id} />
                   ))}
                 </>
               )}
@@ -315,21 +274,13 @@ export function Entity() {
               {productFiltedByCategory.length > 0 &&
                 search?.length === 0 &&
                 productFiltedByCategory?.map((product) => (
-                  <CardProduct
-                    product={product}
-                    key={product._id}
-                    addPurchaseList={useAddToPuchaseList}
-                  />
+                  <CardProduct product={product} key={product._id} />
                 ))}
 
               {productFiltedByCategory.length === 0 &&
                 search?.length === 0 &&
                 productData?.map((product) => (
-                  <CardProduct
-                    product={product}
-                    key={product._id}
-                    addPurchaseList={useAddToPuchaseList}
-                  />
+                  <CardProduct product={product} key={product._id} />
                 ))}
             </div>
           </div>

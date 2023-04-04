@@ -1,13 +1,19 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Product } from "../Types/product.type";
+import { PuchaseListContextType } from "../Types/puchaseListContext.type";
+import { PuchaseListContext } from "../context/PuchaseListContext";
 import { IconAddList } from "./IconAddList";
 
 type Prop = {
   product: Product;
-  addPurchaseList: any;
 };
 
-export function CardProduct({ product, addPurchaseList }: Prop) {
+export function CardProduct({ product }: Prop) {
+  const { AddToPuchaseList } = useContext(
+    PuchaseListContext
+  ) as PuchaseListContextType;
+
   return (
     <div className="w-[20rem] md:w-[16rem] h-[20rem] flex flex-col  mb-4 md:mb-8 hover:scale-110 transition duration-300 ease-in-out rounded-lg shadow-lg bg-white ">
       <Link
@@ -36,7 +42,7 @@ export function CardProduct({ product, addPurchaseList }: Prop) {
         <button
           type="button"
           className="checked:bg-blue-500 w-full flex items-center justify-center py-4 md:py-2.5 bg-green-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-slate-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out"
-          onClick={() => addPurchaseList(product)}
+          onClick={() => AddToPuchaseList(product)}
         >
           <IconAddList w={"20"} h={"20"} color="#fff" className="mr-1" />
           Adicionar
