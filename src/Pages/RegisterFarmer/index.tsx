@@ -1,5 +1,4 @@
 import { ErrorMessage } from "@hookform/error-message";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -11,38 +10,18 @@ import { User } from "../../Types/user.type";
 import { useApiPost } from "../../hook/useApi";
 import { CheckLocalStorage } from "../../service/localStorage";
 
-const InitialUserState: User = {
-  u_type: "farmer",
-  u_full_name: "",
-  u_email: "",
-  u_password: "",
-  u_president_name: "",
-  u_entity_name: "",
-  u_CNPJ_CPF: "",
-  u_UF: "",
-  u_city: "",
-  u_district: "",
-  u_street: "",
-  u_number: "",
-  u_main_contact: "",
-  u_secondary_contact: "",
-};
+let toggleForm: boolean = false;
 
 export function RegisterFarmer() {
   const navigate = useNavigate();
-  const [FormData, setFormData] = useState<User>(InitialUserState);
-  const [toggleForm, setToggleForm] = useState<boolean>(false);
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm();
-  //function for add value input on state
-  const setValueFromFormInput = (newValue: any) => {
-    setFormData((inputValue) => ({ ...inputValue, ...newValue }));
-  };
+  } = useForm<User>();
 
-  const formSubmit = async () => {
+  async function formSubmit(FormData: User) {
+    FormData.u_type = "farmer";
     console.log("FormData", FormData);
 
     const { apiResponse } = await useApiPost<User>("/register", FormData);
@@ -58,7 +37,7 @@ export function RegisterFarmer() {
         navigate("/");
       }, 2000);
     }
-  };
+  }
 
   return (
     <>
@@ -74,7 +53,7 @@ export function RegisterFarmer() {
             <div className="grid grid-col-2 md:grid-cols-2  md:gap-8">
               <div className="form-group mb-6">
                 <label
-                  htmlFor="inputRegisterEntityName"
+                  htmlFor="inputRegisterFarmerName"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
                   Nome da completo
@@ -96,25 +75,19 @@ export function RegisterFarmer() {
                     ease-in-out
                     m-0
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  id="inputRegisterEntityName"
-                  aria-describedby="entityName"
+                  id="inputRegisterFarmerName"
                   placeholder="Digite aqui"
-                  {...register("inputRegisterEntityName", {
+                  {...register("u_full_name", {
                     required: "Campo obrigatório",
                     minLength: {
                       value: 6,
                       message: "Este campo deve ter mais de 6 caracteres",
                     },
                   })}
-                  onChange={(e) =>
-                    setValueFromFormInput({
-                      u_full_name: e.target.value,
-                    })
-                  }
                 />
                 <ErrorMessage
                   errors={errors}
-                  name="inputRegisterEntityName"
+                  name="u_full_name"
                   render={({ message }) => (
                     <small className="text-red-500 text-xs">{message}</small>
                   )}
@@ -122,7 +95,7 @@ export function RegisterFarmer() {
               </div>
               <div className="form-group mb-6">
                 <label
-                  htmlFor="inputRegisterEntityCnpj"
+                  htmlFor="inputRegisterUserCPF"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
                   CPF <span className="text-red-500 font-bold"> *</span>:
@@ -144,27 +117,25 @@ export function RegisterFarmer() {
                   ease-in-out
                   m-0
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  id="inputRegisterEntityCnpj"
-                  aria-describedby="EntityCnpj"
+                  id="inputRegisterUserCPF"
                   placeholder="XXX.XXX.XXX-XX"
-                  max={14}
-                  maxLength={14}
-                  {...register("inputRegisterEntityCnpj", {
+                  max={11}
+                  maxLength={11}
+                  {...register("u_CNPJ_CPF", {
                     required: "Informe um CPF válido para continuar",
                     minLength: {
                       value: 11,
                       message: "Este campo deve ter pelo menos 14 caracteres",
                     },
+                    pattern: {
+                      value: /^[0-9]+$/,
+                      message: "Por favor, apenas números",
+                    },
                   })}
-                  onChange={(e) =>
-                    setValueFromFormInput({
-                      u_CNPJ_CPF: e.target.value,
-                    })
-                  }
                 />
                 <ErrorMessage
                   errors={errors}
-                  name="inputRegisterEntityCnpj"
+                  name="u_CNPJ_CPF"
                   render={({ message }) => (
                     <small className="text-red-500 text-xs">{message}</small>
                   )}
@@ -175,7 +146,7 @@ export function RegisterFarmer() {
             <div className="w-full flex flex-col md:flex-row items-center ">
               <div className="w-full md:w-[23%] md:mr-[3%] form-group mb-6">
                 <label
-                  htmlFor="iputRegisterEntityCity"
+                  htmlFor="iputRegisterFarmerCity"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
                   Cidade
@@ -197,27 +168,21 @@ export function RegisterFarmer() {
                     ease-in-out
                     m-0
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  id="iputRegisterEntityCity"
+                  id="iputRegisterFarmerCity"
                   maxLength={40}
                   max={40}
-                  aria-describedby="entity City"
                   placeholder="Digite aqui"
-                  {...register("iputRegisterEntityCity", {
+                  {...register("u_city", {
                     required: "Campo Obrigatório",
                     minLength: {
                       value: 3,
                       message: "Caracteres insuficiente",
                     },
                   })}
-                  onChange={(e) =>
-                    setValueFromFormInput({
-                      u_city: e.target.value,
-                    })
-                  }
                 />
                 <ErrorMessage
                   errors={errors}
-                  name="iputRegisterEntityCity"
+                  name="u_city"
                   render={({ message }) => (
                     <small className="text-red-500 text-xs">{message}</small>
                   )}
@@ -225,7 +190,7 @@ export function RegisterFarmer() {
               </div>
               <div className="w-full md:w-[22%] min-w-[132px] md:mr-[4%] form-group mb-6">
                 <label
-                  htmlFor="inputRegisterEntityDistrict"
+                  htmlFor="inputRegisterFarmerDistrict"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
                   Bairro
@@ -249,20 +214,28 @@ export function RegisterFarmer() {
                   m-0
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                   id="inputRegisterEntityDistrict"
-                  aria-describedby="inputRegisterEntityDistrict"
                   placeholder="Digite aqui"
                   max={40}
                   maxLength={40}
-                  onChange={(e) =>
-                    setValueFromFormInput({
-                      u_district: e.target.value,
-                    })
-                  }
+                  {...register("u_district", {
+                    minLength: {
+                      value: 3,
+                      message: "Caracteres insuficiente",
+                    },
+                    max: 40,
+                  })}
+                />{" "}
+                <ErrorMessage
+                  errors={errors}
+                  name="u_district"
+                  render={({ message }) => (
+                    <small className="text-red-500 text-xs">{message}</small>
+                  )}
                 />
               </div>
               <div className="w-full md:w-[30%]  form-group mb-6">
                 <label
-                  htmlFor="inputRegisterEntityStreet"
+                  htmlFor="inputRegisterFarmerStreet"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
                   Rua{" "}
@@ -285,22 +258,31 @@ export function RegisterFarmer() {
                   ease-in-out
                   m-0
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  id="inputRegisterEntityStreet"
+                  id="inputRegisterFarmerStreet"
                   placeholder="Digite aqui"
                   max={70}
                   maxLength={70}
-                  onChange={(e) =>
-                    setValueFromFormInput({
-                      u_street: e.target.value,
-                    })
-                  }
+                  {...register("u_street", {
+                    minLength: {
+                      value: 3,
+                      message: "Caracteres insuficiente",
+                    },
+                    max: 70,
+                  })}
+                />{" "}
+                <ErrorMessage
+                  errors={errors}
+                  name="u_street"
+                  render={({ message }) => (
+                    <small className="text-red-500 text-xs">{message}</small>
+                  )}
                 />
               </div>
             </div>
             <div className="w-full flex flex-col md:flex-row items-center ">
               <div className="w-full md:w-[23%] md:mr-[3%] form-group mb-6 ">
                 <label
-                  htmlFor="inputRegisterEntityNumber"
+                  htmlFor="inputRegisterFarmerNumber"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
                   Número{" "}
@@ -322,24 +304,19 @@ export function RegisterFarmer() {
                     ease-in-out
                     m-0
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  id="inputRegisterEntityNumber"
+                  id="inputRegisterFarmerNumber"
                   max={6}
                   maxLength={6}
-                  {...register("inputRegisterEntityNumber", {
+                  {...register("u_number", {
                     pattern: {
                       value: /^[0-9]+$/,
                       message: "Por favor, apenas números",
                     },
                   })}
-                  onChange={(e) =>
-                    setValueFromFormInput({
-                      u_number: e.target.value,
-                    })
-                  }
                 />
                 <ErrorMessage
                   errors={errors}
-                  name="inputRegisterEntityNumber"
+                  name="u_number"
                   render={({ message }) => (
                     <small className="text-red-500 text-xs">{message}</small>
                   )}
@@ -347,7 +324,7 @@ export function RegisterFarmer() {
               </div>
               <div className="w-full md:w-[23%] form-group mb-6 ">
                 <label
-                  htmlFor="inputRegisterEntityUf"
+                  htmlFor="inputRegisterFarmerUf"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
                   UF
@@ -370,16 +347,10 @@ export function RegisterFarmer() {
                       ease-in-out
                       m-0
                       focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                    aria-label="select entity Uf"
-                    id="inputRegisterEntityUf"
-                    {...register("inputRegisterEntityUf", {
+                    id="inputRegisterFarmerUf"
+                    {...register("u_UF", {
                       required: "Campo obrigatório",
                     })}
-                    onChange={(e) =>
-                      setValueFromFormInput({
-                        u_UF: e.target.value,
-                      })
-                    }
                   >
                     <option value="">Selecione</option>
                     <option value="AC">Acre</option>
@@ -412,7 +383,7 @@ export function RegisterFarmer() {
                   </select>
                   <ErrorMessage
                     errors={errors}
-                    name="inputRegisterEntityUf"
+                    name="u_UF"
                     render={({ message }) => (
                       <small className="text-red-500 text-xs">{message}</small>
                     )}
@@ -423,7 +394,7 @@ export function RegisterFarmer() {
             <div className="w-full flex flex-col md:flex-row items-center ">
               <div className="w-full md:w-[23%] md:mr-[3%] form-group mb-6 ">
                 <label
-                  htmlFor="inputEntityMainPhone"
+                  htmlFor="inputFarmerMainPhone"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
                   Nº Whatsapp
@@ -446,14 +417,14 @@ export function RegisterFarmer() {
                   ease-in-out
                   m-0
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  id="inputEntityMainPhone"
+                  id="inputFarmerMainPhone"
                   max={12}
                   maxLength={12}
                   placeholder="(DDD) 9XXXX-XXXX"
-                  {...register("inputEntityMainPhone", {
+                  {...register("u_main_contact", {
                     required: "Campo Obrigatório",
                     minLength: {
-                      value: 11,
+                      value: 12,
                       message: "Números insuficiente",
                     },
                     pattern: {
@@ -461,15 +432,10 @@ export function RegisterFarmer() {
                       message: "Por favor, apenas números",
                     },
                   })}
-                  onChange={(e) =>
-                    setValueFromFormInput({
-                      u_main_contact: e.target.value,
-                    })
-                  }
                 />
                 <ErrorMessage
                   errors={errors}
-                  name="inputEntityMainPhone"
+                  name="u_main_contact"
                   render={({ message }) => (
                     <small className="text-red-500 text-xs">{message}</small>
                   )}
@@ -477,7 +443,7 @@ export function RegisterFarmer() {
               </div>
               <div className="w-full md:w-[23%] form-group mb-6 ">
                 <label
-                  htmlFor="inputRegisterEntitySecondaryPhone"
+                  htmlFor="inputRegisterFarmerSecondaryPhone"
                   className="form-label inline-block mb-2 text-palm-700 mr-3"
                 >
                   Nº Whatsapp 2
@@ -500,12 +466,11 @@ export function RegisterFarmer() {
                     ease-in-out
                     m-0
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  id="inputRegisterEntitySecondaryPhone"
+                  id="inputRegisterFarmerSecondaryPhone"
                   placeholder="(DDD) 9XXXX-XXXX"
                   max={12}
                   maxLength={12}
-                  aria-describedby="entity phone 2"
-                  {...register("inputRegisterEntitySecondaryPhone", {
+                  {...register("u_secondary_contact", {
                     minLength: {
                       value: 12,
                       message: "Números insuficiente",
@@ -515,15 +480,10 @@ export function RegisterFarmer() {
                       message: "Por favor, apenas números",
                     },
                   })}
-                  onChange={(e) =>
-                    setValueFromFormInput({
-                      u_secondary_contact: e.target.value,
-                    })
-                  }
                 />
                 <ErrorMessage
                   errors={errors}
-                  name="inputRegisterEntitySecondaryPhone"
+                  name="u_secondary_contact"
                   render={({ message }) => (
                     <small className="text-red-500 text-xs">{message}</small>
                   )}
@@ -553,7 +513,7 @@ export function RegisterFarmer() {
                 transition
                 duration-150
                 ease-in-out"
-                onClick={handleSubmit(() => setToggleForm(!toggleForm))}
+                onClick={handleSubmit(() => (toggleForm = true))}
               >
                 Próximo
               </button>
@@ -577,7 +537,7 @@ export function RegisterFarmer() {
 
             <div className="w-full mb-6">
               <label
-                htmlFor="inputRegisterUserEmail"
+                htmlFor="inputRegisterFarmerEmail"
                 className="form-label inline-block text-sm mb-2 text-gray-700"
               >
                 Seu E-mail
@@ -586,8 +546,8 @@ export function RegisterFarmer() {
                 type="email"
                 className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                 placeholder="exemplo@gmail.com"
-                id="inputRegisterUserEmail"
-                {...register("inputRegisterUserEmail", {
+                id="inputRegisterFarmerEmail"
+                {...register("u_email", {
                   required: "Campo obrigatório",
                   pattern: {
                     value: /\S+@\S+\.\S+/,
@@ -598,15 +558,10 @@ export function RegisterFarmer() {
                     message: "O email deve ter mais de 14 caracteres",
                   },
                 })}
-                onChange={(e) =>
-                  setValueFromFormInput({
-                    u_email: e.target.value,
-                  })
-                }
               />
               <ErrorMessage
                 errors={errors}
-                name="inputRegisterUserEmail"
+                name="u_email"
                 render={({ message }) => (
                   <small className="text-red-500 text-xs">{message}</small>
                 )}
@@ -615,7 +570,7 @@ export function RegisterFarmer() {
 
             <div className="w-full mb-4">
               <label
-                htmlFor="inputRegisterUserPassword"
+                htmlFor="inputRegisterFarmerPassword"
                 className="form-label inline-block text-sm mb-2 text-gray-700"
               >
                 Sua senha
@@ -624,23 +579,18 @@ export function RegisterFarmer() {
                 type="password"
                 className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                 placeholder="******"
-                id="inputRegisterUserPassword"
-                {...register("inputRegisterUserPassword", {
+                id="inputRegisterFarmerPassword"
+                {...register("u_password", {
                   required: "Campo obrigatório",
                   minLength: {
                     value: 6,
                     message: "O senha deve ter no mínimo 6 caracteres",
                   },
                 })}
-                onChange={(e) =>
-                  setValueFromFormInput({
-                    u_password: e.target.value,
-                  })
-                }
               />
               <ErrorMessage
                 errors={errors}
-                name="inputRegisterUserPassword"
+                name="u_password"
                 render={({ message }) => (
                   <small className="text-red-500 text-xs">{message}</small>
                 )}
@@ -650,7 +600,7 @@ export function RegisterFarmer() {
             <div className="flex flex-col justify-center  text-center lg:text-left mt-6">
               <button
                 type="button"
-                onClick={handleSubmit(() => formSubmit())}
+                onClick={handleSubmit(formSubmit)}
                 className="w-full inline-block px-7 py-2 bg-palm-700 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-palm-500 hover:shadow-lg focus:bg-palm-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-palm-700 active:shadow-lg transition duration-150 ease-in-out"
               >
                 Cadastrar
@@ -662,7 +612,7 @@ export function RegisterFarmer() {
               2
             </p>
             <button
-              onClick={() => setToggleForm(!toggleForm)}
+              onClick={() => (toggleForm = false)}
               className="block relative text-center text-sm text-gray-500 mx-auto"
             >
               Voltar

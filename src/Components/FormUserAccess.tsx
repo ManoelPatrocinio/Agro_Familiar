@@ -1,5 +1,5 @@
 import { ErrorMessage } from "@hookform/error-message";
-import { memo, useState } from "react";
+import { memo } from "react";
 import { useForm } from "react-hook-form";
 
 import Swal from "sweetalert2";
@@ -11,26 +11,17 @@ type FormProps = {
   type: "userLogin" | "userRegister";
 };
 
-const InitialUserState: User = {
-  u_type: "customer",
-  u_full_name: "",
-  u_email: "",
-  u_password: "",
-};
 export const FormUserAccess = memo(({ type }: FormProps) => {
-  const [userFormData, setUserFormData] = useState<User>(InitialUserState); //state for add new user
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm();
-  //function for add value input on state
-  const setValueFromFormInput = (newValue: any) => {
-    setUserFormData((inputValue) => ({ ...inputValue, ...newValue }));
-  };
+  } = useForm<User>();
 
-  const formSubmit = async (type: string) => {
-    if (type === "userRegister") {
+  async function formSubmit(userFormData: User) {
+    if (userFormData.u_full_name && userFormData.u_full_name.length > 0) {
+      console.log("register", userFormData);
+
       const { apiResponse } = await useApiPost<User>("/register", userFormData);
       if (apiResponse) {
         Swal.fire({
@@ -44,7 +35,9 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
       setTimeout(() => {
         window.location.reload();
       }, 2000);
-    } else if (type === "userLogin") {
+    } else {
+      console.log("login", userFormData);
+
       const { apiResponse } = await useApiPost<User>("/login", userFormData);
       if (apiResponse) {
         Swal.fire({
@@ -59,7 +52,7 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
         window.location.reload();
       }, 2000);
     }
-  };
+  }
   return (
     <>
       <form className="w-full h-auto">
@@ -80,22 +73,17 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
                 id="inputAccessUserFullName"
                 className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                 placeholder="Nome Completo"
-                {...register("inputAccessUserFullName", {
+                {...register("u_full_name", {
                   required: "Informe seu nome completo para continuar",
                   minLength: {
                     value: 6,
                     message: "Este campo deve ter mais de 6 caracteres",
                   },
                 })}
-                onChange={(e) =>
-                  setValueFromFormInput({
-                    u_full_name: e.target.value,
-                  })
-                }
               />
               <ErrorMessage
                 errors={errors}
-                name="inputAccessUserFullName"
+                name="u_full_name"
                 render={({ message }) => (
                   <small className="text-red-500 text-xs">{message}</small>
                 )}
@@ -120,7 +108,7 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
             className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
             placeholder="exemplo@gmail.com"
             id="inputFormAccessUserEmail"
-            {...register("inputFormAccessUserEmail", {
+            {...register("u_email", {
               required: "Informe seu email para continuar",
               pattern: {
                 value: /\S+@\S+\.\S+/,
@@ -131,15 +119,10 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
                 message: "O email deve ter mais de 14 caracteres",
               },
             })}
-            onChange={(e) =>
-              setValueFromFormInput({
-                u_email: e.target.value,
-              })
-            }
           />
           <ErrorMessage
             errors={errors}
-            name="inputFormAccessUserEmail"
+            name="u_email"
             render={({ message }) => (
               <small className="text-red-500 text-xs">{message}</small>
             )}
@@ -159,22 +142,17 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
             placeholder="******"
             id="inputFormAccessUserPassword"
             autoComplete="on"
-            {...register("inputFormAccessUserPassword", {
+            {...register("u_password", {
               required: "Informe sua senha para continuar",
               minLength: {
                 value: 6,
                 message: "O senha deve ter no mínimo 6 caracteres",
               },
             })}
-            onChange={(e) =>
-              setValueFromFormInput({
-                u_password: e.target.value,
-              })
-            }
           />
           <ErrorMessage
             errors={errors}
-            name="inputFormAccessUserPassword"
+            name="u_password"
             render={({ message }) => (
               <small className="text-red-500 text-xs">{message}</small>
             )}
@@ -190,7 +168,7 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
         <div className="flex flex-col justify-center  text-center lg:text-left mt-6">
           <button
             type="button"
-            onClick={handleSubmit(() => formSubmit(type))}
+            onClick={handleSubmit(formSubmit)}
             className="w-full inline-block px-7 py-2 bg-palm-700 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-palm-500 hover:shadow-lg focus:bg-palm-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-palm-700 active:shadow-lg transition duration-150 ease-in-out"
           >
             {type === "userRegister" ? "Cadastrar" : "Login"}

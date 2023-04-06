@@ -1,5 +1,4 @@
 import { ErrorMessage } from "@hookform/error-message";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -11,40 +10,19 @@ import { User } from "../../Types/user.type";
 import { useApiPost } from "../../hook/useApi";
 import { CheckLocalStorage } from "../../service/localStorage";
 
-const InitialUserState: User = {
-  u_type: "customer",
-  u_full_name: "",
-  u_email: "",
-  u_password: "",
-  u_president_name: "",
-  u_entity_name: "",
-  u_CNPJ_CPF: "",
-  u_UF: "",
-  u_city: "",
-  u_district: "",
-  u_street: "",
-  u_number: "",
-  u_main_contact: "",
-  u_secondary_contact: "",
-};
-
+let toggleForm: boolean = false;
 export function RegisterEntity() {
   const navigate = useNavigate();
-  const [FormData, setFormData] = useState<User>(InitialUserState);
-  const [toggleForm, setToggleForm] = useState<boolean>(false);
+
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm();
-  //function for add value input on state
-  const setValueFromFormInput = (newValue: any) => {
-    setFormData((inputValue) => ({ ...inputValue, ...newValue }));
-  };
+  } = useForm<User>();
 
-  const formSubmit = async () => {
+  async function formSubmit(FormData: User) {
     console.log("FormData", FormData);
-    if (FormData.u_type == "customer") {
+    if (FormData.u_type.length === 0) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -65,7 +43,7 @@ export function RegisterEntity() {
         navigate("/");
       }, 2000);
     }
-  };
+  }
 
   return (
     <>
@@ -93,14 +71,9 @@ export function RegisterEntity() {
                   <input
                     className="form-check-input  appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
                     type="radio"
-                    name="inlineRadioOptions"
                     id="inputRegisteEntityTypeAssoc"
                     value={"assoc"}
-                    onChange={(e) =>
-                      setValueFromFormInput({
-                        u_type: e.target.value,
-                      })
-                    }
+                    {...register("u_type", {})}
                   />
                   <label
                     className="form-check-label inline-block text-gray-800 cursor-pointer"
@@ -113,14 +86,9 @@ export function RegisterEntity() {
                   <input
                     className="form-check-input  appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
                     type="radio"
-                    name="inlineRadioOptions"
                     id="inputRegisteEntityTypeCoop"
                     value={"coop"}
-                    onChange={(e) =>
-                      setValueFromFormInput({
-                        u_type: e.target.value,
-                      })
-                    }
+                    {...register("u_type", {})}
                   />
                   <label
                     className="form-check-label inline-block text-gray-800 cursor-pointer"
@@ -144,7 +112,6 @@ export function RegisterEntity() {
                 <input
                   type="text"
                   className="form-control
-                    
                     w-full
                     px-3
                     py-1.5
@@ -160,22 +127,17 @@ export function RegisterEntity() {
                   id="inputRegisterEntityName"
                   aria-describedby="entityName"
                   placeholder="Digite aqui"
-                  {...register("inputRegisterEntityName", {
+                  {...register("u_entity_name", {
                     required: "Campo obrigatório",
                     minLength: {
                       value: 6,
                       message: "Este campo deve ter mais de 6 caracteres",
                     },
                   })}
-                  onChange={(e) =>
-                    setValueFromFormInput({
-                      u_entity_name: e.target.value,
-                    })
-                  }
                 />
                 <ErrorMessage
                   errors={errors}
-                  name="inputRegisterEntityName"
+                  name="u_entity_name"
                   render={({ message }) => (
                     <small className="text-red-500 text-xs">{message}</small>
                   )}
@@ -212,7 +174,7 @@ export function RegisterEntity() {
                   max={14}
                   min={14}
                   maxLength={14}
-                  {...register("inputRegisterEntityCnpj", {
+                  {...register("u_CNPJ_CPF", {
                     required: "Informe um CNPJ válido para continuar",
                     minLength: {
                       value: 14,
@@ -223,15 +185,10 @@ export function RegisterEntity() {
                       message: "Por favor, apenas números",
                     },
                   })}
-                  onChange={(e) =>
-                    setValueFromFormInput({
-                      u_CNPJ_CPF: e.target.value,
-                    })
-                  }
                 />
                 <ErrorMessage
                   errors={errors}
-                  name="inputRegisterEntityCnpj"
+                  name="u_CNPJ_CPF"
                   render={({ message }) => (
                     <small className="text-red-500 text-xs">{message}</small>
                   )}
@@ -266,22 +223,17 @@ export function RegisterEntity() {
                 id="inputRegisterPresidentName"
                 aria-describedby="president Name"
                 placeholder="Nome Completo"
-                {...register("inputRegisterPresidentName", {
+                {...register("u_president_name", {
                   required: "Campo obrigatório",
                   minLength: {
                     value: 6,
                     message: "Este campo deve ter mais de 6 caracteres",
                   },
                 })}
-                onChange={(e) =>
-                  setValueFromFormInput({
-                    u_president_name: e.target.value,
-                  })
-                }
               />
               <ErrorMessage
                 errors={errors}
-                name="inputRegisterPresidentName"
+                name="u_president_name"
                 render={({ message }) => (
                   <small className="text-red-500 text-xs">{message}</small>
                 )}
@@ -317,22 +269,17 @@ export function RegisterEntity() {
                   max={40}
                   aria-describedby="entity City"
                   placeholder="Digite aqui"
-                  {...register("iputRegisterEntityCity", {
+                  {...register("u_city", {
                     required: "Campo Obrigatório",
                     minLength: {
                       value: 3,
                       message: "Caracteres insuficiente",
                     },
                   })}
-                  onChange={(e) =>
-                    setValueFromFormInput({
-                      u_city: e.target.value,
-                    })
-                  }
                 />
                 <ErrorMessage
                   errors={errors}
-                  name="iputRegisterEntityCity"
+                  name="u_city"
                   render={({ message }) => (
                     <small className="text-red-500 text-xs">{message}</small>
                   )}
@@ -368,11 +315,20 @@ export function RegisterEntity() {
                   placeholder="Digite aqui"
                   max={40}
                   maxLength={40}
-                  onChange={(e) =>
-                    setValueFromFormInput({
-                      u_district: e.target.value,
-                    })
-                  }
+                  {...register("u_district", {
+                    minLength: {
+                      value: 3,
+                      message: "Caracteres insuficiente",
+                    },
+                    max: 40,
+                  })}
+                />
+                <ErrorMessage
+                  errors={errors}
+                  name="u_district"
+                  render={({ message }) => (
+                    <small className="text-red-500 text-xs">{message}</small>
+                  )}
                 />
               </div>
               <div className="w-full md:w-[30%]  form-group mb-6">
@@ -404,11 +360,20 @@ export function RegisterEntity() {
                   placeholder="Digite aqui"
                   max={70}
                   maxLength={70}
-                  onChange={(e) =>
-                    setValueFromFormInput({
-                      u_street: e.target.value,
-                    })
-                  }
+                  {...register("u_street", {
+                    minLength: {
+                      value: 3,
+                      message: "Caracteres insuficiente",
+                    },
+                    max: 70,
+                  })}
+                />
+                <ErrorMessage
+                  errors={errors}
+                  name="u_street"
+                  render={({ message }) => (
+                    <small className="text-red-500 text-xs">{message}</small>
+                  )}
                 />
               </div>
             </div>
@@ -440,21 +405,16 @@ export function RegisterEntity() {
                   id="inputRegisterEntityNumber"
                   max={6}
                   maxLength={6}
-                  {...register("inputRegisterEntityNumber", {
+                  {...register("u_number", {
                     pattern: {
                       value: /^[0-9]+$/,
                       message: "Por favor, apenas números",
                     },
                   })}
-                  onChange={(e) =>
-                    setValueFromFormInput({
-                      u_number: e.target.value,
-                    })
-                  }
                 />
                 <ErrorMessage
                   errors={errors}
-                  name="inputRegisterEntityNumber"
+                  name="u_number"
                   render={({ message }) => (
                     <small className="text-red-500 text-xs">{message}</small>
                   )}
@@ -487,14 +447,9 @@ export function RegisterEntity() {
                       focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     aria-label="select entity Uf"
                     id="inputRegisterEntityUf"
-                    {...register("inputRegisterEntityUf", {
+                    {...register("u_UF", {
                       required: "Campo obrigatório",
                     })}
-                    onChange={(e) =>
-                      setValueFromFormInput({
-                        u_UF: e.target.value,
-                      })
-                    }
                   >
                     <option value="">Selecione</option>
                     <option value="AC">Acre</option>
@@ -527,7 +482,7 @@ export function RegisterEntity() {
                   </select>
                   <ErrorMessage
                     errors={errors}
-                    name="inputRegisterEntityUf"
+                    name="u_UF"
                     render={({ message }) => (
                       <small className="text-red-500 text-xs">{message}</small>
                     )}
@@ -566,7 +521,7 @@ export function RegisterEntity() {
                   min={12}
                   maxLength={12}
                   placeholder="(DDD) 9XXXX-XXXX"
-                  {...register("inputEntityMainPhone", {
+                  {...register("u_main_contact", {
                     required: "Campo Obrigatório",
                     minLength: {
                       value: 12,
@@ -577,15 +532,10 @@ export function RegisterEntity() {
                       message: "Por favor, apenas números",
                     },
                   })}
-                  onChange={(e) =>
-                    setValueFromFormInput({
-                      u_main_contact: e.target.value,
-                    })
-                  }
                 />
                 <ErrorMessage
                   errors={errors}
-                  name="inputEntityMainPhone"
+                  name="u_main_contact"
                   render={({ message }) => (
                     <small className="text-red-500 text-xs">{message}</small>
                   )}
@@ -622,7 +572,7 @@ export function RegisterEntity() {
                   min={12}
                   maxLength={12}
                   aria-describedby="entity phone 2"
-                  {...register("inputRegisterEntitySecondaryPhone", {
+                  {...register("u_secondary_contact", {
                     minLength: {
                       value: 12,
                       message: "Números insuficiente",
@@ -632,15 +582,10 @@ export function RegisterEntity() {
                       message: "Por favor, apenas números",
                     },
                   })}
-                  onChange={(e) =>
-                    setValueFromFormInput({
-                      u_secondary_contact: e.target.value,
-                    })
-                  }
                 />
                 <ErrorMessage
                   errors={errors}
-                  name="inputRegisterEntitySecondaryPhone"
+                  name="u_secondary_contact"
                   render={({ message }) => (
                     <small className="text-red-500 text-xs">{message}</small>
                   )}
@@ -670,7 +615,7 @@ export function RegisterEntity() {
                 transition
                 duration-150
                 ease-in-out"
-                onClick={handleSubmit(() => setToggleForm(!toggleForm))}
+                onClick={handleSubmit(() => (toggleForm = true))}
               >
                 Próximo
               </button>
@@ -703,61 +648,17 @@ export function RegisterEntity() {
                 id="inputRegisterUserFullName"
                 className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                 placeholder="Nome Completo"
-                {...register("inputRegisterUserFullName", {
+                {...register("u_full_name", {
                   required: "Campo obrigatório",
                   minLength: {
                     value: 6,
                     message: "Este campo deve ter mais de 6 caracteres",
                   },
                 })}
-                onChange={(e) =>
-                  setValueFromFormInput({
-                    u_full_name: e.target.value,
-                  })
-                }
               />
               <ErrorMessage
                 errors={errors}
-                name="inputRegisterUserFullName"
-                render={({ message }) => (
-                  <small className="text-red-500 text-xs">{message}</small>
-                )}
-              />
-            </div>
-
-            <div className="w-full mb-6">
-              <label
-                htmlFor="inputRegisterUserEmail"
-                className="form-label inline-block text-sm mb-2 text-gray-700"
-              >
-                Seu E-mail
-              </label>
-              <input
-                type="email"
-                className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
-                placeholder="exemplo@gmail.com"
-                id="inputRegisterUserEmail"
-                defaultValue={""}
-                {...register("inputRegisterUserEmail", {
-                  required: "Campo obrigatório",
-                  pattern: {
-                    value: /\S+@\S+\.\S+/,
-                    message: "Informe um e-mail válido",
-                  },
-                  minLength: {
-                    value: 15,
-                    message: "O email deve ter mais de 14 caracteres",
-                  },
-                })}
-                onChange={(e) =>
-                  setValueFromFormInput({
-                    u_email: e.target.value,
-                  })
-                }
-              />
-              <ErrorMessage
-                errors={errors}
-                name="inputRegisterUserEmail"
+                name="u_full_name"
                 render={({ message }) => (
                   <small className="text-red-500 text-xs">{message}</small>
                 )}
@@ -776,22 +677,50 @@ export function RegisterEntity() {
                 className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                 placeholder="******"
                 id="inputRegisterUserPassword"
-                {...register("inputRegisterUserPassword", {
+                {...register("u_password", {
                   required: "Campo obrigatório",
                   minLength: {
                     value: 6,
                     message: "O senha deve ter no mínimo 6 caracteres",
                   },
                 })}
-                onChange={(e) =>
-                  setValueFromFormInput({
-                    u_password: e.target.value,
-                  })
-                }
               />
               <ErrorMessage
                 errors={errors}
-                name="inputRegisterUserPassword"
+                name="u_password"
+                render={({ message }) => (
+                  <small className="text-red-500 text-xs">{message}</small>
+                )}
+              />
+            </div>
+            <div className="w-full mb-6">
+              <label
+                htmlFor="inputRegisterUserEmail"
+                className="form-label inline-block text-sm mb-2 text-gray-700"
+              >
+                Seu E-mail
+              </label>
+              <input
+                type="email"
+                className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
+                placeholder="exemplo@gmail.com"
+                id="inputRegisterUserEmail"
+                defaultValue={""}
+                {...register("u_email", {
+                  required: "Campo obrigatório",
+                  pattern: {
+                    value: /\S+@\S+\.\S+/,
+                    message: "Informe um e-mail válido",
+                  },
+                  minLength: {
+                    value: 15,
+                    message: "O email deve ter mais de 14 caracteres",
+                  },
+                })}
+              />
+              <ErrorMessage
+                errors={errors}
+                name="u_email"
                 render={({ message }) => (
                   <small className="text-red-500 text-xs">{message}</small>
                 )}
@@ -801,7 +730,7 @@ export function RegisterEntity() {
             <div className="flex flex-col justify-center  text-center lg:text-left mt-6">
               <button
                 type="button"
-                onClick={handleSubmit(() => formSubmit())}
+                onClick={handleSubmit(formSubmit)}
                 className="w-full inline-block px-7 py-2 bg-palm-700 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-palm-500 hover:shadow-lg focus:bg-palm-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-palm-700 active:shadow-lg transition duration-150 ease-in-out"
               >
                 Cadastrar
@@ -813,7 +742,7 @@ export function RegisterEntity() {
               2
             </p>
             <button
-              onClick={() => setToggleForm(!toggleForm)}
+              onClick={() => (toggleForm = false)}
               className="relative text-center text-sm text-gray-500 mx-auto"
             >
               Voltar
