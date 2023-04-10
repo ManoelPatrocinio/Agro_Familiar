@@ -1,7 +1,7 @@
 import { ErrorMessage } from "@hookform/error-message";
 import classNames from "classnames";
 import { Question } from "phosphor-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -10,44 +10,32 @@ import { ImgPreview } from "../../../Components/ImgPreview";
 import { MenuOfDashboard } from "../../../Components/MenuOfDashboard";
 import { Menu_Sidebar } from "../../../Components/Menu_Sidebar";
 import { Load_spinner } from "../../../Components/load_spinner";
+import { UserLoggedContextType } from "../../../Types/Contexts.type";
 import { FileUploaded } from "../../../Types/fileUploaded.types";
 import { Product } from "../../../Types/product.type";
-import { User } from "../../../Types/user.type";
 import Logo from "../../../assets/images/Logo.png";
+import { UserLoggedContext } from "../../../context/UserLoggedContext";
 import { api, useApiPost } from "../../../hook/useApi";
 import { FirebaseUploadFile } from "../../../service/firebase";
-import { CheckLocalStorage } from "../../../service/localStorage";
 
-const InitialProductState = {
-  id: "",
-  farmer_id: "",
-  p_name: "",
-  p_category: "",
-  p_price: "",
-  p_old_price: "",
-  p_stock: "",
-  p_raiting: 0,
-  p_n_contact: "",
-  p_description: "",
-  p_images: [],
-};
 export function CreateProduct() {
   //************* start pre config from register form *************
-  const [prodData, setProductData] = useState(InitialProductState); //state for add new user
+  const [prodData, setProductData] = useState<Product>(); //state for add new product
   const [filesData, setFileData] = useState<FileUploaded[]>([]);
-  const [userStatus, setUserStatus] = useState<User | null>(null);
-  const [isLoading, setIsloading] = useState<boolean>(false);
+
   const { productId } = useParams();
+  const { userLogged } = useContext(UserLoggedContext) as UserLoggedContextType;
+
+  let isLoading: boolean = false;
+
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm();
+  } = useForm<Product>();
 
   useEffect(() => {
-    setIsloading(true);
-
-    setUserStatus(CheckLocalStorage.getLoggedUser());
+    isLoading = true;
     if (productId) {
       api
         .get(`/product/${productId}`)
@@ -63,13 +51,9 @@ export function CreateProduct() {
           });
         });
     }
-    setIsloading(false);
+    isLoading = false;
   }, []);
 
-  //function for add value input on state
-  const setValueFromFormInput = (newValue: any) => {
-    setProductData((inputValue) => ({ ...inputValue, ...newValue }));
-  };
   //receive the file from dropzone component and set news props to display on other component ex: ImgPreview
   const handleUpload = (file: File) => {
     let finalListFile = filesData.concat(file);
@@ -78,21 +62,20 @@ export function CreateProduct() {
     }
   };
   function resetFilds() {
-    setProductData(InitialProductState);
     setFileData([]);
   }
   const handleDelete = (url: string) => {
     return setFileData(filesData.filter((file) => file.preview !== url));
   };
 
-  async function uploadImgs() {
+  async function uploadImgs(formaData: Product) {
     let newData: string[] = [];
-    setIsloading(true);
+    isLoading = true;
     filesData.forEach(async (item) => {
       const { url } = await FirebaseUploadFile(item as File, "/products");
       if (url) {
         newData.push(url);
-        check(filesData, newData);
+        check(filesData, newData, formaData);
       } else {
         Swal.fire({
           icon: "error",
@@ -103,27 +86,33 @@ export function CreateProduct() {
     });
   }
 
-  function check(arrayChosenImg: FileUploaded[], arrayUploadedImgs: string[]) {
+  function check(
+    arrayChosenImg: FileUploaded[],
+    arrayUploadedImgs: string[],
+    formaData: Product
+  ) {
     if (arrayChosenImg.length === arrayUploadedImgs.length) {
-      sendNewProduct(arrayUploadedImgs);
+      sendNewProduct(arrayUploadedImgs, formaData);
     } else {
       console.log("esperando...");
     }
   }
 
-  const sendNewProduct = async (imgsUrl: string[]) => {
-    const priceFormated = prodData.p_price.replace(",", ".");
-    const oldPriceFormated = prodData.p_old_price.replace(",", ".");
+  const sendNewProduct = async (imgsUrl: string[], formaData: Product) => {
+    const priceFormated = formaData.p_price?.toString().replace(",", ".");
+    const oldPriceFormated = formaData.p_old_price
+      ?.toString()
+      .replace(",", ".");
 
     const newProductFormated = {
-      farmer_id: userStatus?._id,
-      p_name: prodData.p_name,
-      p_category: prodData.p_category,
+      farmer_id: userLogged?._id,
+      p_name: formaData.p_name,
+      p_category: formaData.p_category,
       p_price: priceFormated,
       p_old_price: oldPriceFormated,
-      p_stock: prodData.p_stock,
-      p_n_contact: prodData.p_n_contact,
-      p_description: prodData.p_description,
+      p_stock: formaData.p_stock,
+      p_n_contact: formaData.p_n_contact,
+      p_description: formaData.p_description,
       p_images: imgsUrl,
     };
     console.log("imgsUrl on send", imgsUrl);
@@ -136,7 +125,7 @@ export function CreateProduct() {
 
     resetFilds();
     if (apiResponse != null) {
-      setIsloading(false);
+      isLoading = false;
       Swal.fire({
         icon: "success",
         title: "Success !",
@@ -164,7 +153,7 @@ export function CreateProduct() {
       </header>
       <div className="flex">
         <div className="hidden md:block w-[25%] min-h-full border-r border-gray-200 ">
-          <MenuOfDashboard userLogged={userStatus!} />
+          <MenuOfDashboard />
         </div>
         <div className="relative w-full md:w-[75%] h-full px-8">
           {isLoading ? (
@@ -208,23 +197,22 @@ export function CreateProduct() {
                       id="productName"
                       aria-describedby="productName"
                       placeholder="Digite aqui"
-                      defaultValue={prodData.p_name}
-                      {...register("productName", {
+                      defaultValue={prodData?.p_name}
+                      {...register("p_name", {
                         required: "Campo Obrigatório",
                         minLength: {
                           value: 3,
                           message: "O nome deve ter mais de 3 caracteres",
                         },
+                        maxLength: {
+                          value: 100,
+                          message: "Limite de caracteres atinguido",
+                        },
                       })}
-                      onChange={(e) =>
-                        setValueFromFormInput({
-                          p_name: e.target.value,
-                        })
-                      }
                     />
                     <ErrorMessage
                       errors={errors}
-                      name="productName"
+                      name="p_name"
                       render={({ message }) => (
                         <small className="text-red-500 text-xs">
                           {message}
@@ -260,15 +248,10 @@ export function CreateProduct() {
                          focus:border-blue-600 focus:outline-none"
                         aria-label="Default select example"
                         id="productCategory"
-                        defaultValue={prodData.p_category}
-                        {...register("productCategory", {
+                        defaultValue={prodData?.p_category}
+                        {...register("p_category", {
                           required: "Campo Obrigatório",
                         })}
-                        onChange={(e) =>
-                          setValueFromFormInput({
-                            p_category: e.target.value,
-                          })
-                        }
                       >
                         <option value="">Selecione</option>
                         <optgroup label="Agricultura">
@@ -298,7 +281,7 @@ export function CreateProduct() {
                       </select>
                       <ErrorMessage
                         errors={errors}
-                        name="productCategory"
+                        name="p_category"
                         render={({ message }) => (
                           <small className="text-red-500 text-xs">
                             {message}
@@ -337,23 +320,18 @@ export function CreateProduct() {
                         id="productPrice"
                         aria-describedby="productPrice"
                         placeholder="R$"
-                        defaultValue={prodData.p_price}
-                        {...register("productPrice", {
+                        defaultValue={prodData?.p_price}
+                        {...register("p_price", {
                           required: "Campo Obrigatório",
                           minLength: {
                             value: 1,
                             message: "o Preço deve ter mais de 1 caractere",
                           },
                         })}
-                        onChange={(e) =>
-                          setValueFromFormInput({
-                            p_price: e.target.value,
-                          })
-                        }
                       />
                       <ErrorMessage
                         errors={errors}
-                        name="productPrice"
+                        name="p_price"
                         render={({ message }) => (
                           <small className="text-red-500 text-xs">
                             {message}
@@ -387,14 +365,23 @@ export function CreateProduct() {
                         m-0
                        focus:border-blue-600 focus:outline-none"
                         id="productOldPrice"
-                        aria-describedby="productOldPrice"
                         placeholder="R$"
-                        defaultValue={prodData.p_old_price}
-                        onChange={(e) =>
-                          setValueFromFormInput({
-                            p_old_price: e.target.value,
-                          })
-                        }
+                        defaultValue={prodData?.p_old_price}
+                        {...register("p_old_price", {
+                          minLength: {
+                            value: 1,
+                            message: "o Preço deve ter mais de 1 caractere",
+                          },
+                        })}
+                      />
+                      <ErrorMessage
+                        errors={errors}
+                        name="p_old_price"
+                        render={({ message }) => (
+                          <small className="text-red-500 text-xs">
+                            {message}
+                          </small>
+                        )}
                       />
                     </div>
                     <div className="w-full md:w-[25%]  form-group mb-6">
@@ -424,12 +411,22 @@ export function CreateProduct() {
                     focus:border-blue-600 focus:outline-none"
                         id="productStock"
                         aria-describedby="product stock"
-                        defaultValue={prodData.p_stock}
-                        onChange={(e) =>
-                          setValueFromFormInput({
-                            p_stock: e.target.value,
-                          })
-                        }
+                        defaultValue={prodData?.p_stock}
+                        {...register("p_stock", {
+                          minLength: {
+                            value: 1,
+                            message: "Insira algum valor",
+                          },
+                        })}
+                      />
+                      <ErrorMessage
+                        errors={errors}
+                        name="p_stock"
+                        render={({ message }) => (
+                          <small className="text-red-500 text-xs">
+                            {message}
+                          </small>
+                        )}
                       />
                     </div>
                   </div>
@@ -442,7 +439,7 @@ export function CreateProduct() {
                       <span className="text-red-500 font-bold"> *</span>:
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       className="form-control
                         block
                         w-full
@@ -463,11 +460,11 @@ export function CreateProduct() {
                       maxLength={12}
                       aria-describedby="productWhatsApp"
                       placeholder="(DDD)9XXXX-XXXX"
-                      defaultValue={prodData.p_n_contact}
-                      {...register("productWhatsApp", {
+                      defaultValue={prodData?.p_n_contact}
+                      {...register("p_n_contact", {
                         required: "Campo Obrigatório",
                         minLength: {
-                          value: 11,
+                          value: 12,
                           message: "informe o DDD + Nº do celular",
                         },
                         maxLength: {
@@ -479,15 +476,10 @@ export function CreateProduct() {
                           message: "Por favor, apenas números",
                         },
                       })}
-                      onChange={(e) =>
-                        setValueFromFormInput({
-                          p_n_contact: e.target.value,
-                        })
-                      }
                     />
                     <ErrorMessage
                       errors={errors}
-                      name="productWhatsApp"
+                      name="p_n_contact"
                       render={({ message }) => (
                         <small className="text-red-500 text-xs">
                           {message}
@@ -525,8 +517,8 @@ export function CreateProduct() {
                       id="productDescription"
                       rows={3}
                       placeholder="Informe aqui o máximo  de informações sobre o produto."
-                      defaultValue={prodData.p_description}
-                      {...register("productDescription", {
+                      defaultValue={prodData?.p_description}
+                      {...register("p_description", {
                         required:
                           "Informe os detalhes do produto para continuar",
                         minLength: {
@@ -534,15 +526,10 @@ export function CreateProduct() {
                           message: "O nome deve ter mais de 1 caracteres",
                         },
                       })}
-                      onChange={(e) =>
-                        setValueFromFormInput({
-                          p_description: e.target.value,
-                        })
-                      }
                     />
                     <ErrorMessage
                       errors={errors}
-                      name="productDescription"
+                      name="p_description"
                       render={({ message }) => (
                         <small className="text-red-500 text-xs">
                           {message}
@@ -562,7 +549,7 @@ export function CreateProduct() {
                   </p>
 
                   <div className="w-full flex flex-col md:flex-row justify-start items-center mb-4">
-                    {prodData.p_images.length > 0 ? (
+                    {prodData?.p_images && prodData.p_images.length > 0 ? (
                       <>
                         {prodData.p_images.map((item) => (
                           <div
@@ -628,8 +615,8 @@ export function CreateProduct() {
                   </div>
                 </div>
                 <button
-                  onClick={handleSubmit(() => uploadImgs())}
                   type="submit"
+                  onClick={handleSubmit(uploadImgs)}
                   disabled={filesData.length <= 0 ? true : false}
                   className={classNames(
                     " block w-[90%] md:w-1/4 mx-auto md:mx-0 my-8 py-3 px-3 text-white text-md font-semibold   rounded ",

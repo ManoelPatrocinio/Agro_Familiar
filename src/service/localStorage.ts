@@ -1,13 +1,5 @@
 import { Product } from "../Types/product.type";
-
-type User ={
-    _id:string;
-    u_type ?: ("client" | "farmer" | "assoc" | "coop")
-    u_full_name : string,
-    u_email:string,
-    u_password:string
-
-}
+import { UserLoggedType } from "../Types/user.type";
 
 interface IPuchaseList {
   product: Product;
@@ -16,7 +8,7 @@ interface IPuchaseList {
 export const CheckLocalStorage = {
 
     // Função para salvar o usuário logado no local storage
-    setLoggedUser(data:User){
+    setLoggedUser(data:UserLoggedType){
         const UserLogged ={
             _id: data._id,
             u_type : data.u_type,
@@ -24,12 +16,12 @@ export const CheckLocalStorage = {
             u_full_name : data.u_full_name
         }
      
-        localStorage.setItem("user",  JSON.stringify(UserLogged))
+        localStorage.setItem("@PAF:User",  JSON.stringify(UserLogged))
     },
 
     // Função responsável por recuperar o usuário logado do local storage
     getLoggedUser(){
-        let data = localStorage.getItem("user");
+        let data = localStorage.getItem("@PAF:User");
         if(!data) return null;
         try {
             let parsedData = JSON.parse(data)
@@ -40,7 +32,7 @@ export const CheckLocalStorage = {
         }
     },
     logout (){
-        localStorage.removeItem("user");
+        localStorage.removeItem("@PAF:User");
   
     },
 

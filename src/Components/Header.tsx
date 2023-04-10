@@ -1,13 +1,16 @@
 import classNames from "classnames";
 import { ClipboardText, MagnifyingGlass, User } from "phosphor-react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import {
+  PuchaseListContextType,
+  UserLoggedContextType,
+} from "../Types/Contexts.type";
 import { Product } from "../Types/product.type";
-import { PuchaseListContextType } from "../Types/puchaseListContext.type";
-import { User as UserType } from "../Types/user.type";
 import Logo from "../assets/images/Logo.png";
 import { PuchaseListContext } from "../context/PuchaseListContext";
+import { UserLoggedContext } from "../context/UserLoggedContext";
 import { CheckLocalStorage } from "../service/localStorage";
 import { FormUserAccess } from "./FormUserAccess";
 import { Menu_Sidebar } from "./Menu_Sidebar";
@@ -24,17 +27,15 @@ interface Iprop {
 }
 
 export function Header({ setSearch, ItemSearched }: Iprop) {
-  const [userStatus, setUserStatus] = useState<UserType | null>(null);
   const [showForm, setShowForm] = useState<boolean>(false);
   const { purchaseList } = useContext(
     PuchaseListContext
   ) as PuchaseListContextType;
 
-  useEffect(() => {
-    setUserStatus(CheckLocalStorage.getLoggedUser());
-  }, []);
+  const { userLogged, UserFirstName } = useContext(
+    UserLoggedContext
+  ) as UserLoggedContextType;
 
-  const UserFirstName = userStatus?.u_full_name!.split(" ", 1);
   const CheckLogout = () => {
     Swal.fire({
       icon: "question",
@@ -117,13 +118,13 @@ export function Header({ setSearch, ItemSearched }: Iprop) {
               {UserFirstName ? (
                 <div className="w-full h-full">
                   <Link
-                    to={`/my-shop/${userStatus?._id}`}
+                    to={`/my-shop/${userLogged?._id}`}
                     className="flex justify-center items-center w-full text-center text-palm-700 text-sm py-2"
                   >
                     {" "}
                     Meu Espaço
                   </Link>
-                  {userStatus?.u_type != "customer" && (
+                  {userLogged?.u_type !== "customer" && (
                     <Link
                       to="/Admin/create-product"
                       className="flex justify-center items-center  w-full text-center text-palm-700 text-sm py-2 m-0"

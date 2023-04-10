@@ -7,10 +7,11 @@ import {
   User,
   UsersThree,
 } from "phosphor-react";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { User as UserType } from "../Types/user.type";
+import { UserLoggedContextType } from "../Types/Contexts.type";
+import { UserLoggedContext } from "../context/UserLoggedContext";
 import { CheckLocalStorage } from "../service/localStorage";
 import { FormUserAccess } from "./FormUserAccess";
 import { MenuOfDashboard } from "./MenuOfDashboard";
@@ -19,13 +20,10 @@ type Prop = {
   type: "default" | "admin";
 };
 export function Menu_Sidebar({ type }: Prop) {
-  const [userStatus, setUserStatus] = useState<UserType | null>(null);
+  const { userLogged, UserFirstName } = useContext(
+    UserLoggedContext
+  ) as UserLoggedContextType;
 
-  useEffect(() => {
-    setUserStatus(CheckLocalStorage.getLoggedUser());
-  }, []);
-
-  const UserFirstName = userStatus?.u_full_name!.split(" ", 1);
   const CheckLogout = () => {
     Swal.fire({
       icon: "question",
@@ -157,13 +155,13 @@ export function Menu_Sidebar({ type }: Prop) {
                   {UserFirstName ? (
                     <div className="w-full h-full">
                       <Link
-                        to={`/my-shop/${userStatus?._id}`}
+                        to={`/my-shop/${userLogged?._id}`}
                         className="flex justify-center items-center w-full text-center text-palm-700 text-sm py-2"
                       >
                         {" "}
                         Meu Perfil
                       </Link>
-                      {userStatus?.u_type != "customer" && (
+                      {userLogged?.u_type != "customer" && (
                         <Link
                           to="/Admin/create-product"
                           className="flex justify-center items-center  w-full text-center text-palm-700 text-sm py-2 m-0"

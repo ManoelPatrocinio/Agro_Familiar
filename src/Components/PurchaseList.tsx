@@ -1,6 +1,6 @@
 import { Trash } from "phosphor-react";
 import { useContext } from "react";
-import { PuchaseListContextType } from "../Types/puchaseListContext.type";
+import { PuchaseListContextType } from "../Types/Contexts.type";
 import { PuchaseListContext } from "../context/PuchaseListContext";
 
 export function PurchaseList() {

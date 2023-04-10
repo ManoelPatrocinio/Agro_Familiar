@@ -1,17 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { User } from "../Types/user.type";
+import { UserLoggedContextType } from "../Types/Contexts.type";
 import Logo from "../assets/images/Logo.png";
-import { CheckLocalStorage } from "../service/localStorage";
-interface IProp {
-  userLogged?: User;
-}
-export function MenuOfDashboard({ userLogged }: IProp) {
-  const [userStatus, setUserStatus] = useState<User | null>(null);
+import { UserLoggedContext } from "../context/UserLoggedContext";
 
-  useEffect(() => {
-    setUserStatus(CheckLocalStorage.getLoggedUser());
-  }, []);
+export function MenuOfDashboard() {
+  const { userLogged } = useContext(UserLoggedContext) as UserLoggedContextType;
   return (
     <div className="w-full h-full flex flex-col justify-start items-center relative">
       <button
@@ -32,7 +26,7 @@ export function MenuOfDashboard({ userLogged }: IProp) {
       <ul className=" w-full h-full px-2 ">
         <li className="w-full  bg-palm-700  my-2  rounded hover:bg-palm-500">
           <Link
-            to={`/Admin/my-profile/${userStatus?._id}`}
+            to={`/Admin/my-profile/${userLogged?._id}`}
             className="block w-full h-full px-4 py-3 text-left text-white text-md  font-semibold"
           >
             Meu Perfil
@@ -48,7 +42,7 @@ export function MenuOfDashboard({ userLogged }: IProp) {
         </li>
         <li className="w-full  bg-palm-700  my-2  rounded hover:bg-palm-500">
           <Link
-            to={`/Admin/manager/${userStatus?._id}`}
+            to={`/Admin/manager/${userLogged?._id}`}
             className="block w-full h-full px-4 py-3 text-left text-white text-md  font-semibold"
           >
             Gerenciar produtos

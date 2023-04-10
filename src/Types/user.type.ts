@@ -19,3 +19,11 @@ export type User = {
   u_cover_photo?:string;
   u_description?:string;
 };
+
+export type UserLoggedType ={
+    _id:string;
+    u_type : "customer" | "farmer" | "assoc" | "coop"
+    u_full_name : string,
+    u_email:string,
+    u_password:string
+}

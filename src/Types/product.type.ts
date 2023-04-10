@@ -1,5 +1,5 @@
 export type Product = {
-    _id: string;
+    _id?: string;
     farmer_id?: string;
     farmer_name?:string;
     p_name?: string;
@@ -11,13 +11,6 @@ export type Product = {
     p_n_contact?: string;
     p_description?: string;
     p_images?: [] | string[]
-    // p_images?: {
-    //     main:string,
-    //     secondary: string,
-    //     tertiary:string
-    //     quaternary:string
-
-    // };
     createdAt?: Date;
 }
 

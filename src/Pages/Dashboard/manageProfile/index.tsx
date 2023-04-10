@@ -1,6 +1,6 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { ArrowRight, Question } from "phosphor-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
@@ -44,14 +44,8 @@ const InitialUserState: User = {
 export function ManageProfile() {
   const { entityId } = useParams();
   const navigate = useNavigate();
-
-  const [userStatus, setUserStatus] = useState<User | null>(null);
   const [FormData, setFormData] = useState<User>(InitialUserState);
   const [toggleForm, setToggleForm] = useState<boolean>(false);
-
-  useEffect(() => {
-    setUserStatus(CheckLocalStorage.getLoggedUser());
-  }, []);
 
   const {
     register,
@@ -201,7 +195,7 @@ export function ManageProfile() {
 
       <div className="flex min-h-screen">
         <div className="hidden md:block w-[25%] min-h-full border-r border-gray-200 ">
-          <MenuOfDashboard userLogged={userStatus!} />
+          <MenuOfDashboard />
         </div>
         <div className="w-full md:w-[75%] h-full ">
           {isFetching && (

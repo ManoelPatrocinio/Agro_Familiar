@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { PuchaseListContextType } from "../Types/Contexts.type";
 import { Product } from "../Types/product.type";
-import { PuchaseListContextType } from "../Types/puchaseListContext.type";
 import { PuchaseListContext } from "../context/PuchaseListContext";
 import { IconAddList } from "./IconAddList";
 

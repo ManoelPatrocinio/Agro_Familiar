@@ -1,5 +1,4 @@
 import { MagnifyingGlass, Question } from "phosphor-react";
-import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -11,14 +10,12 @@ import { Product } from "../../../Types/product.type";
 import { User } from "../../../Types/user.type";
 import Logo from "../../../assets/images/Logo.png";
 import { api } from "../../../hook/useApi";
-import { CheckLocalStorage } from "../../../service/localStorage";
 
 type productAndEntityInfo = {
   products: Product[];
   entity: User;
 };
 export function ManageProducts() {
-  const [userStatus, setUserStatus] = useState<User | null>(null);
   const { idUserLogged } = useParams();
 
   const {
@@ -44,10 +41,6 @@ export function ManageProducts() {
     });
   }
 
-  useEffect(() => {
-    setUserStatus(CheckLocalStorage.getLoggedUser());
-  }, []);
-
   return (
     <>
       <header className="w-full md:hidden h-auto px-3 flex justify-between items-end">
@@ -65,7 +58,7 @@ export function ManageProducts() {
       </header>
       <div className="flex ">
         <div className="hidden md:block w-[25%] min-h-full border-r border-gray-200 ">
-          <MenuOfDashboard userLogged={userStatus!} />
+          <MenuOfDashboard />
         </div>
         <div className="w-full md:w-[75%] h-full px-8">
           <h1 className="w-full text-center md:text-left text-md md:text-xl text-palm-700 font-semibold my-8">
