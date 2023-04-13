@@ -9,10 +9,10 @@ import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { Product } from "../../Types/product.type";
 import { User } from "../../Types/user.type";
+import exemple_user_profile from "../../assets/images/exemple_user_profile.png";
 import Icon_WhatsApp from "../../assets/images/icon-whatsapp.svg";
-import entity_profile from "../../assets/images/img_entity_profile_exemple.png";
-import header_background from "../../assets/images/img_header_exemple.png";
 import Star from "../../assets/images/star_icon.png";
+import exemple_user_cover_background from "../../assets/images/user_cover_background.jpg";
 import { api } from "../../hook/useApi";
 
 export function Entity() {
@@ -47,7 +47,7 @@ export function Entity() {
         });
       });
   }, [userId]);
-
+  console.log("entityData", entityData);
   function filterByCategory(category: string) {
     setSearch("");
     const filtedList = productData?.filter(
@@ -66,20 +66,56 @@ export function Entity() {
   return (
     <>
       <Header setSearch={setSearch} ItemSearched={search} />
-      <div className="w-full h-40 md:h-[27rem] md:min-h-[60vh] relative mt-4">
-        <img
-          src={header_background}
-          alt="foto de capa"
-          className="w-full h-full  "
-        />
+      <div className="w-full h-40 md:h-[23rem] md:min-h-[50vh] relative mt-4">
+        {entityData && entityData.u_cover_photo ? (
+          <>
+            {entityData.u_cover_photo.length > 0 ? (
+              <img
+                src={entityData?.u_cover_photo}
+                alt="foto de capa"
+                className="w-full h-full "
+              />
+            ) : (
+              <img
+                src={exemple_user_cover_background}
+                alt="foto de capa"
+                className="w-full h-full "
+              />
+            )}
+          </>
+        ) : (
+          <img
+            src={exemple_user_cover_background}
+            alt="foto de perfil"
+            className="w-full h-full object-cover"
+          />
+        )}
         <div className=" w-full absolute top-[7rem] md:top-[87%] flex flex-col md:flex-row  justify-between items-center md:items-end md:px-16 ">
           <div className="flex flex-col md:flex-row items-center md:items-end">
-            <div className="w-[7rem] h-[7rem] md:w-[9.5rem] md:h-[9.5rem] rounded-[50%]">
-              <img
-                src={entity_profile}
-                alt="foto de perfil"
-                className="w-full h-full object-cover"
-              />
+            <div className="w-[7rem] h-[7rem] md:w-[9.5rem] md:h-[9.5rem] rounded-[50%] ">
+              {entityData && entityData.u_img_profile ? (
+                <>
+                  {entityData.u_img_profile.length > 0 ? (
+                    <img
+                      src={entityData.u_img_profile}
+                      alt="foto de perfil"
+                      className="w-full h-full rounded-[50%]"
+                    />
+                  ) : (
+                    <img
+                      src={exemple_user_profile}
+                      alt="foto de perfil"
+                      className="w-full h-full  rounded-[50%]"
+                    />
+                  )}
+                </>
+              ) : (
+                <img
+                  src={exemple_user_profile}
+                  alt="foto de perfil"
+                  className="w-full h-full rounded-[50%]"
+                />
+              )}
             </div>
             <div className="flex flex-col items-center md:items-start justify-evenly px-4 pb-4">
               <h4 className="text-sm md:text-lg text-center md:text-left text-palm-700 font-display font-semibold pt-3 md:pt-0">

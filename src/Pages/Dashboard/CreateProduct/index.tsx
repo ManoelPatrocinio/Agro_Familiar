@@ -10,6 +10,7 @@ import { ImgPreview } from "../../../Components/ImgPreview";
 import { MenuOfDashboard } from "../../../Components/MenuOfDashboard";
 import { Menu_Sidebar } from "../../../Components/Menu_Sidebar";
 import { Load_spinner } from "../../../Components/load_spinner";
+import { categoriesList } from "../../../Global/categoriesList";
 import { UserLoggedContextType } from "../../../Types/Contexts.type";
 import { FileUploaded } from "../../../Types/fileUploaded.types";
 import { Product } from "../../../Types/product.type";
@@ -19,10 +20,8 @@ import { api, useApiPost } from "../../../hook/useApi";
 import { FirebaseUploadFile } from "../../../service/firebase";
 
 export function CreateProduct() {
-  //************* start pre config from register form *************
-  const [prodData, setProductData] = useState<Product>(); //state for add new product
+  const [prodData, setProductData] = useState<Product>();
   const [filesData, setFileData] = useState<FileUploaded[]>([]);
-
   const { productId } = useParams();
   const { userLogged } = useContext(UserLoggedContext) as UserLoggedContextType;
 
@@ -255,28 +254,25 @@ export function CreateProduct() {
                       >
                         <option value="">Selecione</option>
                         <optgroup label="Agricultura">
-                          <option value="Feijão">Grãos</option>
-                          <option value="Mandioca">Mandioca</option>
-                          <option value="Hortaliças">Hortaliças</option>
-                          <option value="Frutas">Frutas</option>
+                          {categoriesList.Agricultura.map((category) => (
+                            <option value={category} key={category}>
+                              {category}
+                            </option>
+                          ))}
                         </optgroup>
                         <optgroup label="Deriados">
-                          <option value="Pães/Bolos/Biscoitos">
-                            Pães/Bolos/Biscoitos
-                          </option>
-                          <option value="Doces">Doces </option>
-                          <option value="Bebidas">Bebidas </option>
-                          <option value="Temperos">Temperos</option>
-                          <option value="Outros">Outros</option>
+                          {categoriesList.Derivados.map((category) => (
+                            <option value={category} key={category}>
+                              {category}
+                            </option>
+                          ))}
                         </optgroup>
                         <optgroup label="Pecuária">
-                          <option value="Bovinos">Bovinos </option>
-                          <option value="Capríno/Ovínos">
-                            Capríno/Ovínos{" "}
-                          </option>
-                          <option value="Suínos">Suínos </option>
-                          <option value=" Áves"> Áves</option>
-                          <option value="Piscícultura">Piscícultura</option>
+                          {categoriesList.Pecuaria.map((category) => (
+                            <option value={category} key={category}>
+                              {category}
+                            </option>
+                          ))}
                         </optgroup>
                       </select>
                       <ErrorMessage

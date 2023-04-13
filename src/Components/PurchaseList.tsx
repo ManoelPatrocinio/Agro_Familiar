@@ -90,7 +90,9 @@ export function PurchaseList() {
                     </button>
                   </div>
                   <button
-                    onClick={() => DeleteProductToPuchaseList(item.product._id)}
+                    onClick={() =>
+                      DeleteProductToPuchaseList(item!.product._id!)
+                    }
                     className="w-12  h-12  rounded-[100%]  flex justift-center items-end mt-4 md:mt-0"
                   >
                     <Trash size={42} color="#789B3D" weight="light" />
