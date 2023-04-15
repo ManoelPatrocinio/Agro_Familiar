@@ -26,9 +26,9 @@ export function Products() {
 
   useEffect(() => {
     api
-      .get("/all-products")
+      .get("/all-enable-products")
       .then((response) => {
-        setProductData(response.data);
+        setProductData(response.data.products);
       })
       .catch((error) => {
         console.error(error);

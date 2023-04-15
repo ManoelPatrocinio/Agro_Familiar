@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 
 import Swal from "sweetalert2";
 import { User } from "../Types/user.type";
-import { useApiPost } from "../hook/useApi";
+import { api } from "../hook/useApi";
 import { CheckLocalStorage } from "../service/localStorage";
 
 type FormProps = {
@@ -20,37 +20,53 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
 
   async function formSubmit(userFormData: User) {
     if (userFormData.u_full_name && userFormData.u_full_name.length > 0) {
-      console.log("register", userFormData);
-
-      const { apiResponse } = await useApiPost<User>("/register", userFormData);
-      if (apiResponse) {
-        Swal.fire({
-          icon: "success",
-          title: "Success !",
-          showConfirmButton: false,
-          timer: 1500,
+      await api
+        .post("/register", userFormData)
+        .then((response) => {
+          Swal.fire({
+            icon: "success",
+            title: "Success !",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          CheckLocalStorage.setLoggedUser(response.data.user);
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        })
+        .catch((error) => {
+          console.error("data", error);
+          Swal.fire({
+            icon: "error",
+            title: "Oppss..",
+            text: error.response.data.message,
+            showConfirmButton: true,
+          });
         });
-      }
-      CheckLocalStorage.setLoggedUser(apiResponse!);
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
     } else {
-      console.log("login", userFormData);
-
-      const { apiResponse } = await useApiPost<User>("/login", userFormData);
-      if (apiResponse) {
-        Swal.fire({
-          icon: "success",
-          title: "Success !",
-          showConfirmButton: false,
-          timer: 1500,
+      await api
+        .post("/login", userFormData)
+        .then((response) => {
+          Swal.fire({
+            icon: "success",
+            title: "Success !",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          CheckLocalStorage.setLoggedUser(response.data.user);
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        })
+        .catch((error) => {
+          console.error("data", error);
+          Swal.fire({
+            icon: "error",
+            title: "Oppss..",
+            text: error.response.data.message,
+            showConfirmButton: true,
+          });
         });
-      }
-      CheckLocalStorage.setLoggedUser(apiResponse!);
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
     }
   }
   return (

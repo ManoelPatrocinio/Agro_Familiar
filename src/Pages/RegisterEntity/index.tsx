@@ -7,7 +7,7 @@ import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
 import { User } from "../../Types/user.type";
-import { useApiPost } from "../../hook/useApi";
+import { api } from "../../hook/useApi";
 import { CheckLocalStorage } from "../../service/localStorage";
 
 let toggleForm: boolean = false;
@@ -30,19 +30,29 @@ export function RegisterEntity() {
       });
     }
 
-    const { apiResponse } = await useApiPost<User>("/register", FormData);
-    if (apiResponse != null) {
-      Swal.fire({
-        icon: "success",
-        title: "Success !",
-        showConfirmButton: false,
-        timer: 1500,
+    await api
+      .post("/register", FormData)
+      .then((response) => {
+        Swal.fire({
+          icon: "success",
+          title: "Success !",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        CheckLocalStorage.setLoggedUser(response.data.user);
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      })
+      .catch((error) => {
+        console.error("data", error);
+        Swal.fire({
+          icon: "error",
+          title: "Oppss..",
+          text: error.response.data.message,
+          showConfirmButton: true,
+        });
       });
-      CheckLocalStorage.setLoggedUser(apiResponse!);
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
-    }
   }
 
   return (

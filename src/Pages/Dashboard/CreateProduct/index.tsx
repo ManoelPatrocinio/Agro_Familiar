@@ -16,16 +16,15 @@ import { FileUploaded } from "../../../Types/fileUploaded.types";
 import { Product } from "../../../Types/product.type";
 import Logo from "../../../assets/images/Logo.png";
 import { UserLoggedContext } from "../../../context/UserLoggedContext";
-import { api, useApiPost } from "../../../hook/useApi";
+import { api } from "../../../hook/useApi";
 import { FirebaseUploadFile } from "../../../service/firebase";
 
 export function CreateProduct() {
   const [prodData, setProductData] = useState<Product>();
   const [filesData, setFileData] = useState<FileUploaded[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { productId } = useParams();
   const { userLogged } = useContext(UserLoggedContext) as UserLoggedContextType;
-
-  let isLoading: boolean = false;
 
   const {
     register,
@@ -34,7 +33,7 @@ export function CreateProduct() {
   } = useForm<Product>();
 
   useEffect(() => {
-    isLoading = true;
+    setIsLoading(true);
     if (productId) {
       api
         .get(`/product/${productId}`)
@@ -50,7 +49,7 @@ export function CreateProduct() {
           });
         });
     }
-    isLoading = false;
+    setIsLoading(false);
   }, []);
 
   //receive the file from dropzone component and set news props to display on other component ex: ImgPreview
@@ -69,7 +68,7 @@ export function CreateProduct() {
 
   async function uploadImgs(formaData: Product) {
     let newData: string[] = [];
-    isLoading = true;
+    setIsLoading(true);
     filesData.forEach(async (item) => {
       const { url } = await FirebaseUploadFile(item as File, "/products");
       if (url) {
@@ -84,6 +83,7 @@ export function CreateProduct() {
       }
     });
   }
+  console.log("isLoading", isLoading);
 
   function check(
     arrayChosenImg: FileUploaded[],
@@ -117,25 +117,31 @@ export function CreateProduct() {
     console.log("imgsUrl on send", imgsUrl);
     console.log("newProductFormated", newProductFormated);
 
-    const { apiResponse } = await useApiPost<Product>(
-      "/admin/add-product",
-      newProductFormated
-    );
+    await api
+      .post("/admin/add-product", newProductFormated)
+      .then((response) => {
+        Swal.fire({
+          icon: "success",
+          title: "Success !",
+          showConfirmButton: false,
+          timer: 1500,
+        });
 
-    resetFilds();
-    if (apiResponse != null) {
-      isLoading = false;
-      Swal.fire({
-        icon: "success",
-        title: "Success !",
-        showConfirmButton: false,
-        timer: 1500,
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      })
+      .catch((error) => {
+        console.error("data", error);
+        Swal.fire({
+          icon: "error",
+          title: "Oppss..",
+          text: error.response.data.message,
+          showConfirmButton: true,
+        });
       });
 
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    }
+    resetFilds();
   };
 
   return (

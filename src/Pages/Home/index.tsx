@@ -25,8 +25,8 @@ export function Home() {
   } = useQuery<Product[]>(
     "homeGetAllProd",
     async () => {
-      const response = await api.get("/all-products");
-      return response.data;
+      const response = await api.get("/all-enable-products");
+      return response.data.products;
     },
     {
       staleTime: 1000 * 60, // 1 minute

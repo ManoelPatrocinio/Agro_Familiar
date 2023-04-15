@@ -18,7 +18,7 @@ export function InfoEntity() {
       .get(`/entity/${userId}`)
       .then((response) => {
         // console.log("response.data", response.data);
-        setEntityData(response.data);
+        setEntityData(response.data.entity);
 
         // setProductData(response.data);
       })

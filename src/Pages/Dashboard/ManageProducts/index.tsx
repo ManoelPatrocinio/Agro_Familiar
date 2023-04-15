@@ -10,6 +10,7 @@ import { Product } from "../../../Types/product.type";
 import { User } from "../../../Types/user.type";
 import Logo from "../../../assets/images/Logo.png";
 import { api } from "../../../hook/useApi";
+import { FirebaseDeleteFile } from "../../../service/firebase";
 
 type productAndEntityInfo = {
   products: Product[];
@@ -25,7 +26,9 @@ export function ManageProducts() {
   } = useQuery<productAndEntityInfo>(
     "manageProducts",
     async () => {
-      const response = await api.get(`/getEntityAndProducts/${idUserLogged}`);
+      const response = await api.get(
+        `/admin/entity-all-products/${idUserLogged}`
+      );
       return response.data;
     },
     {
@@ -41,6 +44,57 @@ export function ManageProducts() {
     });
   }
 
+  async function alterProductStatus(productId: string) {
+    await api
+      .put(`/admin/alter-products-status/${productId}`)
+      .then((response) => {
+        Swal.fire({
+          icon: "success",
+          title: "Success !",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1700);
+      })
+      .catch((error) => {
+        console.error("data", error);
+        Swal.fire({
+          icon: "error",
+          title: error.response.data.message,
+          showConfirmButton: true,
+        });
+      });
+  }
+  async function removeProductById(produc: Product) {
+    produc.p_images?.forEach(async (ImageUrl) => {
+      const splits = ImageUrl.split("%2F");
+      const imgName = splits[1].split("?alt");
+      await FirebaseDeleteFile(imgName![0], "products");
+    });
+
+    await api
+      .delete(`/admin/remove-product-byId/${produc._id}`)
+      .then((response) => {
+        Swal.fire({
+          icon: "success",
+          title: "Success !",
+          text: response.data.message,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      })
+      .catch((error) => {
+        console.error("data", error);
+        Swal.fire({
+          icon: "error",
+          title: "Oppss..",
+          text: error.response.data.message,
+          showConfirmButton: true,
+        });
+      });
+  }
   return (
     <>
       <header className="w-full md:hidden h-auto px-3 flex justify-between items-end">
@@ -151,7 +205,12 @@ export function ManageProducts() {
           ) : (
             <div className="w-full md:[30%] h-screen overflow-y-auto flex flex-col justify-start items-start pr-2">
               {apiProducts?.products.map((product, index) => (
-                <ProductInList product={product} key={index} />
+                <ProductInList
+                  product={product}
+                  key={index}
+                  alterStatus={alterProductStatus}
+                  deleteProduct={removeProductById}
+                />
               ))}
             </div>
           )}

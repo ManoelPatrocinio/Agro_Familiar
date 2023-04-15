@@ -25,7 +25,7 @@ export function Entities() {
     api
       .get("/all-entity")
       .then((response) => {
-        setEntityData(response.data);
+        setEntityData(response.data.entities);
       })
       .catch((error) => {
         console.error(error);

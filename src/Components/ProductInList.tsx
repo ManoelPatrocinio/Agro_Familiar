@@ -4,11 +4,14 @@ import { Product } from "../Types/product.type";
 import Icon_edit from "../assets/images/icon-edit.png";
 import Icon_trash from "../assets/images/icon-trash.png";
 import Icon_disable from "../assets/images/icon-visible-desable.png";
+import Icon_enable from "../assets/images/icon-visible-enable.png";
 
 interface IProp {
   product: Product;
+  alterStatus: (productId: string) => Promise<void>;
+  deleteProduct: (produc: Product) => Promise<void>;
 }
-export function ProductInList({ product }: IProp) {
+export function ProductInList({ product, alterStatus, deleteProduct }: IProp) {
   return (
     <div className="w-full flex flex-col md:flex-row justify-between items-start mb-6 border border-palm-500 p-3 rounded">
       <div
@@ -119,7 +122,10 @@ export function ProductInList({ product }: IProp) {
           </div>
         </div>
         <div className="w-full flex justify-evenly items-center mt-4 md:mt-0">
-          <button className="text-center text-sm text-palm-700">
+          <button
+            className="text-center text-sm text-palm-700"
+            onClick={() => deleteProduct(product)}
+          >
             {" "}
             <img
               className="mx-auto"
@@ -142,15 +148,27 @@ export function ProductInList({ product }: IProp) {
             />
             Editar
           </Link>
-          <button className="text-center text-sm text-palm-700">
-            {" "}
-            <img
-              className="mx-auto"
-              src={Icon_disable}
-              alt="icone desativar"
-              loading="lazy"
-            />
-            Desativar
+          <button
+            className="text-center text-sm text-palm-700"
+            onClick={() => alterStatus(product._id!)}
+          >
+            {product.p_status ? (
+              <img
+                className="mx-auto"
+                src={Icon_enable}
+                alt="icone desativar"
+                loading="lazy"
+              />
+            ) : (
+              <img
+                className="mx-auto"
+                src={Icon_disable}
+                alt="icone desativar"
+                loading="lazy"
+              />
+            )}
+
+            {product.p_status ? "Desativar" : "Ativar"}
           </button>
         </div>
       </div>

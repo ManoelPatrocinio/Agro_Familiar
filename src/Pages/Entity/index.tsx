@@ -30,7 +30,7 @@ export function Entity() {
   const { userId } = useParams();
   useEffect(() => {
     api
-      .get(`/getEntityAndProducts/${userId}`)
+      .get(`/entity-enable-products/${userId}`)
       .then((response) => {
         // console.log("response.data", response.data);
         setEntityData(response.data.entity);

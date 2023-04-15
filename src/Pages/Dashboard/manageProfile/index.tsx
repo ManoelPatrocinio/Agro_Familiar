@@ -13,7 +13,7 @@ import { Load_spinner } from "../../../Components/load_spinner";
 import { User } from "../../../Types/user.type";
 import Logo from "../../../assets/images/Logo.png";
 import Star from "../../../assets/images/star_icon.png";
-import { api, useApiPut } from "../../../hook/useApi";
+import { api } from "../../../hook/useApi";
 import {
   FirebaseDeleteFile,
   FirebaseUploadFile,
@@ -65,8 +65,8 @@ export function ManageProfile() {
     "manageProfile",
     async () => {
       const response = await api.get(`/entity/${entityId}`);
-      setFormData(response.data);
-      return response.data;
+      setFormData(response.data.entity);
+      return response.data.entity;
     },
     {
       staleTime: 1000 * 60, // 1 minute
@@ -109,41 +109,58 @@ export function ManageProfile() {
 
   const formSubmit = async (type: string, UpdatedEntity: User) => {
     console.log("UpdatedEntity", UpdatedEntity);
-
     if (type === "basicInfo") {
-      const { apiResponse } = await useApiPut<User>(
-        `/admin/update-user/${UpdatedEntity._id}`,
-        UpdatedEntity
-      );
-      if (apiResponse != null) {
-        Swal.fire({
-          icon: "success",
-          title: "Success !",
-          showConfirmButton: false,
-          timer: 1500,
+      await api
+        .put(`/admin/update-user/${UpdatedEntity._id}`, UpdatedEntity)
+        .then((response) => {
+          Swal.fire({
+            icon: "success",
+            title: "Success !",
+            text: response.data.message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          console.log("response.data.user", response.data.entity);
+          CheckLocalStorage.setLoggedUser(response.data.entity);
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        })
+        .catch((error) => {
+          console.error("data", error);
+          Swal.fire({
+            icon: "error",
+            title: error.response.data.message,
+            showConfirmButton: true,
+          });
         });
-        CheckLocalStorage.setLoggedUser(apiResponse!);
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-      }
     } else if (type === "accessData") {
-      const { apiResponse } = await useApiPut<User>(
-        `/admin/update-user-access-data/${UpdatedEntity._id}`,
-        UpdatedEntity
-      );
-      if (apiResponse != null) {
-        Swal.fire({
-          icon: "success",
-          title: "Success !",
-          showConfirmButton: false,
-          timer: 1500,
+      await api
+        .put(
+          `/admin/update-user-access-data/${UpdatedEntity._id}`,
+          UpdatedEntity
+        )
+        .then((response) => {
+          Swal.fire({
+            icon: "success",
+            title: "Success !",
+            text: response.data.message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          CheckLocalStorage.logout();
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
+        })
+        .catch((error) => {
+          console.error("data", error);
+          Swal.fire({
+            icon: "error",
+            title: error.response.data.message,
+            showConfirmButton: true,
+          });
         });
-        CheckLocalStorage.logout();
-        setTimeout(() => {
-          navigate("/");
-        }, 2000);
-      }
     }
   };
 

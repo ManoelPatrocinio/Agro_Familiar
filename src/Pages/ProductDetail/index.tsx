@@ -31,8 +31,8 @@ export function ProductDetail() {
     api
       .get(`/product/${productId}`)
       .then((response) => {
-        FarmerName = response.data.farmer_name;
-        setProductData(response.data.product);
+        FarmerName = response.data.entityAndproducts.farmer_name;
+        setProductData(response.data.entityAndproducts.product);
       })
       .catch((error) => {
         console.error(error);
