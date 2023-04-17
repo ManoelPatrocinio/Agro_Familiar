@@ -47,7 +47,7 @@ export function Entity() {
         });
       });
   }, [userId]);
-  console.log("entityData", entityData);
+
   function filterByCategory(category: string) {
     setSearch("");
     const filtedList = productData?.filter(

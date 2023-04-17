@@ -46,12 +46,10 @@ export function ProductDetail() {
 
   const handleProdQtd = (arg: boolean) => {
     if (arg) {
-      setProductQTD(productQTD! + 1);
-      console.log("ggg", productQTD);
+      setProductQTD((oldQTD) => oldQTD + 1);
     } else {
       if (productQTD! > 1) {
-        console.log("ggg", productQTD);
-        setProductQTD(productQTD! - 1);
+        setProductQTD((oldQTD) => oldQTD - 1);
       }
     }
   };
