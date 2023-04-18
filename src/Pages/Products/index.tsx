@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { CardProduct } from "../../Components/CardProduct";
 import { Carrousel } from "../../Components/Carrousel";
 import { Dropdrown } from "../../Components/Dropdrown";
+import { Empty_search } from "../../Components/Empty_search";
 import { Filter_category } from "../../Components/Filter_category";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
@@ -14,6 +15,8 @@ import { SectionTitle } from "../../Components/SectionTitle";
 import { Load_spinner } from "../../Components/load_spinner";
 import { Product } from "../../Types/product.type";
 import { api } from "../../hook/useApi";
+
+let total: number = 0; //number of products in the list, to calculate the number must be  pages shown
 
 export function Products() {
   const [toggleFilterVisibility, SetToggleFilterVisibility] =
@@ -30,8 +33,13 @@ export function Products() {
     ["productsPage"],
     async () => {
       const response = await api.get("/all-enable-products");
-      setPagination(offSet);
+      filterByPagination(response.data.products, offSet);
+      console.log(
+        "response.data.products.length",
+        response.data.products.length
+      );
 
+      total = response.data.products.length;
       return response.data.products;
     },
     {
@@ -64,10 +72,18 @@ export function Products() {
   function filterByCategory(category: string) {
     setSearch("");
     setOffSet(0);
-    const filtedList = productAPi?.filter(
-      (item) => item.p_category === category
-    );
-    filtedList && setPagination(offSet, filtedList);
+    if (category === "todos") {
+      setPagination(offSet, productAPi);
+      total = productAPi?.length!;
+    } else {
+      const filtedList = productAPi?.filter(
+        (item) => item.p_category === category
+      );
+      total = filtedList?.length!;
+      filtedList?.length! > 0
+        ? setPagination(offSet, filtedList)
+        : setProductData([]);
+    }
   }
 
   const filteredProdList =
@@ -76,14 +92,14 @@ export function Products() {
           product.p_name?.toLowerCase().includes(search.toLowerCase())
         )
       : [];
-
+  console.log("total", total);
   return (
     <>
       <Header setSearch={setSearch} ItemSearched={search} />
       <Carrousel />
 
       <main className="flex items-start flex-col px-8 md:px-20">
-        <SectionTitle title={"Destaques"} className={"my-6"} />
+        <SectionTitle title={"Produtos"} className={"my-6"} />
         <div className="relative w-full flex items-start justify-between ">
           <Filter_category
             ToggleFilterVisibility={SetToggleFilterVisibility}
@@ -105,7 +121,7 @@ export function Products() {
                 Filtrar
               </button>
             </div>
-            <div className="w-full flex flex-wrap justify-around my-4">
+            <div className="w-full min-h-screen flex flex-wrap justify-around my-4 pt-6">
               {isFetching ? (
                 <Load_spinner
                   adicionalClass="w-screen h-screen"
@@ -121,16 +137,29 @@ export function Products() {
                     </>
                   )}
 
-                  {search?.length === 0 &&
-                    productData?.map((product) => (
-                      <CardProduct product={product} key={product._id} />
-                    ))}
+                  {search?.length === 0 && (
+                    <>
+                      {" "}
+                      {productData.length === 0 ? (
+                        <Empty_search
+                          text="Ainda não temos itens nesta categoria "
+                          classAdicinonal="h-screen w-full justify-center"
+                        />
+                      ) : (
+                        <>
+                          {productData?.map((product) => (
+                            <CardProduct product={product} key={product._id} />
+                          ))}
+                        </>
+                      )}
+                    </>
+                  )}
                 </>
               )}
             </div>
-            {productAPi && (
+            {productData.length > 0 && (
               <Pagination
-                total={productAPi.length}
+                total={total}
                 offSet={offSet}
                 setOffSet={setPagination}
                 limit={Limit_perPage}

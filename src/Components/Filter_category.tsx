@@ -31,6 +31,14 @@ export function Filter_category({
       <h3 className="w-full text-center text-lg text-palm-700">Filtre Por:</h3>
 
       <div className="w-full my-4">
+        <li className="w-full  text-sm my-1 list-none">
+          <button
+            onClick={() => filterByCategory("todos")}
+            className="w-full text-left text-sm font-semibold text-palm-700 mb-4 "
+          >
+            Todos
+          </button>
+        </li>
         <h5 className="w-full text-left text-sm font-semibold text-palm-700 mb-4">
           Agricultura
         </h5>
