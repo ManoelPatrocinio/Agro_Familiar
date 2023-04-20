@@ -17,9 +17,10 @@ interface IPuchaseList {
 }
 export function Home() {
   const [search, setSearch] = useState<string>("");
+  const [productData, setProductData] = useState<Product[]>([]);
 
   const {
-    data: apiProducts,
+    data: productAPi,
     isFetching,
     error,
   } = useQuery<Product[]>(
@@ -42,10 +43,45 @@ export function Home() {
   }
   const filteredProdList =
     search.length > 0
-      ? apiProducts?.filter((product) =>
+      ? productAPi?.filter((product) =>
           product.p_name?.toLowerCase().includes(search.toLowerCase())
         )
       : [];
+
+  function filteredProdListByOrderType(orderType: string) {
+    let filtedList: Product[] = [];
+
+    if (orderType === "Menor Preço") {
+      filtedList = productAPi!.sort((prev, next) => {
+        return prev.p_price! - next.p_price!;
+      });
+    } else if (orderType === "Maior Preço") {
+      filtedList = productAPi!.sort((prev, next) => {
+        return next.p_price! - prev.p_price!;
+      });
+    } else if (orderType === "De A a Z") {
+      filtedList = productAPi!.sort((prev, next) => {
+        let prevUpperCase = prev.p_name?.toUpperCase(),
+          nextUpperCase = next.p_name?.toUpperCase();
+        return prevUpperCase == nextUpperCase
+          ? 0
+          : prevUpperCase! > nextUpperCase!
+          ? 1
+          : -1;
+      });
+    } else if (orderType == "De Z a A") {
+      filtedList = productAPi!.sort((prev, next) => {
+        let prevUpperCase = prev.p_name?.toUpperCase(),
+          nextUpperCase = next.p_name?.toUpperCase();
+        return prevUpperCase == nextUpperCase
+          ? 0
+          : nextUpperCase! > prevUpperCase!
+          ? 1
+          : -1;
+      });
+    }
+    setProductData(filtedList);
+  }
 
   return (
     <>
@@ -56,6 +92,7 @@ export function Home() {
         <SectionTitle title={"Destaques"} className={"my-6 w-full"} />
         <Dropdrown
           items={["Menor Preço", "Maior Preço", "De A a Z", "De Z a A"]}
+          setOptionOrder={filteredProdListByOrderType}
         />
 
         <div className="w-full flex flex-wrap justify-around pt-4 px-0 ">
@@ -73,7 +110,7 @@ export function Home() {
             </>
           ) : (
             <>
-              {apiProducts?.map((product) => (
+              {productData?.map((product) => (
                 <CardProduct product={product} key={product._id} />
               ))}
             </>
