@@ -148,7 +148,7 @@ export function ManageProducts() {
       total = productAPi?.products?.length!;
     } else {
       const filtedList = productAPi?.products?.filter(
-        (item) => item.p_category === category
+        (item: Product) => item.p_category === category
       );
       total = filtedList?.length!;
       filtedList?.length! > 0
@@ -158,7 +158,7 @@ export function ManageProducts() {
   }
   const filteredProdList =
     search.length > 0
-      ? productAPi?.filter((product) =>
+      ? productAPi?.products.filter((product: Product) =>
           product.p_name?.toLowerCase().includes(search.toLowerCase())
         )
       : [];
@@ -239,7 +239,7 @@ export function ManageProducts() {
               >
                 <option value="todos">Todos</option>
                 <optgroup label="Agricultura">
-                  {categoriesList.Agricultura.map((category) => (
+                  {categoriesList.Agricultura.map((category: string) => (
                     <option
                       value={category}
                       key={category}
@@ -250,7 +250,7 @@ export function ManageProducts() {
                   ))}
                 </optgroup>
                 <optgroup label="Deriados">
-                  {categoriesList.Derivados.map((category) => (
+                  {categoriesList.Derivados.map((category: string) => (
                     <option
                       value={category}
                       key={category}
@@ -261,7 +261,7 @@ export function ManageProducts() {
                   ))}
                 </optgroup>
                 <optgroup label="Pecuária">
-                  {categoriesList.Pecuaria.map((category) => (
+                  {categoriesList.Pecuaria.map((category: string) => (
                     <option
                       value={category}
                       key={category}
@@ -284,7 +284,7 @@ export function ManageProducts() {
             <div className="w-full md:[30%] h-screen overflow-y-auto flex flex-col justify-start items-start pr-2 mb-6">
               {search?.length > 0 && (
                 <>
-                  {filteredProdList?.map((product) => (
+                  {filteredProdList?.map((product: Product) => (
                     <ProductInList
                       product={product}
                       key={product._id}
@@ -305,7 +305,7 @@ export function ManageProducts() {
                     />
                   ) : (
                     <>
-                      {productData?.map((product) => (
+                      {productData?.map((product: Product) => (
                         <ProductInList
                           product={product}
                           key={product._id}
