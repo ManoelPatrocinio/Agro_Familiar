@@ -1,91 +1,174 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { CardEntity } from "../../Components/CardEntity";
 import { Carrousel } from "../../Components/Carrousel";
 import { Dropdrown } from "../../Components/Dropdrown";
+import { Empty_search } from "../../Components/Empty_search";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
+import { Pagination } from "../../Components/Pagination";
 import { SectionTitle } from "../../Components/SectionTitle";
 import { Load_spinner } from "../../Components/load_spinner";
-import { User as typeUser } from "../../Types/user.type";
+import { User } from "../../Types/user.type";
 import farmersPromotionImage1 from "../../assets/images/banner_joinUs.jpeg";
 import iconFarmeWhite from "../../assets/images/icon-farmer-white.png";
 import iconEntityWhite from "../../assets/images/icone-entity-white.png";
 import { api } from "../../hook/useApi";
+let total: number = 0; //number of products in the list, to calculate the number must be  pages shown
 
 export function Farmers() {
-  const [entityData, setEntityData] = useState<typeUser[]>();
-  const [filtedEntityList, setFiltedEntityList] = useState<
-    "farmer" | "coop" | "assoc"
-  >("farmer");
   const [search, setSearch] = useState<string>("");
+  const [farmersData, setFarmersData] = useState<User[]>([]);
+  const [offSet, setOffSet] = useState<number>(0);
 
-  useEffect(() => {
-    api
-      .get("/all-entity")
-      .then((response) => {
-        setEntityData(response.data.entities);
-      })
-      .catch((error) => {
-        console.error(error);
-        Swal.fire({
-          icon: "error",
-          title: "Oppss",
-          text: "Desculpe, não foi possível  exibir os produtores da sua região.",
-        });
-      });
-  }, []);
+  const Limit_perPage = 9; //cards number shown per page
 
-  function filtedEntity() {
-    return entityData?.filter((entity) => entity.u_type === filtedEntityList);
+  const {
+    data: farmersAPi,
+    isFetching,
+    error,
+  } = useQuery<User[]>(
+    ["farmersPages"],
+    async () => {
+      const response = await api.get("/all-entity");
+
+      filterByTypeEntity(response.data.entities);
+
+      total = await response.data.entities.length;
+      return response.data.entities;
+    },
+    {
+      refetchOnWindowFocus: false,
+      staleTime: 1000 * 60, // 1 minute
+    }
+  );
+
+  if (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oppss",
+      text: "Desculpe, não foi possível  exibir os produtores cadastrados, tente novamente.",
+    });
+  }
+  function setPagination(offset: number, entityArray?: User[]) {
+    setOffSet(offset);
+    entityArray
+      ? filterByPagination(entityArray, offset)
+      : farmersAPi && filterByPagination(farmersAPi, offset);
+  }
+  function filterByPagination(entitys: User[], off: number) {
+    let page = off / Limit_perPage + 1 - 1;
+    let start = page * Limit_perPage;
+    let end = start + Limit_perPage;
+    let list = entitys ? entitys.slice(start, end) : [];
+    list.length > 0 && setFarmersData(list);
   }
 
-  const filteredEntityList =
+  function filterByTypeEntity(entitys: User[]) {
+    setSearch("");
+    setOffSet(0);
+
+    const filtedList = entitys?.filter((entity) => entity.u_type === "farmer");
+    total = filtedList?.length!;
+
+    filtedList?.length! > 0
+      ? setPagination(offSet, filtedList)
+      : setFarmersData([]);
+  }
+  const filtedEntityListBySearch =
     search.length > 0
-      ? entityData?.filter((product) =>
-          product.u_entity_name?.toLowerCase().includes(search.toLowerCase())
+      ? farmersAPi?.filter((entity) =>
+          entity.u_entity_name?.toLowerCase().includes(search.toLowerCase())
         )
       : [];
 
+  function filteredProdListByOrderType(orderType: string) {
+    let filtedList: User[] = [];
+    setOffSet(0);
+
+    if (orderType === "De A a Z") {
+      filtedList = farmersAPi!.sort((prev, next) => {
+        let prevUpperCase = prev.u_entity_name?.toUpperCase(),
+          nextUpperCase = next.u_entity_name?.toUpperCase();
+        return prevUpperCase == nextUpperCase
+          ? 0
+          : prevUpperCase! > nextUpperCase!
+          ? 1
+          : -1;
+      });
+    } else if (orderType == "De Z a A") {
+      filtedList = farmersAPi!.sort((prev, next) => {
+        let prevUpperCase = prev.u_entity_name?.toUpperCase(),
+          nextUpperCase = next.u_entity_name?.toUpperCase();
+        return prevUpperCase == nextUpperCase
+          ? 0
+          : nextUpperCase! > prevUpperCase!
+          ? 1
+          : -1;
+      });
+    }
+    total = filtedList.length;
+    setPagination(offSet, filtedList);
+  }
   return (
     <>
       <Header setSearch={setSearch} ItemSearched={search} />
       <Carrousel />
       <main className=" w-full flex items-start flex-col px-6 md:px-20">
         <SectionTitle title="Produtores" className={"my-6 w-full"} />
-        <Dropdrown items={["De A a Z", "De Z a A"]} />
+        <Dropdrown
+          items={["De A a Z", "De Z a A"]}
+          setOptionOrder={filteredProdListByOrderType}
+        />
 
-        <div className="w-full flex flex-wrap justify-around ">
-          {!entityData && (
+        <div className="w-full h-auto min-h-[50vh] flex flex-wrap justify-around ">
+          {isFetching ? (
             <Load_spinner
               adicionalClass="w-screen h-screen"
-              message="Carregando"
+              message="Carregando Organizações ..."
             />
-          )}
-
-          {search.length > 0 ? (
-            <>
-              <>
-                {filteredEntityList?.map((entity) => (
-                  <CardEntity entity={entity} key={entity._id} />
-                ))}
-              </>
-            </>
           ) : (
             <>
-              {filtedEntity() && (
+              {search?.length > 0 && (
                 <>
-                  {filtedEntity()?.map((entity) => (
+                  {filtedEntityListBySearch?.map((entity) => (
                     <CardEntity entity={entity} key={entity._id} />
                   ))}
+                </>
+              )}
+
+              {search?.length === 0 && (
+                <>
+                  {" "}
+                  {farmersData.length === 0 ? (
+                    <Empty_search
+                      text="Ainda não temos produtores nessa região "
+                      classAdicinonal="h-screen w-full justify-center"
+                    />
+                  ) : (
+                    <>
+                      {farmersData?.map((entity) => (
+                        <CardEntity entity={entity} key={entity._id} />
+                      ))}
+                    </>
+                  )}
                 </>
               )}
             </>
           )}
         </div>
+        {farmersData.length > 0 && (
+          <Pagination
+            total={total}
+            offSet={offSet}
+            setOffSet={setPagination}
+            limit={Limit_perPage}
+          />
+        )}
         <div
-          className="w-full  h-auto  bg-no-repeat bg-[length:100%_100%] rounded"
+          className="w-full  h-auto  bg-no-repeat bg-[length:100%_100%] mt-8 rounded"
           style={{ backgroundImage: `url(${farmersPromotionImage1})` }}
         >
           <div className="bg-[rgba(0,0,0,0.7)] w-full h-auto px-2 py-8 rounded ">

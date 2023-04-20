@@ -83,7 +83,6 @@ export function CreateProduct() {
       }
     });
   }
-  console.log("isLoading", isLoading);
 
   function check(
     arrayChosenImg: FileUploaded[],
@@ -103,16 +102,17 @@ export function CreateProduct() {
       ?.toString()
       .replace(",", ".");
 
-    const newProductFormated = {
+    const newProductFormated: Product = {
       farmer_id: userLogged?._id,
       p_name: formaData.p_name,
       p_category: formaData.p_category,
-      p_price: priceFormated,
-      p_old_price: oldPriceFormated,
+      p_price: priceFormated ? parseFloat(priceFormated) : 0,
+      p_old_price: oldPriceFormated ? parseFloat(oldPriceFormated) : 0,
       p_stock: formaData.p_stock,
       p_n_contact: formaData.p_n_contact,
       p_description: formaData.p_description,
       p_images: imgsUrl,
+      p_status: true,
     };
     console.log("imgsUrl on send", imgsUrl);
     console.log("newProductFormated", newProductFormated);
@@ -120,6 +120,7 @@ export function CreateProduct() {
     await api
       .post("/admin/add-product", newProductFormated)
       .then((response) => {
+        setFileData([]);
         Swal.fire({
           icon: "success",
           title: "Success !",
@@ -133,12 +134,17 @@ export function CreateProduct() {
       })
       .catch((error) => {
         console.error("data", error);
+        setIsLoading(false);
+
         Swal.fire({
           icon: "error",
           title: "Oppss..",
           text: error.response.data.message,
           showConfirmButton: true,
         });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       });
 
     resetFilds();

@@ -10,7 +10,7 @@ type Props = {
 };
 export function CardEntity({ entity }: Props) {
   return (
-    <div className="w-[21.25rem] h-auto min-h-[13.8rem] flex flex-col justify-between pt-4 mt-4 mb-8 border border-gray-400 rounded hover:scale-110 transition duration-300 ease-in-out">
+    <div className="w-[21.25rem]  h-[13.8rem] flex flex-col justify-between pt-4 mt-4 mb-8 border border-gray-400 rounded hover:scale-110 transition duration-300 ease-in-out">
       {entity.u_type === "farmer" ? (
         <>
           <div className="w-[6rem] h-[6rem] mx-auto mb-2">

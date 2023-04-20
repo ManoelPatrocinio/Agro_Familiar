@@ -1,11 +1,15 @@
 import { MagnifyingGlass, Question } from "phosphor-react";
+import { useState } from "react";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Empty_search } from "../../../Components/Empty_search";
 import { MenuOfDashboard } from "../../../Components/MenuOfDashboard";
 import { Menu_Sidebar } from "../../../Components/Menu_Sidebar";
+import { Pagination } from "../../../Components/Pagination";
 import { ProductInList } from "../../../Components/ProductInList";
 import { Load_spinner } from "../../../Components/load_spinner";
+import { categoriesList } from "../../../Global/categoriesList";
 import { Product } from "../../../Types/product.type";
 import { User } from "../../../Types/user.type";
 import Logo from "../../../assets/images/Logo.png";
@@ -16,11 +20,18 @@ type productAndEntityInfo = {
   products: Product[];
   entity: User;
 };
+
+let total: number = 0; //number of products in the list, to calculate the number must be  pages shown
+
 export function ManageProducts() {
   const { idUserLogged } = useParams();
+  const [search, setSearch] = useState<string>("");
+  const [productData, setProductData] = useState<Product[]>([]);
+  const [offSet, setOffSet] = useState<number>(0);
+  const Limit_perPage = 9; //cards number shown per page
 
   const {
-    data: apiProducts,
+    data: productAPi,
     isFetching,
     error,
   } = useQuery<productAndEntityInfo>(
@@ -29,6 +40,9 @@ export function ManageProducts() {
       const response = await api.get(
         `/admin/entity-all-products/${idUserLogged}`
       );
+      filterByPagination(response.data.products, offSet);
+      total = response.data.products.length;
+
       return response.data;
     },
     {
@@ -68,33 +82,87 @@ export function ManageProducts() {
       });
   }
   async function removeProductById(produc: Product) {
-    produc.p_images?.forEach(async (ImageUrl) => {
-      const splits = ImageUrl.split("%2F");
-      const imgName = splits[1].split("?alt");
-      await FirebaseDeleteFile(imgName![0], "products");
-    });
+    Swal.fire({
+      icon: "question",
+      title: "Deletar produto",
+      showCancelButton: true,
+      confirmButtonText: "Sim",
+      text: "Tem certeja que deseja apagar esse produto ?",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        produc.p_images?.forEach(async (ImageUrl) => {
+          const splits = ImageUrl.split("%2F");
+          const imgName = splits[1].split("?alt");
+          await FirebaseDeleteFile(imgName![0], "products");
+        });
 
-    await api
-      .delete(`/admin/remove-product-byId/${produc._id}`)
-      .then((response) => {
-        Swal.fire({
-          icon: "success",
-          title: "Success !",
-          text: response.data.message,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      })
-      .catch((error) => {
-        console.error("data", error);
-        Swal.fire({
-          icon: "error",
-          title: "Oppss..",
-          text: error.response.data.message,
-          showConfirmButton: true,
-        });
-      });
+        await api
+          .delete(`/admin/remove-product-byId/${produc._id}`)
+          .then((response) => {
+            Swal.fire({
+              icon: "success",
+              title: "Success !",
+              text: response.data.message,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1500);
+          })
+          .catch((error) => {
+            console.error("data", error);
+            Swal.fire({
+              icon: "error",
+              title: "Oppss..",
+              text: error.response.data.message,
+              showConfirmButton: true,
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          });
+      }
+    });
   }
+
+  function setPagination(offset: number, productArray?: Product[]) {
+    setOffSet(offset);
+    productArray
+      ? filterByPagination(productArray, offset)
+      : productAPi?.products && filterByPagination(productAPi.products, offset);
+  }
+  function filterByPagination(products: Product[], off: number) {
+    let page = off / Limit_perPage + 1 - 1;
+    let start = page * Limit_perPage;
+    let end = start + Limit_perPage;
+    let list = products ? products.slice(start, end) : [];
+    list.length > 0 && setProductData(list);
+  }
+
+  function filterByCategory(category: string) {
+    setSearch("");
+    setOffSet(0);
+    if (category === "todos") {
+      setPagination(offSet, productAPi?.products);
+      total = productAPi?.products?.length!;
+    } else {
+      const filtedList = productAPi?.products?.filter(
+        (item) => item.p_category === category
+      );
+      total = filtedList?.length!;
+      filtedList?.length! > 0
+        ? setPagination(offSet, filtedList)
+        : setProductData([]);
+    }
+  }
+  const filteredProdList =
+    search.length > 0
+      ? productAPi?.filter((product) =>
+          product.p_name?.toLowerCase().includes(search.toLowerCase())
+        )
+      : [];
+
   return (
     <>
       <header className="w-full md:hidden h-auto px-3 flex justify-between items-end">
@@ -114,19 +182,20 @@ export function ManageProducts() {
         <div className="hidden md:block w-[25%] min-h-full border-r border-gray-200 ">
           <MenuOfDashboard />
         </div>
-        <div className="w-full md:w-[75%] h-full px-8">
+        <div className="w-full md:w-[75%] h-full px-8 pb-8">
           <h1 className="w-full text-center md:text-left text-md md:text-xl text-palm-700 font-semibold my-8">
             Gerenciar Produtos
           </h1>
           <div className="w-full flex flex-col md:flex-row justify-between items-end mb-4 md:mb-10">
             <div className="form-search hidden w-[33%] md:flex items-end ">
-              <button className="w-10 h-10">
+              <div className="w-10 h-10">
                 <MagnifyingGlass size={32} color="#789B3D" mirrored />
-              </button>
+              </div>
               <input
                 type="text"
                 placeholder="Busque Aqui..."
                 className="w-10/12  text-sm text-gray-400 p-2 border-b-[1px] border-palm-700 rounded-br focus:outline-none"
+                onChange={(e) => setSearch(e.target.value)}
               />
             </div>
             <div className="relative w-full h-12 mb-12 md:mb-8 md:hidden ">
@@ -153,9 +222,7 @@ export function ManageProducts() {
                 id="manageSelectCategory"
                 className="form-select appearance-none
                       block
-                      
                       px-3
-                      
                       text-base
                       font-normal
                       text-gray-700
@@ -167,31 +234,42 @@ export function ManageProducts() {
                       m-0
                       cursor-pointer
                       focus:text-gray-700 focus:bg-white focus:outline-none"
-                aria-label="Default select example"
+                defaultValue={"todos"}
+                onChange={(e) => filterByCategory(e.target.value)}
               >
-                <option value="">Selecione</option>
+                <option value="todos">Todos</option>
                 <optgroup label="Agricultura">
-                  <option value="Milho">Milho</option>
-                  <option value="Feijão">Feijão</option>
-                  <option value="Mandioca">Mandioca</option>
-                  <option value="Hortaliças">Hortaliças</option>
-                  <option value="Frutas">Frutas</option>
+                  {categoriesList.Agricultura.map((category) => (
+                    <option
+                      value={category}
+                      key={category}
+                      className="cursor-pointer"
+                    >
+                      {category}
+                    </option>
+                  ))}
                 </optgroup>
                 <optgroup label="Deriados">
-                  <option value="Pães/Bolos/Biscoitos">
-                    Pães/Bolos/Biscoitos
-                  </option>
-                  <option value="Doces">Doces </option>
-                  <option value="Bebidas">Bebidas </option>
-                  <option value="Temperos">Temperos</option>
-                  <option value="Outros">Outros</option>
+                  {categoriesList.Derivados.map((category) => (
+                    <option
+                      value={category}
+                      key={category}
+                      className="cursor-pointer"
+                    >
+                      {category}
+                    </option>
+                  ))}
                 </optgroup>
                 <optgroup label="Pecuária">
-                  <option value="Bovinos">Bovinos </option>
-                  <option value="Capríno/Ovínos">Capríno/Ovínos </option>
-                  <option value="Suínos">Suínos </option>
-                  <option value=" Áves"> Áves</option>
-                  <option value="Piscícultura">Piscícultura</option>
+                  {categoriesList.Pecuaria.map((category) => (
+                    <option
+                      value={category}
+                      key={category}
+                      className="cursor-pointer"
+                    >
+                      {category}
+                    </option>
+                  ))}
                 </optgroup>
               </select>
             </div>
@@ -200,19 +278,54 @@ export function ManageProducts() {
           {isFetching ? (
             <Load_spinner
               adicionalClass="w-full h-screen"
-              message="Carregando Produtos,aguarde ..."
+              message="Carregando Produtos ..."
             />
           ) : (
-            <div className="w-full md:[30%] h-screen overflow-y-auto flex flex-col justify-start items-start pr-2">
-              {apiProducts?.products.map((product, index) => (
-                <ProductInList
-                  product={product}
-                  key={index}
-                  alterStatus={alterProductStatus}
-                  deleteProduct={removeProductById}
-                />
-              ))}
+            <div className="w-full md:[30%] h-screen overflow-y-auto flex flex-col justify-start items-start pr-2 mb-6">
+              {search?.length > 0 && (
+                <>
+                  {filteredProdList?.map((product) => (
+                    <ProductInList
+                      product={product}
+                      key={product._id}
+                      alterStatus={alterProductStatus}
+                      deleteProduct={removeProductById}
+                    />
+                  ))}
+                </>
+              )}
+
+              {search?.length === 0 && (
+                <>
+                  {" "}
+                  {productData.length === 0 ? (
+                    <Empty_search
+                      text="Você ainda não tem itens nesta categoria "
+                      classAdicinonal="h-screen w-full justify-center"
+                    />
+                  ) : (
+                    <>
+                      {productData?.map((product) => (
+                        <ProductInList
+                          product={product}
+                          key={product._id}
+                          alterStatus={alterProductStatus}
+                          deleteProduct={removeProductById}
+                        />
+                      ))}
+                    </>
+                  )}
+                </>
+              )}
             </div>
+          )}
+          {productData.length > 0 && (
+            <Pagination
+              total={total}
+              offSet={offSet}
+              setOffSet={setPagination}
+              limit={Limit_perPage}
+            />
           )}
         </div>
       </div>

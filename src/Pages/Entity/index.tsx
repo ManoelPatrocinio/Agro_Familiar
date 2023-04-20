@@ -1,12 +1,16 @@
 import { DotsThreeVertical, Funnel } from "phosphor-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { CardProduct } from "../../Components/CardProduct";
 import { Dropdrown } from "../../Components/Dropdrown";
+import { Empty_search } from "../../Components/Empty_search";
 import { Filter_category } from "../../Components/Filter_category";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
+import { Pagination } from "../../Components/Pagination";
+import { Load_spinner } from "../../Components/load_spinner";
 import { Product } from "../../Types/product.type";
 import { User } from "../../Types/user.type";
 import exemple_user_profile from "../../assets/images/exemple_user_profile.png";
@@ -15,53 +19,141 @@ import Star from "../../assets/images/star_icon.png";
 import exemple_user_cover_background from "../../assets/images/user_cover_background.jpg";
 import { api } from "../../hook/useApi";
 
+let total: number = 0; //number of products in the list, to calculate the number must be  pages shown
+
 export function Entity() {
+  const { userId } = useParams();
   const [productData, setProductData] = useState<Product[]>();
   const [entityData, setEntityData] = useState<User>();
-  const [productFiltedByCategory, setProductFiltedByCategory] = useState<
-    Product[]
-  >([]);
+  const [search, setSearch] = useState<string>("");
+  const [offSet, setOffSet] = useState<number>(0);
 
   const [toggleFilterVisibility, SetToggleFilterVisibility] =
     useState<boolean>(false);
 
-  const [search, setSearch] = useState<string>("");
+  const Limit_perPage = 9; //cards number shown per page
 
-  const { userId } = useParams();
-  useEffect(() => {
-    api
-      .get(`/entity-enable-products/${userId}`)
-      .then((response) => {
-        // console.log("response.data", response.data);
-        setEntityData(response.data.entity);
-        setProductData(response.data.products);
+  // useEffect(() => {
+  //   api
+  //     .get(`/entity-enable-products/${userId}`)
+  //     .then((response) => {
+  //       // console.log("response.data", response.data);
+  //       setEntityData(response.data.entity);
+  //       setProductData(response.data.products);
 
-        // setProductData(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-        Swal.fire({
-          icon: "error",
-          title: "Oppss",
-          text: "Desculpe, não foi possível  exibir as organizações da sua região.",
-        });
-      });
-  }, [userId]);
+  //       // setProductData(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Oppss",
+  //         text: "Desculpe, não foi possível  exibir as organizações da sua região.",
+  //       });
+  //     });
+  // }, [userId]);
+
+  const {
+    data: productAPi,
+    isFetching,
+    error,
+  } = useQuery<Product[]>(
+    ["myShop", userId],
+    async () => {
+      const response = await api.get(`/entity-enable-products/${userId}`);
+      setEntityData(response.data.entity);
+      filterByPagination(response.data.products, offSet);
+
+      total = response.data.products.length;
+      return response.data.products;
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  if (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oppss",
+      text: "Desculpe, não foi possível  essa informação, tente novamente, por favor",
+    });
+  }
+
+  function setPagination(offset: number, productArray?: Product[]) {
+    setOffSet(offset);
+    productArray
+      ? filterByPagination(productArray, offset)
+      : productAPi && filterByPagination(productAPi, offset);
+  }
+  function filterByPagination(products: Product[], off: number) {
+    let page = off / Limit_perPage + 1 - 1;
+    let start = page * Limit_perPage;
+    let end = start + Limit_perPage;
+    let list = products ? products.slice(start, end) : [];
+    list.length > 0 && setProductData(list);
+  }
 
   function filterByCategory(category: string) {
     setSearch("");
-    const filtedList = productData?.filter(
-      (item) => item.p_category === category
-    );
-    filtedList && setProductFiltedByCategory(filtedList);
+    setOffSet(0);
+    if (category === "todos") {
+      setPagination(offSet, productAPi);
+      total = productAPi?.length!;
+    } else {
+      const filtedList = productAPi?.filter(
+        (item) => item.p_category === category
+      );
+      total = filtedList?.length!;
+      filtedList?.length! > 0
+        ? setPagination(offSet, filtedList)
+        : setProductData([]);
+    }
   }
 
   const filteredProdList =
     search.length > 0
-      ? productData?.filter((product) =>
+      ? productAPi?.filter((product) =>
           product.p_name?.toLowerCase().includes(search.toLowerCase())
         )
       : [];
+
+  function filteredProdListByOrderType(orderType: string) {
+    let filtedList: Product[] = [];
+    setOffSet(0);
+
+    if (orderType === "Menor Preço") {
+      filtedList = productAPi!.sort((prev, next) => {
+        return prev.p_price! - next.p_price!;
+      });
+    } else if (orderType === "Maior Preço") {
+      filtedList = productAPi!.sort((prev, next) => {
+        return next.p_price! - prev.p_price!;
+      });
+    } else if (orderType === "De A a Z") {
+      filtedList = productAPi!.sort((prev, next) => {
+        let prevUpperCase = prev.p_name?.toUpperCase(),
+          nextUpperCase = next.p_name?.toUpperCase();
+        return prevUpperCase == nextUpperCase
+          ? 0
+          : prevUpperCase! > nextUpperCase!
+          ? 1
+          : -1;
+      });
+    } else if (orderType == "De Z a A") {
+      filtedList = productAPi!.sort((prev, next) => {
+        let prevUpperCase = prev.p_name?.toUpperCase(),
+          nextUpperCase = next.p_name?.toUpperCase();
+        return prevUpperCase == nextUpperCase
+          ? 0
+          : nextUpperCase! > prevUpperCase!
+          ? 1
+          : -1;
+      });
+    }
+    total = filtedList.length;
+    setPagination(offSet, filtedList);
+  }
 
   return (
     <>
@@ -287,6 +379,7 @@ export function Entity() {
             <div className="w-full flex justify-between md:justify-start ">
               <Dropdrown
                 items={["Menor Preço", "Maior Preço", "De A a Z", "De Z a A"]}
+                setOptionOrder={filteredProdListByOrderType}
               />
               <button
                 onClick={() =>
@@ -298,28 +391,52 @@ export function Entity() {
                 Filtrar
               </button>
             </div>
-            <div className="w-full flex flex-wrap justify-around mt-4 relative">
-              {search?.length > 0 && (
+            <div className="w-full min-h-screen flex flex-wrap justify-around my-4 pt-6">
+              {isFetching ? (
+                <Load_spinner
+                  adicionalClass="w-screen h-screen"
+                  message="Carregando Produtos ..."
+                />
+              ) : (
                 <>
-                  {filteredProdList?.map((product) => (
-                    <CardProduct product={product} key={product._id} />
-                  ))}
+                  {search?.length > 0 && (
+                    <>
+                      {filteredProdList?.map((product) => (
+                        <CardProduct product={product} key={product._id} />
+                      ))}
+                    </>
+                  )}
+
+                  {search?.length === 0 && (
+                    <>
+                      {" "}
+                      {productData?.length === 0 ? (
+                        <Empty_search
+                          text="Ainda não temos itens nesta categoria "
+                          classAdicinonal="h-screen w-full justify-center"
+                        />
+                      ) : (
+                        <>
+                          {productData?.map((product) => (
+                            <CardProduct product={product} key={product._id} />
+                          ))}
+                        </>
+                      )}
+                    </>
+                  )}
                 </>
               )}
-
-              {productFiltedByCategory.length > 0 &&
-                search?.length === 0 &&
-                productFiltedByCategory?.map((product) => (
-                  <CardProduct product={product} key={product._id} />
-                ))}
-
-              {productFiltedByCategory.length === 0 &&
-                search?.length === 0 &&
-                productData?.map((product) => (
-                  <CardProduct product={product} key={product._id} />
-                ))}
             </div>
+            {productData && productData.length > 0 && (
+              <Pagination
+                total={total}
+                offSet={offSet}
+                setOffSet={setPagination}
+                limit={Limit_perPage}
+              />
+            )}
           </div>
+
           <a
             href={`http://api.whatsapp.com/send?l=pt_BR&phone=+55${entityData?.u_main_contact}&text=Olá, tudo bem ? Encontrei seu contato no Portal Agro Familiar `}
             className="fixed bottom-6 right-7 w-[4rem] h-[4rem]"

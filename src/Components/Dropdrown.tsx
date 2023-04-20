@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 
 type Props = {
   items: string[];
+  setOptionOrder: (orderType: string) => void;
 };
-export function Dropdrown({ items }: Props) {
+export function Dropdrown({ items, setOptionOrder }: Props) {
   return (
     <div className="flex justify-center pl-4 md:pl-0">
       <div>
@@ -77,6 +78,8 @@ export function Dropdrown({ items }: Props) {
             {items.map((item) => {
               return (
                 <li
+                  key={item}
+                  onClick={() => setOptionOrder(item)}
                   className="
                       dropdown-item
                       md:text-sm
@@ -91,9 +94,8 @@ export function Dropdrown({ items }: Props) {
                       text-gray-700
                       hover:bg-gray-100
                     "
-                  key={item}
                 >
-                  {item}
+                  <button className="w-full h-full text-left">{item}</button>
                 </li>
               );
             })}

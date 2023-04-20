@@ -34,10 +34,6 @@ export function Products() {
     async () => {
       const response = await api.get("/all-enable-products");
       filterByPagination(response.data.products, offSet);
-      console.log(
-        "response.data.products.length",
-        response.data.products.length
-      );
 
       total = response.data.products.length;
       return response.data.products;
@@ -88,11 +84,47 @@ export function Products() {
 
   const filteredProdList =
     search.length > 0
-      ? productData?.filter((product) =>
+      ? productAPi?.filter((product) =>
           product.p_name?.toLowerCase().includes(search.toLowerCase())
         )
       : [];
-  console.log("total", total);
+
+  function filteredProdListByOrderType(orderType: string) {
+    let filtedList: Product[] = [];
+    setOffSet(0);
+
+    if (orderType === "Menor Preço") {
+      filtedList = productAPi!.sort((prev, next) => {
+        return prev.p_price! - next.p_price!;
+      });
+    } else if (orderType === "Maior Preço") {
+      filtedList = productAPi!.sort((prev, next) => {
+        return next.p_price! - prev.p_price!;
+      });
+    } else if (orderType === "De A a Z") {
+      filtedList = productAPi!.sort((prev, next) => {
+        let prevUpperCase = prev.p_name?.toUpperCase(),
+          nextUpperCase = next.p_name?.toUpperCase();
+        return prevUpperCase == nextUpperCase
+          ? 0
+          : prevUpperCase! > nextUpperCase!
+          ? 1
+          : -1;
+      });
+    } else if (orderType == "De Z a A") {
+      filtedList = productAPi!.sort((prev, next) => {
+        let prevUpperCase = prev.p_name?.toUpperCase(),
+          nextUpperCase = next.p_name?.toUpperCase();
+        return prevUpperCase == nextUpperCase
+          ? 0
+          : nextUpperCase! > prevUpperCase!
+          ? 1
+          : -1;
+      });
+    }
+    total = filtedList.length;
+    setPagination(offSet, filtedList);
+  }
   return (
     <>
       <Header setSearch={setSearch} ItemSearched={search} />
@@ -110,6 +142,7 @@ export function Products() {
             <div className="w-full flex justify-between md:justify-start ">
               <Dropdrown
                 items={["Menor Preço", "Maior Preço", "De A a Z", "De Z a A"]}
+                setOptionOrder={filteredProdListByOrderType}
               />
               <button
                 onClick={() =>
