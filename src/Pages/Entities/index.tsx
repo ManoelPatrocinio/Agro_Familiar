@@ -33,13 +33,12 @@ export function Entities() {
     ["entitiesPages"],
     async () => {
       const response = await api.get("/all-entity");
-      filterByPagination(response.data.entities, offSet);
+      filterByTypeEntity("assoc", response.data.entities);
       total = response.data.entities.length;
       return response.data.entities;
     },
     {
       refetchOnWindowFocus: false,
-      staleTime: 1000 * 60, // 1 minute
     }
   );
 
@@ -65,14 +64,16 @@ export function Entities() {
     list.length > 0 && setEntitiesData(list);
   }
 
-  function filterByTypeEntity(entityType: string = "assoc") {
+  function filterByTypeEntity(entityType: string = "assoc", entities?: User[]) {
     setSearch("");
     setOffSet(0);
-    if (entityType === "Todos") {
-      filterByPagination(entitiesAPi!, offSet);
+    let filtedList: User[] = [];
+    if (entities) {
+      filtedList = entities.filter((entity) => entity.u_type === entityType);
+      filterByPagination(filtedList!, offSet);
       total = entitiesAPi?.length!;
     } else {
-      const filtedList = entitiesAPi?.filter(
+      filtedList = entitiesAPi!.filter(
         (entity) => entity.u_type === entityType
       );
 
@@ -132,12 +133,7 @@ export function Entities() {
           >
             Associações
           </button>
-          <button
-            onClick={() => filterByTypeEntity("Todos")}
-            className="mx-2 md:mx-0 text-sm md:text-lg font-display text-center text-gray-800 hover:text-palm-700 focus:text-palm-700 transition-all "
-          >
-            Todos
-          </button>
+
           <button
             onClick={() => filterByTypeEntity("coop")}
             className="mx-2 md:mx-0  text-sm md:text-lg font-display text-center text-gray-800 hover:text-palm-700 focus:text-palm-700 transition-all"

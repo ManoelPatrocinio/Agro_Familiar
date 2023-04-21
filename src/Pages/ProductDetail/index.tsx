@@ -253,7 +253,7 @@ export function ProductDetail() {
       <h4 className="w-full text-start  text-md text-palm-700 mb-8">
         Descrição do Produto{" "}
       </h4>
-      <p className="w-full text-justify text-sm text-gray-700">
+      <p className="w-full text-justify text-sm text-gray-700 indent-8">
         {/* Produto fresco e bem cuidado, retirado assim que a compra é confirmada.
         plantado na roça de seu Zé Borges Com disponibilidade de entrega a cada
         semana, a partir de terça-feira Conseguimos atender até uma demanda de
@@ -269,7 +269,11 @@ export function ProductDetail() {
     <>
       <Header setSearch={() => {}} ItemSearched={""} />
       <Carrousel />
-      <SectionTitle title={FarmerName} className={"my-10"} />
+      <SectionTitle
+        title={FarmerName}
+        entityLink={`/my-shop/${productData?.farmer_id}`}
+        className={"my-10"}
+      />
       <main className="w-full h-full md:h-[22rem]  flex flex-col md:flex-row px-4 md:px-20">
         <div
           id="carouselProductImg"

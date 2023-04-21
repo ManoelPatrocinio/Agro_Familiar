@@ -23,6 +23,7 @@
     "react-input-mask": "^2.0.4",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.3.0",
+    "react-toastify": "^9.1.2",
     "sweetalert2": "^11.7.0",
     "tw-elements": "^1.0.0-alpha12",
     "uuid": "^9.0.0"

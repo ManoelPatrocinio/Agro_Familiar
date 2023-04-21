@@ -33,15 +33,12 @@ export function Farmers() {
     ["farmersPages"],
     async () => {
       const response = await api.get("/all-entity");
-
       filterByTypeEntity(response.data.entities);
-
       total = await response.data.entities.length;
       return response.data.entities;
     },
     {
       refetchOnWindowFocus: false,
-      staleTime: 1000 * 60, // 1 minute
     }
   );
 
@@ -77,6 +74,7 @@ export function Farmers() {
       ? setPagination(offSet, filtedList)
       : setFarmersData([]);
   }
+
   const filtedEntityListBySearch =
     search.length > 0
       ? farmersAPi?.filter((entity) =>

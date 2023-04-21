@@ -14,6 +14,8 @@ export function PurchaseList() {
   const TotalPuchaseList = purchaseList.reduce((total, current) => {
     return total + current.product.p_price! * current.quantity;
   }, 0);
+
+  console.log("purchaseList", purchaseList);
   return (
     <div
       className="offcanvas offcanvas-end fixed bottom-0 flex flex-col justify-between max-w-full max-h-[100vh] bg-white invisible bg-clip-padding shadow-sm outline-none transition duration-300 ease-in-out text-gray-700 top-0 right-0 border-none w-[90vw] md:w-[45vw]"
@@ -38,7 +40,7 @@ export function PurchaseList() {
       <div className="offcanvas-body max-h-[70%] flex-grow p-4 overflow-y-auto">
         {purchaseList.length > 0 && (
           <>
-            {purchaseList?.map((item, index) => (
+            {purchaseList?.map((item) => (
               <div
                 key={item.product._id}
                 className="w-full h-auto min-h-[8rem] flex items-center flex-wrap  justify-evenly md:justify-between border-b-2 border-b-green-400 py-3 mb-2"

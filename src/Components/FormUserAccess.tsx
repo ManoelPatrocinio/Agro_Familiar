@@ -71,7 +71,7 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
   }
   return (
     <>
-      <form className="w-full h-auto">
+      <form onSubmit={handleSubmit(formSubmit)} className="w-full h-auto">
         {type === "userRegister" ? (
           <>
             <h4 className="w-full text-center text-lg font-semibold text-palm-700 mb-6">
@@ -183,8 +183,7 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
 
         <div className="flex flex-col justify-center  text-center lg:text-left mt-6">
           <button
-            type="button"
-            onClick={handleSubmit(formSubmit)}
+            type="submit"
             className="w-full inline-block px-7 py-2 bg-palm-700 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-palm-500 hover:shadow-lg focus:bg-palm-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-palm-700 active:shadow-lg transition duration-150 ease-in-out"
           >
             {type === "userRegister" ? "Cadastrar" : "Login"}

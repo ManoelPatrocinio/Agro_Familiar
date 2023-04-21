@@ -4,6 +4,8 @@ import "./Global/styles.css";
 
 import { QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 import { ModalRegister } from "./Components/ModalRegister";
 import { SystemRoutes } from "./Routers/router";
 import { PuchaseListProvider } from "./context/PuchaseListContext";
@@ -21,6 +23,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         </UserLoggedProvider>
       </QueryClientProvider>
     </BrowserRouter>
+    <ToastContainer />
     <ModalRegister />
   </React.StrictMode>
 );

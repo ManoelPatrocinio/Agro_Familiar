@@ -41,7 +41,7 @@ export function CardProduct({ product }: Prop) {
         </div>
         <button
           type="button"
-          className="checked:bg-blue-500 w-full flex items-center justify-center py-4 md:py-2.5 bg-green-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-slate-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out"
+          className="checked:bg-blue-500 w-full flex items-center justify-center py-4 md:py-2.5 bg-green-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-green-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out"
           onClick={() => AddToPuchaseList(product)}
         >
           <IconAddList w={"20"} h={"20"} color="#fff" className="mr-1" />

@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { Product } from "../../Types/product.type";
 import { CheckLocalStorage } from "../../service/localStorage";
 interface IPuchaseList {
@@ -33,6 +34,7 @@ export const PuchaseListProvider = ({ children }: Props) => {
       });
       setPurchaseList(newPuchaseList);
       CheckLocalStorage.setItemOnPurchaseList(newPuchaseList);
+      toast.success("Adicionado com sucesso !");
       return;
     }
     //if product is not already in puchase list
@@ -43,6 +45,7 @@ export const PuchaseListProvider = ({ children }: Props) => {
     const newPuchaseList: IPuchaseList[] = [...purchaseList, listItem];
     setPurchaseList(newPuchaseList);
     localStorage.setItem("@PAF:purchase", JSON.stringify(newPuchaseList));
+    toast.success("Adicionado com sucesso !");
   }
   function RemoveToPuchaseList(product: Product, qtd?: number) {
     const alreadyInPuchaseList = purchaseList.find(
