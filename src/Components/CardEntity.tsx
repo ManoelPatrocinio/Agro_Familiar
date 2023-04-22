@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { WhatsappLogo } from "phosphor-react";
 import { Link } from "react-router-dom";
 import { User } from "../Types/user.type";
@@ -10,7 +11,15 @@ type Props = {
 };
 export function CardEntity({ entity }: Props) {
   return (
-    <div className="w-[21.25rem]  h-[13.8rem] flex flex-col justify-between pt-4 mt-4 mb-8 border border-gray-400 rounded hover:scale-110 transition duration-300 ease-in-out">
+    <div
+      className={classNames(
+        "w-[21.25rem] flex flex-col justify-between  pt-4 mt-4 mb-8 border border-gray-400 rounded  hover:scale-110 transition duration-300 ease-in-out",
+        {
+          "h-[15rem]": entity.u_type === "farmer",
+          "h-[13rem]": entity.u_type !== "farmer",
+        }
+      )}
+    >
       {entity.u_type === "farmer" ? (
         <>
           <div className="w-[6rem] h-[6rem] mx-auto mb-2">
@@ -23,9 +32,9 @@ export function CardEntity({ entity }: Props) {
           </div>
           <Link
             to={`/my-shop/${entity._id}`}
-            className="w-full text-center text-palm-700 font-display text-sm"
+            className="w-full text-sm text-center whitespace-nowrap text-ellipsis overflow-hidden text-palm-700 font-display px-2 "
           >
-            {entity.u_full_name}
+            {entity.u_full_name}{" "}
           </Link>
           <span className="w-full text-center text-gray-400 font-sans text-xs pt-2 pb-4">
             {entity.u_city}
@@ -35,11 +44,11 @@ export function CardEntity({ entity }: Props) {
         <>
           <Link
             to={`/my-shop/${entity._id}`}
-            className="w-full text-center text-palm-700 font-display text-sm"
+            className="w-full max-h-[40px] text-center text-palm-700 font-display text-sm  text-ellipsis overflow-hidden  px-2"
           >
             {entity.u_entity_name}
           </Link>
-          <span className="w-full text-center text-gray-400 font-sans text-xs mb-2">
+          <span className="w-full text-center text-gray-400 font-sans text-xs my-2">
             {entity.u_city}
           </span>
           <div className="flex justify-around items-center py-2">

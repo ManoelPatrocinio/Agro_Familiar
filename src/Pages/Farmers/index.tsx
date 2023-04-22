@@ -125,7 +125,7 @@ export function Farmers() {
           {isFetching ? (
             <Load_spinner
               adicionalClass="w-screen h-screen"
-              message="Carregando Organizações ..."
+              message="Carregando ..."
             />
           ) : (
             <>

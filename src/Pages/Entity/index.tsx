@@ -20,10 +20,11 @@ import exemple_user_cover_background from "../../assets/images/user_cover_backgr
 import { api } from "../../hook/useApi";
 
 let total: number = 0; //number of products in the list, to calculate the number must be  pages shown
+let categorySelected: string = "Produtos";
 
 export function Entity() {
   const { userId } = useParams();
-  const [productData, setProductData] = useState<Product[]>();
+  const [productData, setProductData] = useState<Product[]>([]);
   const [entityData, setEntityData] = useState<User>();
   const [search, setSearch] = useState<string>("");
   const [offSet, setOffSet] = useState<number>(0);
@@ -32,26 +33,6 @@ export function Entity() {
     useState<boolean>(false);
 
   const Limit_perPage = 9; //cards number shown per page
-
-  // useEffect(() => {
-  //   api
-  //     .get(`/entity-enable-products/${userId}`)
-  //     .then((response) => {
-  //       // console.log("response.data", response.data);
-  //       setEntityData(response.data.entity);
-  //       setProductData(response.data.products);
-
-  //       // setProductData(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Oppss",
-  //         text: "Desculpe, não foi possível  exibir as organizações da sua região.",
-  //       });
-  //     });
-  // }, [userId]);
 
   const {
     data: productAPi,
@@ -62,7 +43,7 @@ export function Entity() {
     async () => {
       const response = await api.get(`/entity-enable-products/${userId}`);
       setEntityData(response.data.entity);
-      filterByPagination(response.data.products, offSet);
+      setPagination(offSet, response.data.products);
 
       total = response.data.products.length;
       return response.data.products;
@@ -87,6 +68,7 @@ export function Entity() {
       : productAPi && filterByPagination(productAPi, offset);
   }
   function filterByPagination(products: Product[], off: number) {
+    setProductData([]);
     let page = off / Limit_perPage + 1 - 1;
     let start = page * Limit_perPage;
     let end = start + Limit_perPage;
@@ -97,7 +79,8 @@ export function Entity() {
   function filterByCategory(category: string) {
     setSearch("");
     setOffSet(0);
-    if (category === "todos") {
+    categorySelected = category;
+    if (category === "Produtos") {
       setPagination(offSet, productAPi);
       total = productAPi?.length!;
     } else {
@@ -154,7 +137,6 @@ export function Entity() {
     total = filtedList.length;
     setPagination(offSet, filtedList);
   }
-
   return (
     <>
       <Header setSearch={setSearch} ItemSearched={search} />
@@ -298,12 +280,16 @@ export function Entity() {
       <div className="px-8 md:px-20 mt-[10rem]">
         <div className="w-full flex justify-between items-center mb-6 md:mb-8 ">
           <div>
-            <h4 className="w-full text-sm md:text-left md:text-lg text-gray-800  font-medium">
-              Todos os Podutos
+            <h4 className="w-full text-sm md:text-left md:text-lg text-gray-800  font-medium mb-1">
+              {categorySelected === "Produtos"
+                ? "Todos os Podutos"
+                : categorySelected}
             </h4>
             <p className="w-full mx-auto   text-xs md:text-left md:text-sm text-gray-400">
               {" "}
-              122 items{" "}
+              {productData?.length === 0
+                ? "0 Itens"
+                : `${productData?.length} Itens`}
             </p>
           </div>
           <div className="flex md:hidden  justify-center ">
@@ -412,7 +398,7 @@ export function Entity() {
                       {" "}
                       {productData?.length === 0 ? (
                         <Empty_search
-                          text="Ainda não temos itens nesta categoria "
+                          text="Ainda não temos itens "
                           classAdicinonal="h-screen w-full justify-center"
                         />
                       ) : (
@@ -439,7 +425,7 @@ export function Entity() {
 
           <a
             href={`http://api.whatsapp.com/send?l=pt_BR&phone=+55${entityData?.u_main_contact}&text=Olá, tudo bem ? Encontrei seu contato no Portal Agro Familiar `}
-            className="fixed bottom-6 right-7 w-[4rem] h-[4rem]"
+            className="fixed bottom-6 right-7 w-[3.5rem] h-[3.5rem] md:w-[4rem] md:h-[4rem]"
             target="_blank"
           >
             <img src={Icon_WhatsApp} className="w-full h-full scale-x-[-1]" />

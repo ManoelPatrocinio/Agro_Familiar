@@ -7,7 +7,7 @@ type Props = {
 };
 export function Dropdrown({ items, setOptionOrder }: Props) {
   return (
-    <div className="flex justify-center pl-4 md:pl-0">
+    <div className="flex justify-center">
       <div>
         <div className="dropdown relative">
           <Link
@@ -82,8 +82,8 @@ export function Dropdrown({ items, setOptionOrder }: Props) {
                   onClick={() => setOptionOrder(item)}
                   className="
                       dropdown-item
-                      md:text-sm
-                      text-xs
+          
+                      text-sm
                       py-2
                       px-4
                       font-normal

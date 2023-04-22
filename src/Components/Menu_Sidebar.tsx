@@ -11,6 +11,7 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { UserLoggedContextType } from "../Types/Contexts.type";
+import exemple_user_profile from "../assets/images/exemple_user_profile.png";
 import { UserLoggedContext } from "../context/UserLoggedContext";
 import { CheckLocalStorage } from "../service/localStorage";
 import { FormUserAccess } from "./FormUserAccess";
@@ -39,9 +40,9 @@ export function Menu_Sidebar({ type }: Prop) {
     });
   };
   return (
-    <div className="md:hidden m-0 p-0">
+    <div className="md:hidden m-0 p-0 ">
       <button
-        className="md:hidden m-0 p-0"
+        className="md:hidden m-0 p-0 border-0"
         type="button"
         data-bs-toggle="offcanvas"
         data-bs-target="#offcanvasExample"
@@ -61,60 +62,6 @@ export function Menu_Sidebar({ type }: Prop) {
         {type === "default" ? (
           <>
             <div className="w-full h-auto flex items-center justify-between border-b-[1px] py-6 px-2 border-palm-700">
-              {/* <div className="dropdown relative   items-center">
-                <button
-                  className="
-                flex  
-                text-left
-                font-body
-                text-xs 
-                font-semibold
-                text-palm-700 ml-2         
-              "
-                  type="button"
-                  id="dropdownLogin"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <User
-                    size={32}
-                    color="#789B3D"
-                    weight="fill"
-                    className="mr-3"
-                  />
-                  Login / <br /> Registre-se{" "}
-                </button>
-                <div
-                  className="
-                  dropdown-menu
-                  min-w-max
-                  absolute
-                  w-[100%]
-                  min-h-[26rem]
-                  h-auto
-                  top-[4rem]
-                  left-[0]
-                  bg-white
-                  z-50
-                  float-left
-                  px-4
-                  py-8
-                text-left
-                  rounded-lg
-                  shadow-lg
-                  mt-1
-                  hidden
-                  m-0
-                  bg-clip-padding
-                  border
-                  border-gray-200
-                "
-                  aria-labelledby="dropdownLogin"
-                >
-                  <FormUserAccess type="userLogin" />
-                </div>
-              </div> */}
-
               <div className="dropdown relative items-center">
                 <button
                   className="
@@ -132,13 +79,43 @@ export function Menu_Sidebar({ type }: Prop) {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  <User size={32} color="#789B3D" className="mr-2" />
                   {UserFirstName ? (
-                    UserFirstName
+                    <div className="w-full h-full flex  justify-start  items-center ">
+                      {userLogged!.u_img_profile?.length > 0 ? (
+                        <img
+                          src={userLogged.u_img_profile}
+                          className="w-12 h-12 rounded-[50%]"
+                        />
+                      ) : (
+                        <img
+                          src={exemple_user_profile}
+                          className="w-12 h-12 rounded-[50%]"
+                        />
+                      )}
+                      <p className="w-full flex  text-md ml-2 ">
+                        Minha Conta{" "}
+                        <svg
+                          aria-hidden="true"
+                          focusable="false"
+                          data-prefix="fas"
+                          data-icon="caret-down"
+                          className="w-2 ml-2"
+                          role="img"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 320 512"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+                          ></path>
+                        </svg>
+                      </p>
+                    </div>
                   ) : (
-                    <>
+                    <div className="w-full h-full flex justify-start items-end">
+                      <User size={32} color="#789B3D" className="mr-2" />
                       Login / <br /> Registre-se
-                    </>
+                    </div>
                   )}
                 </button>
                 <div
@@ -147,36 +124,55 @@ export function Menu_Sidebar({ type }: Prop) {
                     {
                       "  min-h-[26rem] h-auto left-0 top-[4rem] px-4  py-8":
                         !UserFirstName,
-                      " w-[10rem]   h-auto py-2": UserFirstName,
+                      " w-[13rem]   h-auto py-2": UserFirstName,
                     }
                   )}
                   aria-labelledby="dropdownLogin"
                 >
                   {UserFirstName ? (
-                    <div className="w-full h-full">
-                      <Link
-                        to={`/my-shop/${userLogged?._id}`}
-                        className="flex justify-center items-center w-full text-center text-palm-700 text-sm py-2"
-                      >
-                        {" "}
-                        Meu Perfil
-                      </Link>
-                      {userLogged?.u_type != "customer" && (
+                    <div className="w-full h-full ">
+                      <div className="w-full h-full flex flex-col justify-center items-center">
+                        {userLogged!.u_img_profile?.length > 0 ? (
+                          <img
+                            src={userLogged.u_img_profile}
+                            className="w-12 h-12 rounded-[50%]"
+                          />
+                        ) : (
+                          <img
+                            src={exemple_user_profile}
+                            className="w-12 h-12 rounded-[50%]"
+                          />
+                        )}
+                        <span className="w-full text-center text-[12px] text-gray-600 my-2">
+                          {userLogged.u_email}
+                        </span>
+                      </div>
+                      <div className="w-full h-full">
+                        {userLogged?.u_type !== "customer" && (
+                          <Link
+                            to="/Admin/create-product"
+                            className="block w-full text-center text-palm-700 text-sm py-3 m-0"
+                          >
+                            {" "}
+                            Dashboard
+                          </Link>
+                        )}
                         <Link
-                          to="/Admin/create-product"
-                          className="flex justify-center items-center  w-full text-center text-palm-700 text-sm py-2 m-0"
+                          to={`/my-shop/${userLogged?._id}`}
+                          className="block w-full text-center text-palm-700 text-sm py-3"
                         >
                           {" "}
-                          Dashboard
+                          Meu Espaço
                         </Link>
-                      )}
-                      <button
-                        className="w-full text-center text-palm-700 text-sm py-2"
-                        onClick={() => CheckLogout()}
-                      >
-                        {" "}
-                        Sair da conta
-                      </button>
+
+                        <button
+                          className="w-full text-center text-palm-700 text-sm py-3"
+                          onClick={() => CheckLogout()}
+                        >
+                          {" "}
+                          Sair da conta
+                        </button>
+                      </div>
                     </div>
                   ) : (
                     <FormUserAccess type="userLogin" />

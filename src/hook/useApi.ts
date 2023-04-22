@@ -91,7 +91,7 @@ export function useApiGet<T = unknown>(url: string) {
   //let apiResponse:(User | null) = null
   const [apiGetResponse, setApiGetResponse] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     api
@@ -101,7 +101,7 @@ export function useApiGet<T = unknown>(url: string) {
       })
       .catch((error) => {
         console.error(error);
-        setError(error);
+        setError(error.data.message);
       })
       .finally(() => {
         setIsLoading(false);

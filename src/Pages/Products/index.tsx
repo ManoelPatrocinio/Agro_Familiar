@@ -17,6 +17,7 @@ import { Product } from "../../Types/product.type";
 import { api } from "../../hook/useApi";
 
 let total: number = 0; //number of products in the list, to calculate the number must be  pages shown
+let categorySelected: string = "Produtos";
 
 export function Products() {
   const [toggleFilterVisibility, SetToggleFilterVisibility] =
@@ -68,7 +69,8 @@ export function Products() {
   function filterByCategory(category: string) {
     setSearch("");
     setOffSet(0);
-    if (category === "todos") {
+    categorySelected = category;
+    if (category === "Produtos") {
       setPagination(offSet, productAPi);
       total = productAPi?.length!;
     } else {
@@ -131,7 +133,11 @@ export function Products() {
       <Carrousel />
 
       <main className="flex items-start flex-col px-8 md:px-20">
-        <SectionTitle title={"Produtos"} className={"my-6"} />
+        <SectionTitle
+          title={categorySelected}
+          className={"my-6 mb-6 md:mb-12"}
+        />
+
         <div className="relative w-full flex items-start justify-between ">
           <Filter_category
             ToggleFilterVisibility={SetToggleFilterVisibility}
@@ -154,7 +160,7 @@ export function Products() {
                 Filtrar
               </button>
             </div>
-            <div className="w-full min-h-screen flex flex-wrap justify-around my-4 pt-6">
+            <div className="w-full min-h-screen flex flex-wrap justify-around my-4 ">
               {isFetching ? (
                 <Load_spinner
                   adicionalClass="w-screen h-screen"

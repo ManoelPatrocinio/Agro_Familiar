@@ -33,7 +33,7 @@ export function Filter_category({
       <div className="w-full my-4">
         <li className="w-full  text-sm my-1 list-none">
           <button
-            onClick={() => filterByCategory("todos")}
+            onClick={() => filterByCategory("Produtos")}
             className="w-full text-left text-sm font-semibold text-palm-700 mb-4 "
           >
             Todos

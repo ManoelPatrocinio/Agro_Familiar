@@ -50,7 +50,7 @@ export function MenuOfDashboard() {
         </li>
         <li className="w-full  bg-palm-700  my-2  rounded hover:bg-palm-500">
           <Link
-            to={`/my-shop/${userLogged._id}`}
+            to={`/my-shop/${userLogged?._id}`}
             className="block w-full h-full px-4 py-3 text-left text-white text-md  font-semibold"
           >
             Ir p/ o site

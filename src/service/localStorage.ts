@@ -13,6 +13,7 @@ export const CheckLocalStorage = {
       u_type: data.u_type,
       u_email: data.u_email,
       u_full_name: data.u_full_name,
+      u_img_profile: data.u_img_profile ? data.u_img_profile : "",
     };
 
     localStorage.setItem("@PAF:User", JSON.stringify(UserLogged));

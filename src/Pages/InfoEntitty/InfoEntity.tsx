@@ -113,7 +113,7 @@ export function InfoEntity() {
           Informações sobre a Associação
         </h1>
 
-        <p className="w-full md:text-left text-justify text-sm text-gray-800 indent-9 md:indent-12">
+        <p className="w-full md:text-left text-justify text-sm text-gray-700 indent-9 md:indent-12">
           {/* A associação foi fundada em 2002 , como resposta da união dos
           moradores do povoado de Curral Novo, na cidade de Barra Bahia. Hoje já
           contamos com mais de 23 colaboradores, que atuam em conjunto no
