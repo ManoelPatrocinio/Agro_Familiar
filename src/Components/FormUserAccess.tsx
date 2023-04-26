@@ -20,8 +20,12 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
 
   async function formSubmit(userFormData: User) {
     if (userFormData.u_full_name && userFormData.u_full_name.length > 0) {
+      const newUser: User = {
+        ...userFormData,
+        u_type: "customer",
+      };
       await api
-        .post("/register", userFormData)
+        .post("/register", newUser)
         .then((response) => {
           Swal.fire({
             icon: "success",
