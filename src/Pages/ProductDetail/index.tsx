@@ -1,17 +1,25 @@
+import { ErrorMessage } from "@hookform/error-message";
 import classNames from "classnames";
-import { WhatsappLogo } from "phosphor-react";
+import { ChatText, WhatsappLogo } from "phosphor-react";
 import { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import { CardComment } from "../../Components/CardComment";
 import { Carrousel } from "../../Components/Carrousel";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { IconAddList } from "../../Components/IconAddList";
 import { SectionTitle } from "../../Components/SectionTitle";
-import { PuchaseListContextType } from "../../Types/Contexts.type";
+import {
+  PuchaseListContextType,
+  UserLoggedContextType,
+} from "../../Types/Contexts.type";
+import { Comment } from "../../Types/comment.type";
 import { Product } from "../../Types/product.type";
 import Star from "../../assets/images/star_icon.png";
 import { PuchaseListContext } from "../../context/PuchaseListContext";
+import { UserLoggedContext } from "../../context/UserLoggedContext";
 import { api } from "../../hook/useApi";
 
 let FarmerName: string;
@@ -23,9 +31,17 @@ export function ProductDetail() {
   const [viewProdDetail, setViewProdDetail] = useState<
     "description" | "reviews"
   >("description");
+  const [commentsList, setCommentsList] = useState<Comment[]>([]);
+
   const { AddToPuchaseList } = useContext(
     PuchaseListContext
   ) as PuchaseListContextType;
+  const { userLogged } = useContext(UserLoggedContext) as UserLoggedContextType;
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<Comment>();
 
   useEffect(() => {
     api
@@ -42,7 +58,23 @@ export function ProductDetail() {
           text: "Desculpe, não foi possível  exibir as informações do produto.",
         });
       });
-  }, []);
+    api
+      .get(`get-product-comments/${productId}`)
+      .then((response) => {
+        // console.log("response.data", response.data);
+        setCommentsList(response.data.comments);
+
+        // setProductData(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        Swal.fire({
+          icon: "error",
+          title: "Oppss",
+          text: "Desculpe, não foi possível  exibir essa comentários.",
+        });
+      });
+  }, [productId]);
 
   const handleProdQtd = (arg: boolean) => {
     if (arg) {
@@ -53,199 +85,220 @@ export function ProductDetail() {
       }
     }
   };
+  function raitingCalculate(comments: Comment[]) {
+    // Na escala de 1 a 5, as notas 1 e 2 são negativas(detractors), 4 e 5 são positivas(promoters), e 3 é neutro.
+    var promoters = 0;
+    var detractors = 0;
+    var soma = 0;
+    for (var i = 0, l = comments.length; i < l; i++) {
+      soma += comments[i].c_raiting;
+      if (comments[i].c_raiting >= 4) promoters++;
+      if (comments[i].c_raiting <= 2) detractors++;
+    }
+
+    const nps = ((promoters - detractors) / comments.length) * 100;
+    const media = soma / comments.length;
+    return media < 0 ? 0 : media;
+  }
   const reviews = (
-    <div className="w-full max-h-[25rem] overflow-y-auto  ">
-      <h4 className="w-full text-start  text-md text-palm-700 mb-8">
-        Avaliações do Produto{" "}
-      </h4>
-      <div className="w-full">
-        <div className="flex flex-col md:flex-row justify-start items-start relative mb-6 border-b border-gray-400 pb-4">
-          <div className="w-20 min-w-[5rem] h-20 rounded-[50%] mr-2">
-            <img
-              src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/256/charlie-chaplin-icon.png"
-              className="relative bg-white  h-full w-full"
-              alt="Foto perfil"
-              loading="lazy"
-            />
+    <div className="w-full h-auto">
+      <div className="mt-6 ">
+        <h4 className="w-full text-left text-sm md:text-md text-gray-800 font-semibold pb-8 ">
+          Comentários & Avaliações
+        </h4>
+        {commentsList.length === 0 ? (
+          <h4 className="w-full text-left text-sm md:text-md text-gray-500 md:pl-6 mb-20">
+            Este produto ainda não tem comentários e avaliações, seja o primeiro
+            a comentar e ajude o nosso perfil 😀
+          </h4>
+        ) : (
+          <div className="w-full max-h-[25rem] overflow-y-auto md:pl-20  ">
+            {commentsList.map((comment) => (
+              <CardComment comment={comment} key={comment._id} />
+            ))}
           </div>
-          <div className="flex flex-col ">
-            <p className="w-full text-left text-sm  text-gray-800 font-medium font-display">
-              Manoel Patrocino
-            </p>
-            <div className=" flex flex-col md:flex-row justify-start items-start mb-4">
-              <div className="flex mr-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-yellow-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-yellow-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-yellow-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-yellow-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              </div>
-              <span className="text-xs text-gray-400">
-                20 de abril de 2022, às 14h88
-              </span>
-            </div>
-            <p className="w-full text-sm text-justify md:text-left text-gray-800 pr-2">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime
-              quisquam vero adipisci beatae voluptas dolor ame. Lorem ipsum
-              dolor sit amet consectetur adipisicing elit. Maxime quisquam vero
-              adipisci beatae voluptas dolor ame. Lorem ipsum dolor sit amet
-              consectetur adipisicing elit. Maxime quisquam vero adipisci beatae
-              voluptas dolor ame.
-            </p>
-          </div>
-        </div>
-        <div className="flex  flex-col md:flex-row justify-start items-start relative mb-6 border-b border-gray-400 pb-4">
-          <div className="w-20 min-w-[5rem] h-20 rounded-[50%] mr-2">
-            <img
-              src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/256/charlie-chaplin-icon.png"
-              className="relative bg-white  h-full w-full"
-              alt="Foto perfil"
-              loading="lazy"
-            />
-          </div>
-          <div className="flex flex-col ">
-            <p className="w-full text-left text-sm  text-gray-800 font-medium font-display">
-              Manoel Patrocino
-            </p>
-            <div className=" flex flex-col md:flex-row justify-start items-start mb-4">
-              <div className="flex mr-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-yellow-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-yellow-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-yellow-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-yellow-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              </div>
-              <span className="text-xs text-gray-400">
-                20 de abril de 2022, às 14h88
-              </span>
-            </div>
-            <p className="w-full text-sm text-justify md:text-left text-gray-800 pr-2 ">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime
-              quisquam vero adipisci beatae voluptas dolor ame. Lorem ipsum
-              dolor sit amet consectetur adipisicing elit. Maxime quisquam vero
-              adipisci beatae voluptas dolor ame. Lorem ipsum dolor sit amet
-              consectetur adipisicing elit. Maxime quisquam vero adipisci beatae
-              voluptas dolor ame.
-            </p>
-          </div>
-        </div>
-        <div className="flex  flex-col md:flex-row justify-start items-start relative mb-6 border-b border-gray-400 pb-4">
-          <div className="w-20 min-w-[5rem] h-20 rounded-[50%] mr-2">
-            <img
-              src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/256/charlie-chaplin-icon.png"
-              className="relative bg-white  h-full w-full"
-              alt="Foto perfil"
-              loading="lazy"
-            />
-          </div>
-          <div className="flex flex-col ">
-            <p className="w-full text-left text-sm  text-gray-800 font-medium font-display">
-              Manoel Patrocino
-            </p>
-            <div className=" flex flex-col md:flex-row justify-start items-start mb-4">
-              <div className="flex mr-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-yellow-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-yellow-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-yellow-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-yellow-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              </div>
-              <span className="text-xs text-gray-400">
-                20 de abril de 2022, às 14h88
-              </span>
-            </div>
-            <p className="w-full text-sm text-justify md:text-left text-gray-800 pr-2">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime
-              quisquam vero adipisci beatae voluptas dolor ame. Lorem ipsum
-              dolor sit amet consectetur adipisicing elit. Maxime quisquam vero
-              adipisci beatae voluptas dolor ame. Lorem ipsum dolor sit amet
-              consectetur adipisicing elit. Maxime quisquam vero adipisci beatae
-              voluptas dolor ame.
-            </p>
-          </div>
-        </div>
+        )}
       </div>
+      {userLogged && (
+        <div className="mt-5 md:col-span-2 md:mt-12">
+          <div className="w-full  flex items-start justify-start pb-4">
+            {" "}
+            <ChatText size={24} color="#678433" />{" "}
+            <p className="w-full ml-1 text-left text-sm text-palm-900 font-semibold ">
+              {" "}
+              Deixe o seu Comentário
+            </p>
+          </div>
+          <form onSubmit={handleSubmit(formSubmit)} method="POST">
+            <div className="overflow-hidden ">
+              <div className="bg-white py-5">
+                <div className="grid grid-cols-6 gap-6">
+                  <div className="col-span-6 sm:col-span-3">
+                    <label
+                      htmlFor="c_customer_name"
+                      className="block text-sm font-semibold text-palm-900"
+                    >
+                      Seu Nome
+                    </label>
+                    <small className="text-xs text-gray-400">
+                      Será publicado
+                    </small>
+                    <input
+                      type="text"
+                      id="c_customer_name"
+                      autoComplete="given-name"
+                      className="mt-2 p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:border-palm-700 focus:outline-none sm:text-sm"
+                      {...register("c_customer_name", {
+                        required: "Informe seu nome completo para continuar",
+                        minLength: {
+                          value: 6,
+                          message: "Este campo deve ter mais de 6 caracteres",
+                        },
+                      })}
+                    />
+                    <ErrorMessage
+                      errors={errors}
+                      name="c_customer_name"
+                      render={({ message }) => (
+                        <small className="text-red-500 text-xs">
+                          {message}
+                        </small>
+                      )}
+                    />
+                  </div>
+
+                  <div className="col-span-6 sm:col-span-3">
+                    <label
+                      htmlFor="c_customer_email"
+                      className="block text-sm font-semibold text-palm-900"
+                    >
+                      Seu E-mail
+                    </label>
+                    <small className="text-xs text-gray-400">
+                      Não será publicado
+                    </small>
+
+                    <input
+                      type="email"
+                      id="c_customer_email"
+                      autoComplete="email"
+                      className="mt-2 p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:border-palm-700 focus:outline-none sm:text-sm"
+                      defaultValue={userLogged.u_email}
+                      {...register("c_customer_email", {
+                        required: "Campo obrigatório",
+                        pattern: {
+                          value: /\S+@\S+\.\S+/,
+                          message: "Informe um e-mail válido",
+                        },
+                        minLength: {
+                          value: 15,
+                          message: "O email deve ter pelo menos 15 caracteres",
+                        },
+                      })}
+                    />
+                    <ErrorMessage
+                      errors={errors}
+                      name="c_customer_email"
+                      render={({ message }) => (
+                        <small className="text-red-500 text-xs">
+                          {message}
+                        </small>
+                      )}
+                    />
+                  </div>
+                  <div className="col-span-6 sm:col-span-3 ">
+                    <label
+                      htmlFor="c_comment"
+                      className="block text-sm font-semibold text-palm-900"
+                    >
+                      Seu Comentário
+                    </label>
+                    <small className="text-xs text-gray-400">
+                      será publicado nesta página
+                    </small>
+                    <textarea
+                      id="c_comment"
+                      rows={5}
+                      className="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:border-palm-700 focus:outline-none  sm:text-sm"
+                      {...register("c_comment", {
+                        required: "Informe algum comentário para continuar",
+                        minLength: {
+                          value: 3,
+                          message:
+                            "Este campo deve ter pelo mesnos 3 caracteres",
+                        },
+                      })}
+                    />
+                    <ErrorMessage
+                      errors={errors}
+                      name="c_comment"
+                      render={({ message }) => (
+                        <small className="text-red-500 text-xs">
+                          {message}
+                        </small>
+                      )}
+                    />
+                  </div>
+                  <div className="col-span-6 sm:col-span-3 ">
+                    <label className="block text-sm font-semibold text-red-500">
+                      Deixe sua Avaliação
+                    </label>
+                    <small className="text-xs text-gray-400">
+                      Sua avaliação é importante para o desenvolvimento desse(s)
+                      produtor(es)
+                    </small>
+
+                    <div className="star-rating mt-2">
+                      <input
+                        type="radio"
+                        id="c_raiting5"
+                        defaultValue={5}
+                        {...register("c_raiting", {})}
+                      />
+                      <label htmlFor="c_raiting5"></label>
+                      <input
+                        type="radio"
+                        id="c_raiting4"
+                        defaultValue={4}
+                        {...register("c_raiting", {})}
+                      />
+                      <label htmlFor="c_raiting4"></label>
+                      <input
+                        type="radio"
+                        id="c_raiting3"
+                        defaultValue={3}
+                        {...register("c_raiting", {})}
+                      />
+                      <label htmlFor="c_raiting3"></label>
+                      <input
+                        type="radio"
+                        id="c_raiting2"
+                        defaultValue={2}
+                        {...register("c_raiting", {})}
+                      />
+                      <label htmlFor="c_raiting2"></label>
+                      <input
+                        type="radio"
+                        id="c_raiting1"
+                        defaultValue={1}
+                        {...register("c_raiting", {})}
+                      />
+                      <label htmlFor="c_raiting1"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="flex justify-center rounded-md border border-transparent bg-palm-500 py-2 px-6 text-sm font-medium text-white shadow-sm hover:bg-palm-900 focus:outline-none focus:ring-2  focus:ring-offset-2"
+              >
+                Publicar Comentário
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
   const description = (
@@ -264,6 +317,54 @@ export function ProductDetail() {
       </p>
     </div>
   );
+
+  async function formSubmit(FormData: Comment) {
+    if (!FormData.c_raiting) {
+      Swal.fire({
+        icon: "info",
+        title: "Atenção",
+        text: "É  preciso informar um número de estrelas para continuar",
+        showConfirmButton: true,
+      });
+    } else {
+      const newComent: Comment = {
+        c_comment: FormData.c_comment,
+        c_raiting: FormData.c_raiting,
+        c_customer_id: userLogged._id,
+        c_customer_name: FormData.c_customer_name,
+        c_customer_email: userLogged.u_email,
+        c_user_img_profile: !userLogged.u_img_profile
+          ? ""
+          : userLogged.u_img_profile,
+
+        id_product: productId,
+      };
+
+      await api
+        .post("/create-comment", newComent)
+        .then((response) => {
+          Swal.fire({
+            icon: "success",
+            title: "Success !",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 1700);
+        })
+        .catch((error) => {
+          console.error("data", error);
+          Swal.fire({
+            icon: "error",
+            title: "Oppss..",
+            text: error.response.data.message,
+            showConfirmButton: true,
+          });
+        });
+    }
+  }
 
   return (
     <>
@@ -331,12 +432,19 @@ export function ProductDetail() {
                 {productData?.p_name}
               </h2>
               <div className="flex w-[100%] items-center justify-center md:justify-start mb-2">
-                <span className="text-sm text-gray-400"> 4.6 </span>
+                <span className="text-sm text-gray-400">
+                  {" "}
+                  {commentsList.length === 0
+                    ? 0
+                    : raitingCalculate(commentsList)}
+                </span>
                 <img
                   src={Star}
                   className="w-4 h-4 md:w-[17px] md:h-[17px] ml-1 mr-1"
                 />
-                <span className="text-xs md:text-xs text-gray-400">(202)</span>
+                <span className="text-xs md:text-xs text-gray-400">
+                  ({commentsList.length})
+                </span>
                 {productData?.p_stock! > 0 && (
                   <span className="text-left text-gray-500 text-xs ml-4">
                     Em estoque: {productData?.p_stock}

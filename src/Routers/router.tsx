@@ -5,10 +5,10 @@ import { CreateProduct } from "../Pages/Dashboard/CreateProduct";
 import { ManageProducts } from "../Pages/Dashboard/ManageProducts";
 import { ManageProfile } from "../Pages/Dashboard/manageProfile";
 import { Entities } from "../Pages/Entities";
+import { EntityInfo } from "../Pages/EntittyInfo/EntityInfo";
 import { Entity } from "../Pages/Entity";
 import { Farmers } from "../Pages/Farmers";
 import { Home } from "../Pages/Home";
-import { InfoEntity } from "../Pages/InfoEntitty/InfoEntity";
 import { ProductDetail } from "../Pages/ProductDetail";
 import { Products } from "../Pages/Products";
 import { RegisterEntity } from "../Pages/RegisterEntity";
@@ -21,7 +21,7 @@ export const SystemRoutes = () => {
       <Route path="/" element={<Home />} />
       <Route path="/Entities" element={<Entities />} />
       <Route path="/my-shop/:userId" element={<Entity />} />
-      <Route path="/Entity-info/:userId" element={<InfoEntity />} />
+      <Route path="/Entity-info/:userId" element={<EntityInfo />} />
       <Route path="/Products" element={<Products />} />
       <Route path="/Product-detail/:productId" element={<ProductDetail />} />
       <Route path="/Farmers" element={<Farmers />} />
