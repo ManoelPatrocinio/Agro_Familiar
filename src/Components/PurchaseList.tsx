@@ -46,7 +46,7 @@ export function PurchaseList() {
               >
                 <a
                   href={`/Product-detail/${item.product._id}`}
-                  className="w-[35%] md:w-[25%] h-32 md:max-w-[30%] rounded mr-[1%] md:mr-0 "
+                  className="w-[6.25rem] h-[6.25rem] md:w-[25%] md:h-32 md:max-w-[30%] rounded mr-[1%] md:mr-0 "
                 >
                   <img
                     src={item.product.p_images![0]}
@@ -56,35 +56,34 @@ export function PurchaseList() {
                   />
                 </a>
                 <div className="w-[64%] md:w-[50%] md:min-w-[50%] h-32 flex flex-col justify-around items-start px-2">
-                  <div>
-                    <h4 className="w-full text-left  text-md text-palm-700">
-                      {item.product.p_name}
-                    </h4>
-                    {/* <p className="w-full text-left text-xs text-gray-400 ">
+                  <h4 className="w-full text-left  text-md text-palm-700 whitespace-nowrap text-ellipsis overflow-hidden">
+                    {item.product.p_name}
+                  </h4>
+                  {/* <p className="w-full text-left text-xs text-gray-400 ">
                       {item.product.farmer_id}
                     </p> */}
-                  </div>
+
                   <span className="w-full text-left text-lg text-green-600">
                     R$: {item?.product.p_price! * item.quantity}
                   </span>
                   {/* <small>QTD: {item.quantity}</small> */}
                 </div>
                 <div className="w-full md:w-[25%] flex justify-evenly md:justify-between items-center">
-                  <div className="w-[35%]  md:w-[57%] flex justify-start  rounded border border-palm-700  mt-4 md:mt-0">
+                  <div className="w-[35%]  md:w-[57%] md:h-10 flex justify-evenly  items-center rounded border border-palm-700  mt-4 md:mt-0">
                     <button
                       onClick={() => RemoveToPuchaseList(item.product)}
-                      className=" h-full text-center text-xl text-palm-700 p-2"
+                      className="text-center text-xl text-palm-700 p-2"
                       type="button"
                     >
                       -
                     </button>
-                    <div className="w-1/2 h-full text-center text-sm text-palm-700 py-3 ">
+                    <div className="w-1/2  text-center text-sm text-palm-700 py-3 ">
                       {item.quantity}
                     </div>
 
                     <button
                       onClick={() => AddToPuchaseList(item.product)}
-                      className=" h-full text-center text-xl text-palm-700 p-2"
+                      className="  text-center text-xl text-palm-700 p-2"
                       type="button"
                     >
                       +
@@ -94,7 +93,7 @@ export function PurchaseList() {
                     onClick={() =>
                       DeleteProductToPuchaseList(item!.product._id!)
                     }
-                    className="w-12  h-12  rounded-[100%]  flex justift-center items-end mt-4 md:mt-0"
+                    className="w-12  h-10  rounded-[100%]  flex justify-center items-center mt-4 md:mt-0"
                   >
                     <Trash size={42} color="#789B3D" weight="light" />
                   </button>
@@ -112,8 +111,13 @@ export function PurchaseList() {
             R$ {TotalPuchaseList}
           </span>
         </div>
-        <button className="w-full h-[60%] text-lg text-white  bg-green-600 py-4">
-          Solicitar Produtos
+        <button className="w-full h-[60%] text-lg  text-white  bg-green-600 py-4 leading-none">
+          Salvar Lista de Compra
+          <br />
+          <span className="d-block w-full text-center text-[12px] text-[#f9f9f9] ">
+            {" "}
+            Salve e acesse em qualquer dispositivo usuando essa mesma conta
+          </span>
         </button>
       </div>
     </div>
