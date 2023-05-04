@@ -8,19 +8,19 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import { ModalRegister } from "./Components/ModalRegister";
 import { SystemRoutes } from "./Routers/router";
+import { AuthProvider } from "./context/AuthContext";
 import { PuchaseListProvider } from "./context/PuchaseListContext";
-import { UserLoggedProvider } from "./context/UserLoggedContext";
 import { queryClient } from "./service/queryClient";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <UserLoggedProvider>
+        <AuthProvider>
           <PuchaseListProvider>
             <SystemRoutes />
           </PuchaseListProvider>
-        </UserLoggedProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </BrowserRouter>
     <ToastContainer />

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { Product } from "../Types/product.type";
@@ -10,10 +11,14 @@ interface IapiResponse {
   user?: User;
 }
 const backendUrl = import.meta.env.VITE_BACKEND_PORT;
+const { "@PAF:token": token } = parseCookies();
 
 export const api = axios.create({
   baseURL: backendUrl,
 });
+if (token) {
+  api.defaults.headers.common["Authorization"] = "Bearer " + token;
+}
 
 // // hook from POST request Api
 

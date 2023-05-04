@@ -28,7 +28,7 @@ export function CardProduct({ product }: Prop) {
         />
       </Link>
       <div className="py-4 px-3 w-full h-[43%]">
-        <h5 className="w-full h-[1.25rem] overflow-y-auto text-center text-gray-700 text-sm font-medium mb-2">
+        <h5 className="w-full   text-center text-ellipsis whitespace-nowrap overflow-hidden  text-gray-700 text-sm font-medium mb-2">
           {product.p_name}
         </h5>
 

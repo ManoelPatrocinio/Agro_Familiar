@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { destroyCookie } from "nookies";
 import {
   ClipboardText,
   MagnifyingGlass,
@@ -8,16 +9,12 @@ import {
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import {
-  PuchaseListContextType,
-  UserLoggedContextType,
-} from "../Types/Contexts.type";
+import { PuchaseListContextType } from "../Types/Contexts.type";
 import { Product } from "../Types/product.type";
 import Logo from "../assets/images/Logo.png";
 import exemple_user_profile from "../assets/images/exemple_user_profile.png";
+import { AuthContext } from "../context/AuthContext";
 import { PuchaseListContext } from "../context/PuchaseListContext";
-import { UserLoggedContext } from "../context/UserLoggedContext";
-import { CheckLocalStorage } from "../service/localStorage";
 import { FormUserAccess } from "./FormUserAccess";
 import { Menu_Sidebar } from "./Menu_Sidebar";
 import { PurchaseList } from "./PurchaseList";
@@ -38,9 +35,7 @@ export function Header({ setSearch, ItemSearched }: Iprop) {
     PuchaseListContext
   ) as PuchaseListContextType;
 
-  const { userLogged, UserFirstName } = useContext(
-    UserLoggedContext
-  ) as UserLoggedContextType;
+  const { userLogged } = useContext(AuthContext);
   const CheckLogout = () => {
     Swal.fire({
       icon: "question",
@@ -50,7 +45,7 @@ export function Header({ setSearch, ItemSearched }: Iprop) {
       text: "Deseja mesmo nos deixar ?",
     }).then((result) => {
       if (result.isConfirmed) {
-        CheckLocalStorage.logout();
+        destroyCookie(undefined, "@PAF:token");
         window.location.reload();
       }
     });
@@ -98,7 +93,7 @@ export function Header({ setSearch, ItemSearched }: Iprop) {
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              {UserFirstName ? (
+              {userLogged ? (
                 <div className="w-full h-full flex flex-col justify-center  items-center text-[12px]">
                   <UserCircle size={38} />
                   <p className="w-full flex ">
@@ -132,16 +127,16 @@ export function Header({ setSearch, ItemSearched }: Iprop) {
                 " dropdown-menu min-w-max absolute  top-[3.5rem]   bg-white z-50 float-left  text-left  rounded-lg  shadow-lg mt-1  hidden   m-0   bg-clip-padding                border                border-gray-200               ",
                 {
                   " w-[20rem]  min-h-[26rem] h-auto left-[-8rem] px-4  py-8":
-                    !UserFirstName,
-                  " w-[10rem]   h-auto left-[-30%] py-2": UserFirstName,
+                    !userLogged,
+                  " w-[10rem]   h-auto left-[-30%] py-2": userLogged,
                 }
               )}
               aria-labelledby="dropdownLogin"
             >
-              {UserFirstName ? (
+              {userLogged ? (
                 <div className="w-full h-full ">
                   <div className="w-full h-full flex flex-col justify-center items-center">
-                    {userLogged!.u_img_profile?.length > 0 ? (
+                    {userLogged!.u_img_profile!.length > 0 ? (
                       <img
                         src={userLogged.u_img_profile}
                         className="w-12 h-12 rounded-[50%]"
@@ -158,24 +153,26 @@ export function Header({ setSearch, ItemSearched }: Iprop) {
                   </div>
                   <div className="w-full h-full">
                     {userLogged?.u_type !== "customer" && (
-                      <Link
-                        to="/Admin/create-product"
-                        className="block w-full text-center text-palm-700 text-sm py-2 m-0 hover:text-palm-900 hover:border-b-2 border-palm-500 transition-all rounded"
-                      >
-                        {" "}
-                        Dashboard
-                      </Link>
+                      <>
+                        <Link
+                          to="/Admin/create-product"
+                          className="block w-max mx-auto text-center text-palm-700 text-sm pt-2 mb-2 relative border-animated hover:text-palm-900 transition-all "
+                        >
+                          {" "}
+                          Dashboard
+                        </Link>
+                        <Link
+                          to={`/my-shop/${userLogged?._id}`}
+                          className="block w-max mx-auto text-center text-palm-700 text-sm pt-2 mb-2 relative border-animated hover:text-palm-900 transition-all "
+                        >
+                          {" "}
+                          Meu Espaço
+                        </Link>
+                      </>
                     )}
-                    <Link
-                      to={`/my-shop/${userLogged?._id}`}
-                      className="block w-full text-center text-palm-700 text-sm py-2 hover:text-palm-900 hover:border-b-2 border-palm-500 transition-all rounded"
-                    >
-                      {" "}
-                      Meu Espaço
-                    </Link>
 
                     <button
-                      className="w-full text-center text-palm-700 text-sm py-2 hover:text-palm-900 hover:border-b-2 border-palm-500 transition-all rounded"
+                      className="block mx-auto text-center text-palm-700 text-sm pt-2 mb-2 relative border-animated hover:text-palm-900 transition-all "
                       onClick={() => CheckLogout()}
                     >
                       {" "}
@@ -209,7 +206,7 @@ export function Header({ setSearch, ItemSearched }: Iprop) {
           {" "}
           <Link
             to="/"
-            className="text-lg text-palm-700 font-normal font-display ml-16"
+            className="text-lg text-palm-700 font-normal font-display ml-16 relative border-animated hover:text-palm-900"
           >
             Início
           </Link>
@@ -218,7 +215,7 @@ export function Header({ setSearch, ItemSearched }: Iprop) {
           {" "}
           <Link
             to="/Products"
-            className="text-lg text-palm-700 font-normal font-display"
+            className="text-lg text-palm-700 font-normal font-display relative border-animated hover:text-palm-900"
           >
             Produtos
           </Link>
@@ -227,7 +224,7 @@ export function Header({ setSearch, ItemSearched }: Iprop) {
           {" "}
           <Link
             to="/Entities"
-            className="text-lg text-palm-700 font-normal font-display"
+            className="text-lg text-palm-700 font-normal font-display relative border-animated hover:text-palm-900"
           >
             Associações/Cooperativas
           </Link>
@@ -236,7 +233,7 @@ export function Header({ setSearch, ItemSearched }: Iprop) {
           {" "}
           <Link
             to="/Farmers"
-            className="text-lg text-palm-700 font-normal font-display"
+            className="text-lg text-palm-700 font-normal font-display relative border-animated hover:text-palm-900"
           >
             Produtores
           </Link>
@@ -256,6 +253,9 @@ export function Header({ setSearch, ItemSearched }: Iprop) {
                 flex
                 items-center
                 whitespace-nowrap
+                relative
+                border-animated
+                hover:text-palm-900
               "
               type="button"
               id="dropdownMenuButton1"

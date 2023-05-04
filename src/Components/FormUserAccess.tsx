@@ -1,9 +1,10 @@
 import { ErrorMessage } from "@hookform/error-message";
-import { memo } from "react";
+import { memo, useContext } from "react";
 import { useForm } from "react-hook-form";
 
 import Swal from "sweetalert2";
 import { User } from "../Types/user.type";
+import { AuthContext } from "../context/AuthContext";
 import { api } from "../hook/useApi";
 import { CheckLocalStorage } from "../service/localStorage";
 
@@ -18,6 +19,7 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
     handleSubmit,
   } = useForm<User>();
 
+  const { signIn } = useContext(AuthContext);
   async function formSubmit(userFormData: User) {
     if (userFormData.u_full_name && userFormData.u_full_name.length > 0) {
       const newUser: User = {
@@ -48,29 +50,7 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
           });
         });
     } else {
-      await api
-        .post("/login", userFormData)
-        .then((response) => {
-          Swal.fire({
-            icon: "success",
-            title: "Success !",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          CheckLocalStorage.setLoggedUser(response.data.user);
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
-        })
-        .catch((error) => {
-          console.error("data", error);
-          Swal.fire({
-            icon: "error",
-            title: "Oppss..",
-            text: error.response.data.message,
-            showConfirmButton: true,
-          });
-        });
+      await signIn(userFormData);
     }
   }
   return (

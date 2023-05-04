@@ -44,7 +44,7 @@ export function CardEntity({ entity }: Props) {
         <>
           <Link
             to={`/my-shop/${entity._id}`}
-            className="w-full max-h-[40px] text-center text-palm-700 font-display text-sm  text-ellipsis overflow-hidden  px-2"
+            className="w-full  text-center text-palm-700 font-display text-sm  text-ellipsis whitespace-nowrap overflow-hidden  px-2"
           >
             {entity.u_entity_name}
           </Link>

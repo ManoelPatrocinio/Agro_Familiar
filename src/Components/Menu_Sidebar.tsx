@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { destroyCookie } from "nookies";
 import {
   House,
   List,
@@ -10,10 +11,8 @@ import {
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { UserLoggedContextType } from "../Types/Contexts.type";
 import exemple_user_profile from "../assets/images/exemple_user_profile.png";
-import { UserLoggedContext } from "../context/UserLoggedContext";
-import { CheckLocalStorage } from "../service/localStorage";
+import { AuthContext } from "../context/AuthContext";
 import { FormUserAccess } from "./FormUserAccess";
 import { MenuOfDashboard } from "./MenuOfDashboard";
 
@@ -21,10 +20,7 @@ type Prop = {
   type: "default" | "admin";
 };
 export function Menu_Sidebar({ type }: Prop) {
-  const { userLogged, UserFirstName } = useContext(
-    UserLoggedContext
-  ) as UserLoggedContextType;
-
+  const { userLogged } = useContext(AuthContext);
   const CheckLogout = () => {
     Swal.fire({
       icon: "question",
@@ -34,7 +30,7 @@ export function Menu_Sidebar({ type }: Prop) {
       text: "Deseja mesmo nos deixar ?",
     }).then((result) => {
       if (result.isConfirmed) {
-        CheckLocalStorage.logout();
+        destroyCookie(undefined, "@PAF:token");
         window.location.reload();
       }
     });
@@ -79,9 +75,9 @@ export function Menu_Sidebar({ type }: Prop) {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  {UserFirstName ? (
+                  {userLogged ? (
                     <div className="w-full h-full flex  justify-start  items-center ">
-                      {userLogged!.u_img_profile?.length > 0 ? (
+                      {userLogged?.u_img_profile!.length > 0 ? (
                         <img
                           src={userLogged.u_img_profile}
                           className="w-12 h-12 rounded-[50%]"
@@ -123,16 +119,16 @@ export function Menu_Sidebar({ type }: Prop) {
                     " dropdown-menu min-w-max absolute  top-[3rem]   bg-white z-50 float-left  text-left  rounded-lg  shadow-lg mt-1 hidden bg-clip-padding border border-gray-200",
                     {
                       "  min-h-[26rem] h-auto left-0 top-[4rem] px-4  py-8":
-                        !UserFirstName,
-                      " w-[13rem]   h-auto py-2": UserFirstName,
+                        !userLogged,
+                      " w-[13rem]   h-auto py-2": userLogged,
                     }
                   )}
                   aria-labelledby="dropdownLogin"
                 >
-                  {UserFirstName ? (
+                  {userLogged ? (
                     <div className="w-full h-full ">
                       <div className="w-full h-full flex flex-col justify-center items-center">
-                        {userLogged!.u_img_profile?.length > 0 ? (
+                        {userLogged?.u_img_profile!.length > 0 ? (
                           <img
                             src={userLogged.u_img_profile}
                             className="w-12 h-12 rounded-[50%]"

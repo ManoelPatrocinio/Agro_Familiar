@@ -1,15 +1,23 @@
+import { useEffect } from "react";
+import { Footer } from "../../Components/Footer";
+import { Header } from "../../Components/Header";
+import { startAnimateOnScroll } from "../../Global/animate";
 import allFree from "../../assets/images/all_Free.png";
 import forClient from "../../assets/images/forClient.png";
 import whatWeOffer from "../../assets/images/whatWeOffer.png";
-import { Footer } from "../../Components/Footer";
-import { Header } from "../../Components/Header";
 
 export function AboutUs() {
+  useEffect(() => {
+    startAnimateOnScroll();
+  }, []);
   return (
     <>
       <Header setSearch={() => {}} ItemSearched={""} />
       <main className="w-full h-full px-8 md:px-20 mt-10 md:mt-20">
-        <div className="w-full  text-justify indent-8 md:indent-0 md:text-center font-display mb-10">
+        <div
+          className="w-full  text-justify indent-8 md:indent-0 md:text-center font-display mb-10"
+          data-animate="up"
+        >
           <h3 className="w-full text-xl text-center text-palm-700 mb-8">
             Sobre Nós
           </h3>
@@ -20,7 +28,10 @@ export function AboutUs() {
             familiar.
           </p>
         </div>
-        <div className="w-full md:w-1/2   text-justify indent-8 md:indent-0 md:text-center font-display">
+        <div
+          className="w-full md:w-1/2   text-justify indent-8 md:indent-0 md:text-center font-display"
+          data-animate="left"
+        >
           <h3 className="w-full text-xl text-center text-palm-700 mb-8">
             O que fazemos ?
           </h3>
@@ -32,7 +43,10 @@ export function AboutUs() {
             possam estar acessíveis para clientes de todas as regiões.
           </p>
         </div>
-        <div className="w-full md:w-1/2 md:ml-[50%] text-justify indent-8 md:indent-0 md:text-center font-display mb-10">
+        <div
+          className="w-full md:w-1/2 md:ml-[50%] text-justify indent-8 md:indent-0 md:text-center font-display mb-10"
+          data-animate="right"
+        >
           <h3 className="w-full text-xl text-center text-palm-700 my-8">
             O que nos motivou ?{" "}
           </h3>
@@ -46,18 +60,21 @@ export function AboutUs() {
           </p>
         </div>
         <div className="w-full  h-full md:h-[22rem] text-justify md:text-center font-display ">
-          <h3 className="w-full text-xl text-center text-palm-700 mb-8">
+          <h3
+            className="w-full text-xl text-center text-palm-700 mb-8"
+            data-animate="up"
+          >
             O que oferecemos ?
           </h3>
           <div className="w-full h-full  flex flex-col md:flex-row">
-            <div className="w-full md:w-1/2  px-10 py-2">
+            <div className="w-full md:w-1/2  px-10 py-2" data-animate="left">
               <img
                 src={whatWeOffer}
                 alt="o que oferecemos"
                 className="w-full h-full"
               />
             </div>
-            <div className="w-full md:w-1/2 text-left">
+            <div className="w-full md:w-1/2 text-left" data-animate="right">
               <h4 className="text-md text-palm-700 font-medium my-4">
                 Para o Produtor
               </h4>
@@ -81,7 +98,10 @@ export function AboutUs() {
         </div>
         <div className="w-full h-full md:h-[22rem]  text-center font-display my-10 ">
           <div className="w-full h-full  flex  flex-col-reverse md:flex-row">
-            <div className="w-full md:w-1/2 text-left md:pt-8">
+            <div
+              className="w-full md:w-1/2 text-left md:pt-8"
+              data-animate="left"
+            >
               <h4 className="text-md text-palm-700 font-medium my-4">
                 Para o Cliente
               </h4>
@@ -98,7 +118,7 @@ export function AboutUs() {
                 </li>
               </ul>
             </div>
-            <div className="w-full md:w-1/2  px-10 py-2">
+            <div className="w-full md:w-1/2  px-10 py-2" data-animate="right">
               <img
                 src={forClient}
                 alt="o que oferecemos"
@@ -107,7 +127,10 @@ export function AboutUs() {
             </div>
           </div>
         </div>
-        <div className="w-full text-justify indent-8 md:indent-0 md:text-center font-display ">
+        <div
+          className="w-full text-justify indent-8 md:indent-0 md:text-center font-display "
+          data-animate="up"
+        >
           <img
             src={allFree}
             alt="all free"

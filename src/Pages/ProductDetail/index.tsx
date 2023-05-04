@@ -11,15 +11,12 @@ import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { IconAddList } from "../../Components/IconAddList";
 import { SectionTitle } from "../../Components/SectionTitle";
-import {
-  PuchaseListContextType,
-  UserLoggedContextType,
-} from "../../Types/Contexts.type";
+import { PuchaseListContextType } from "../../Types/Contexts.type";
 import { Comment } from "../../Types/comment.type";
 import { Product } from "../../Types/product.type";
 import Star from "../../assets/images/star_icon.png";
+import { AuthContext } from "../../context/AuthContext";
 import { PuchaseListContext } from "../../context/PuchaseListContext";
-import { UserLoggedContext } from "../../context/UserLoggedContext";
 import { api } from "../../hook/useApi";
 
 let FarmerName: string;
@@ -36,7 +33,7 @@ export function ProductDetail() {
   const { AddToPuchaseList } = useContext(
     PuchaseListContext
   ) as PuchaseListContextType;
-  const { userLogged } = useContext(UserLoggedContext) as UserLoggedContextType;
+  const { userLogged } = useContext(AuthContext);
   const {
     register,
     formState: { errors },
@@ -330,10 +327,10 @@ export function ProductDetail() {
       const newComent: Comment = {
         c_comment: FormData.c_comment,
         c_raiting: FormData.c_raiting,
-        c_customer_id: userLogged._id,
+        c_customer_id: userLogged?._id!,
         c_customer_name: FormData.c_customer_name,
-        c_customer_email: userLogged.u_email,
-        c_user_img_profile: !userLogged.u_img_profile
+        c_customer_email: userLogged?.u_email!,
+        c_user_img_profile: !userLogged?.u_img_profile
           ? ""
           : userLogged.u_img_profile,
 

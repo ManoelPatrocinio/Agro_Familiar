@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { UserLoggedContextType } from "../Types/Contexts.type";
 import Logo from "../assets/images/Logo.png";
-import { UserLoggedContext } from "../context/UserLoggedContext";
+import { AuthContext } from "../context/AuthContext";
 
 export function MenuOfDashboard() {
-  const { userLogged } = useContext(UserLoggedContext) as UserLoggedContextType;
+  const { userLogged } = useContext(AuthContext);
+
   return (
     <div className="w-full h-full flex flex-col justify-start items-center relative">
       <button

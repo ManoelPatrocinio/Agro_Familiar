@@ -7,20 +7,19 @@ import Swal from "sweetalert2";
 import { CardComment } from "../../Components/CardComment";
 import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
-import { UserLoggedContextType } from "../../Types/Contexts.type";
 import { Comment } from "../../Types/comment.type";
 import { User } from "../../Types/user.type";
 import exemple_user_profile from "../../assets/images/exemple_user_profile.png";
 import Star from "../../assets/images/star_icon.png";
 import exemple_user_cover_background from "../../assets/images/user_cover_background.jpg";
-import { UserLoggedContext } from "../../context/UserLoggedContext";
+import { AuthContext } from "../../context/AuthContext";
 import { api } from "../../hook/useApi";
 
 export function EntityInfo() {
   const { userId } = useParams();
   const [entityData, setEntityData] = useState<User>();
   const [commentsList, setCommentsList] = useState<Comment[]>([]);
-  const { userLogged } = useContext(UserLoggedContext) as UserLoggedContextType;
+  const { userLogged } = useContext(AuthContext);
   const {
     register,
     formState: { errors },
@@ -74,10 +73,10 @@ export function EntityInfo() {
       const newComent: Comment = {
         c_comment: FormData.c_comment,
         c_raiting: FormData.c_raiting,
-        c_customer_id: userLogged._id,
+        c_customer_id: userLogged?._id!,
         c_customer_name: FormData.c_customer_name,
-        c_customer_email: userLogged.u_email,
-        c_user_img_profile: !userLogged.u_img_profile
+        c_customer_email: userLogged?.u_email!,
+        c_user_img_profile: !userLogged?.u_img_profile
           ? ""
           : userLogged.u_img_profile,
 

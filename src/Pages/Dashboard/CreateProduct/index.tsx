@@ -11,11 +11,10 @@ import { MenuOfDashboard } from "../../../Components/MenuOfDashboard";
 import { Menu_Sidebar } from "../../../Components/Menu_Sidebar";
 import { Load_spinner } from "../../../Components/load_spinner";
 import { categoriesList } from "../../../Global/categoriesList";
-import { UserLoggedContextType } from "../../../Types/Contexts.type";
 import { FileUploaded } from "../../../Types/fileUploaded.types";
 import { Product } from "../../../Types/product.type";
 import Logo from "../../../assets/images/Logo.png";
-import { UserLoggedContext } from "../../../context/UserLoggedContext";
+import { AuthContext } from "../../../context/AuthContext";
 import { api } from "../../../hook/useApi";
 import { FirebaseUploadFile } from "../../../service/firebase";
 
@@ -24,8 +23,7 @@ export function CreateProduct() {
   const [filesData, setFileData] = useState<FileUploaded[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { productId } = useParams();
-  const { userLogged } = useContext(UserLoggedContext) as UserLoggedContextType;
-
+  const { userLogged } = useContext(AuthContext);
   const {
     register,
     formState: { errors },
