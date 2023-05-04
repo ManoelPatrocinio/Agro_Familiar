@@ -6,7 +6,6 @@ import Swal from "sweetalert2";
 import { User } from "../Types/user.type";
 import { AuthContext } from "../context/AuthContext";
 import { api } from "../hook/useApi";
-import { CheckLocalStorage } from "../service/localStorage";
 
 type FormProps = {
   type: "userLogin" | "userRegister";
@@ -35,7 +34,6 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
             showConfirmButton: false,
             timer: 1500,
           });
-          CheckLocalStorage.setLoggedUser(response.data.user);
           setTimeout(() => {
             window.location.reload();
           }, 2000);

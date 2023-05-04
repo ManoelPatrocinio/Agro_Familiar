@@ -8,7 +8,6 @@ import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
 import { User } from "../../Types/user.type";
 import { api } from "../../hook/useApi";
-import { CheckLocalStorage } from "../../service/localStorage";
 
 let toggleForm: boolean = false;
 export function RegisterEntity() {
@@ -21,7 +20,6 @@ export function RegisterEntity() {
   } = useForm<User>();
 
   async function formSubmit(FormData: User) {
-    console.log("FormData", FormData);
     if (FormData.u_type.length === 0) {
       Swal.fire({
         icon: "error",
@@ -39,7 +37,7 @@ export function RegisterEntity() {
           showConfirmButton: false,
           timer: 1500,
         });
-        CheckLocalStorage.setLoggedUser(response.data.user);
+
         setTimeout(() => {
           navigate("/");
         }, 2000);

@@ -8,7 +8,6 @@ import { Header } from "../../Components/Header";
 import { SectionTitle } from "../../Components/SectionTitle";
 import { User } from "../../Types/user.type";
 import { api } from "../../hook/useApi";
-import { CheckLocalStorage } from "../../service/localStorage";
 
 let toggleForm: boolean = false;
 
@@ -32,7 +31,7 @@ export function RegisterFarmer() {
           showConfirmButton: false,
           timer: 1500,
         });
-        CheckLocalStorage.setLoggedUser(response.data.user);
+
         setTimeout(() => {
           navigate("/");
         }, 2000);

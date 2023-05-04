@@ -1,4 +1,5 @@
 import { ErrorMessage } from "@hookform/error-message";
+import { destroyCookie } from "nookies";
 import { ArrowRight, Question } from "phosphor-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -18,7 +19,6 @@ import {
   FirebaseDeleteFile,
   FirebaseUploadFile,
 } from "../../../service/firebase";
-import { CheckLocalStorage } from "../../../service/localStorage";
 
 const InitialUserState: User = {
   u_type: "farmer",
@@ -108,7 +108,6 @@ export function ManageProfile() {
   };
 
   const formSubmit = async (type: string, UpdatedEntity: User) => {
-    console.log("UpdatedEntity", UpdatedEntity);
     if (type === "basicInfo") {
       await api
         .put(`/admin/update-user/${UpdatedEntity._id}`, UpdatedEntity)
@@ -120,8 +119,7 @@ export function ManageProfile() {
             showConfirmButton: false,
             timer: 1500,
           });
-          console.log("response.data.user", response.data.entity);
-          CheckLocalStorage.setLoggedUser(response.data.entity);
+
           setTimeout(() => {
             window.location.reload();
           }, 2000);
@@ -148,7 +146,8 @@ export function ManageProfile() {
             showConfirmButton: false,
             timer: 1500,
           });
-          CheckLocalStorage.logout();
+          destroyCookie(undefined, "@PAF:token");
+
           setTimeout(() => {
             navigate("/");
           }, 2000);
