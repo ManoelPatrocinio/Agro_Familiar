@@ -1,13 +1,17 @@
 import { Product } from "../Types/product.type";
 
 interface IPuchaseList {
+  user_id: string;
+  products: IProduct[];
+}
+interface IProduct {
   product: Product;
   quantity: number;
 }
 export const CheckLocalStorage = {
   // Purchase list
   // Função para salvar produto no local storage
-  setItemOnPurchaseList(data: IPuchaseList[]) {
+  setItemOnPurchaseList(data: IPuchaseList) {
     let parsedData = JSON.stringify(data);
     localStorage.setItem("@PAF:purchase", parsedData);
   },

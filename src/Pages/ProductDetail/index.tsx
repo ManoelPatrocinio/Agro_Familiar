@@ -11,7 +11,6 @@ import { Footer } from "../../Components/Footer";
 import { Header } from "../../Components/Header";
 import { IconAddList } from "../../Components/IconAddList";
 import { SectionTitle } from "../../Components/SectionTitle";
-import { PuchaseListContextType } from "../../Types/Contexts.type";
 import { Comment } from "../../Types/comment.type";
 import { Product } from "../../Types/product.type";
 import Star from "../../assets/images/star_icon.png";
@@ -30,9 +29,7 @@ export function ProductDetail() {
   >("description");
   const [commentsList, setCommentsList] = useState<Comment[]>([]);
 
-  const { AddToPuchaseList } = useContext(
-    PuchaseListContext
-  ) as PuchaseListContextType;
+  const { AddToPuchaseList } = useContext(PuchaseListContext);
   const { userLogged } = useContext(AuthContext);
   const {
     register,

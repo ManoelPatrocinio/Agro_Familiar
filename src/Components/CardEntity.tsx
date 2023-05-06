@@ -5,7 +5,7 @@ import { User } from "../Types/user.type";
 import IconAgropecuary from "../assets/images/Agropecuaria.png";
 import IconAgriculture from "../assets/images/agriculture.png";
 import IconAgroIndut from "../assets/images/agroIndus.png";
-import UserPhoto from "../assets/images/img_entity_profile_exemple.png";
+import UserPhoto from "../assets/images/exemple_user_profile.png";
 type Props = {
   entity: User;
 };

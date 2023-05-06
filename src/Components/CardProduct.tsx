@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { PuchaseListContextType } from "../Types/Contexts.type";
 import { Product } from "../Types/product.type";
 import { PuchaseListContext } from "../context/PuchaseListContext";
 import { IconAddList } from "./IconAddList";
@@ -10,10 +9,7 @@ type Prop = {
 };
 
 export function CardProduct({ product }: Prop) {
-  const { AddToPuchaseList } = useContext(
-    PuchaseListContext
-  ) as PuchaseListContextType;
-
+  const { AddToPuchaseList } = useContext(PuchaseListContext);
   return (
     <div className="w-[20rem] md:w-[16rem] h-[20rem] flex flex-col  mb-4 md:mb-8 hover:scale-110 transition duration-300 ease-in-out rounded-lg shadow-lg bg-white ">
       <Link

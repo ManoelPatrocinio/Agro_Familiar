@@ -1,6 +1,7 @@
 import { Trash } from "phosphor-react";
 import { useContext } from "react";
-import { PuchaseListContextType } from "../Types/Contexts.type";
+import Swal from "sweetalert2";
+import { AuthContext } from "../context/AuthContext";
 import { PuchaseListContext } from "../context/PuchaseListContext";
 
 export function PurchaseList() {
@@ -8,12 +9,28 @@ export function PurchaseList() {
     AddToPuchaseList,
     RemoveToPuchaseList,
     DeleteProductToPuchaseList,
+    SavePuchaseListOnBd,
+    DeletePurchaseList,
     purchaseList,
-  } = useContext(PuchaseListContext) as PuchaseListContextType;
-
-  const TotalPuchaseList = purchaseList.reduce((total, current) => {
-    return total + current.product.p_price! * current.quantity;
+  } = useContext(PuchaseListContext);
+  const { isAuthenticated } = useContext(AuthContext);
+  const TotalPuchaseList = purchaseList?.reduce((total, current) => {
+    return total + current?.product.p_price! * current.quantity;
   }, 0);
+
+  function handleDeletePurchaseList() {
+    Swal.fire({
+      icon: "question",
+      title: "Excluir",
+      showCancelButton: true,
+      confirmButtonText: "Sim",
+      text: "Deseja mesmo excluir sua lista de compra ?",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        DeletePurchaseList();
+      }
+    });
+  }
 
   return (
     <div
@@ -24,11 +41,12 @@ export function PurchaseList() {
     >
       <div className="offcanvas-header h-[7%] flex items-center justify-between p-4">
         <h5
-          className="w-full text-center text-md text-palm-700 mb-0 leading-normal font-semibold "
+          className="w-full text-center text-md text-palm-700 mb-0 leading-normal font-semibold my-4"
           id="PurchaseListLabel"
         >
           Lista de Compra
         </h5>
+
         <button
           type="button"
           className="btn-close box-content w-4 h-4 p-2 -my-5 -mr-2 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
@@ -36,8 +54,8 @@ export function PurchaseList() {
           aria-label="Close"
         ></button>
       </div>
-      <div className="offcanvas-body max-h-[70%] flex-grow p-4 overflow-y-auto">
-        {purchaseList.length > 0 && (
+      <div className="offcanvas-body max-h-[70%] flex-grow p-4 overflow-y-auto ">
+        {purchaseList && purchaseList.length > 0 && (
           <>
             {purchaseList?.map((item) => (
               <div
@@ -49,7 +67,7 @@ export function PurchaseList() {
                   className="w-[6.25rem] h-[6.25rem] md:w-[25%] md:h-32 md:max-w-[30%] rounded mr-[1%] md:mr-0 "
                 >
                   <img
-                    src={item.product.p_images![0]}
+                    src={item.product.p_images ? item.product.p_images[0] : ""}
                     alt={item.product.p_name}
                     className="w-full h-full rounded"
                     loading="lazy"
@@ -103,6 +121,15 @@ export function PurchaseList() {
           </>
         )}
       </div>
+      {isAuthenticated && purchaseList?.length > 0 && (
+        <button
+          onClick={() => handleDeletePurchaseList()}
+          className="text-gray-500 text-sm font-display py-3 underline underline-offset-4  hover:text-red-500 transition-all"
+        >
+          Excluir Lista de Compra
+        </button>
+      )}
+
       <div className="w-full h-[23%] flex flex-col justify-between border-t border-gray-200">
         <div className="w-full h-[40%] flex justify-between px-3 py-5">
           {" "}
@@ -111,7 +138,10 @@ export function PurchaseList() {
             R$ {TotalPuchaseList}
           </span>
         </div>
-        <button className="w-full h-[60%] text-lg  text-white  bg-green-600 py-4 leading-none">
+        <button
+          onClick={() => SavePuchaseListOnBd()}
+          className="w-full h-[60%] text-lg  text-white  bg-green-600 py-4 leading-none"
+        >
           Salvar Lista de Compra
           <br />
           <span className="d-block w-full text-center text-[12px] text-[#f9f9f9] ">

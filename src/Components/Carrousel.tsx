@@ -1,3 +1,4 @@
+import ImgHeaderCarousel_1_mobile from "../assets/images/header-slide-Mobile.jpg";
 import ImgHeaderCarousel_1 from "../assets/images/header_slide_1.png";
 import ImgHeaderCarousel_2 from "../assets/images/header_slide_2.jpg";
 
@@ -34,7 +35,13 @@ export function Carrousel() {
         <div className="carousel-item active float-left w-full h-full">
           <img
             src={ImgHeaderCarousel_1}
-            className="block w-full h-full"
+            className="hidden md:block w-full h-full"
+            alt="slide o melhor da agricultura familiar da sua região "
+            loading="lazy"
+          />
+          <img
+            src={ImgHeaderCarousel_1_mobile}
+            className="block md:hidden w-full h-full"
             alt="slide o melhor da agricultura familiar da sua região "
             loading="lazy"
           />

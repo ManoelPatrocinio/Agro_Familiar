@@ -9,8 +9,6 @@ import {
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { PuchaseListContextType } from "../Types/Contexts.type";
-import { Product } from "../Types/product.type";
 import Logo from "../assets/images/Logo.png";
 import exemple_user_profile from "../assets/images/exemple_user_profile.png";
 import { AuthContext } from "../context/AuthContext";
@@ -19,11 +17,6 @@ import { FormUserAccess } from "./FormUserAccess";
 import { Menu_Sidebar } from "./Menu_Sidebar";
 import { PurchaseList } from "./PurchaseList";
 
-interface IPuchaseList {
-  product: Product;
-  quantity: number;
-}
-
 interface Iprop {
   setSearch: React.Dispatch<React.SetStateAction<string>>;
   ItemSearched: string;
@@ -31,10 +24,7 @@ interface Iprop {
 
 export function Header({ setSearch, ItemSearched }: Iprop) {
   const [showForm, setShowForm] = useState<boolean>(false);
-  const { purchaseList } = useContext(
-    PuchaseListContext
-  ) as PuchaseListContextType;
-
+  const { purchaseList } = useContext(PuchaseListContext);
   const { userLogged } = useContext(AuthContext);
   const CheckLogout = () => {
     Swal.fire({
@@ -195,7 +185,7 @@ export function Header({ setSearch, ItemSearched }: Iprop) {
           >
             <ClipboardText size={40} color="#789B3D" />
             <span className="w-5 h-5 rounded-2xl bg-palm-700 text-white text-xs text-center leading-5 absolute top-[-6px] right-[-2px]">
-              {purchaseList?.length}
+              {purchaseList ? purchaseList?.length : 0}
             </span>{" "}
           </button>
           <PurchaseList />
