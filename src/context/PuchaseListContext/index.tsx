@@ -124,31 +124,32 @@ export const PuchaseListProvider = ({
         text: "Entre ou crie uma conta no portal, assim você poderá salvar e ter acesso a sua lista de compra em qualquer dispositivo 😀",
         showConfirmButton: true,
       });
-    }
-    if (purchaseList.length > 0) {
-      await api
-        .post("/CreateOrUpdate-purchaseList", PurchaseList)
-        .then((response) => {
-          Swal.fire({
-            icon: "success",
-            title: "Parabéns !",
-            text: response.data.message,
-            showConfirmButton: false,
-            timer: 1500,
+    } else {
+      if (purchaseList.length > 0) {
+        await api
+          .post("/CreateOrUpdate-purchaseList", PurchaseList)
+          .then((response) => {
+            Swal.fire({
+              icon: "success",
+              title: "Parabéns !",
+              text: response.data.message,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1700);
+          })
+          .catch((error) => {
+            console.error("data", error);
+            Swal.fire({
+              icon: "error",
+              title: "Oppss..",
+              text: error.response.data.message,
+              showConfirmButton: true,
+            });
           });
-          setTimeout(() => {
-            window.location.reload();
-          }, 1700);
-        })
-        .catch((error) => {
-          console.error("data", error);
-          Swal.fire({
-            icon: "error",
-            title: "Oppss..",
-            text: error.response.data.message,
-            showConfirmButton: true,
-          });
-        });
+      }
     }
   }
 
