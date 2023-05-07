@@ -126,7 +126,8 @@ export function Header({ setSearch, ItemSearched }: Iprop) {
               {userLogged ? (
                 <div className="w-full h-full ">
                   <div className="w-full h-full flex flex-col justify-center items-center">
-                    {userLogged!.u_img_profile!.length > 0 ? (
+                    {userLogged?.u_img_profile &&
+                    userLogged?.u_img_profile.length > 0 ? (
                       <img
                         src={userLogged.u_img_profile}
                         className="w-12 h-12 rounded-[50%]"
