@@ -1,4 +1,5 @@
-import { Route, Routes } from "react-router-dom";
+import { useContext } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { AboutUs } from "../Pages/AboutUs";
 import { ContactUs } from "../Pages/ContactUs";
 import { CreateProduct } from "../Pages/Dashboard/CreateProduct";
@@ -14,8 +15,27 @@ import { Products } from "../Pages/Products";
 import { RegisterEntity } from "../Pages/RegisterEntity";
 import { RegisterFarmer } from "../Pages/RegisterFarmer";
 import { WaitPage } from "../Pages/WaitPage";
+import { AuthContext } from "../context/AuthContext";
+interface IprotectedRoute {
+  isAllowed: boolean;
+  redirectPath: string;
+  children: JSX.Element;
+}
+const ProtectedRoute = ({
+  isAllowed,
+  redirectPath = "/",
+  children,
+}: IprotectedRoute) => {
+  if (!isAllowed) {
+    return <Navigate to={redirectPath} replace />;
+  }
+
+  return children;
+};
 
 export const SystemRoutes = () => {
+  const { isAuthenticated, userLogged } = useContext(AuthContext);
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -30,16 +50,50 @@ export const SystemRoutes = () => {
       <Route path="/Register-entity" element={<RegisterEntity />} />
       <Route path="/Register-farmer" element={<RegisterFarmer />} />
       <Route path="/WaitPage" element={<WaitPage />} />
-      <Route path="/Admin/create-product" element={<CreateProduct />} />
+      <Route
+        path="/Admin/create-product"
+        element={
+          <ProtectedRoute
+            isAllowed={!!isAuthenticated && userLogged?.u_type !== "customer"}
+            redirectPath="/"
+          >
+            <CreateProduct />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/Admin/create-product/:productId"
-        element={<CreateProduct />}
+        element={
+          <ProtectedRoute
+            isAllowed={!!isAuthenticated && userLogged?.u_type !== "customer"}
+            redirectPath="/"
+          >
+            <CreateProduct />
+          </ProtectedRoute>
+        }
       />
-      <Route path="/Admin/manager/:idUserLogged" element={<ManageProducts />} />
-      <Route path="/Admin/my-profile/:entityId" element={<ManageProfile />} />
-      {/* <Route path="/login" element={<Login/>} />
-            <Route path="/register" element={<Register/>} />
-   */}
+      <Route
+        path="/Admin/manager/:idUserLogged"
+        element={
+          <ProtectedRoute
+            isAllowed={!!isAuthenticated && userLogged?.u_type !== "customer"}
+            redirectPath="/"
+          >
+            <ManageProducts />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/Admin/my-profile/:entityId"
+        element={
+          <ProtectedRoute
+            isAllowed={!!isAuthenticated && userLogged?.u_type !== "customer"}
+            redirectPath="/"
+          >
+            <ManageProfile />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 };
