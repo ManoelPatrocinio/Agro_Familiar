@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import Swal from "sweetalert2";
@@ -11,10 +12,7 @@ import { Load_spinner } from "../../Components/load_spinner";
 import { Product } from "../../Types/product.type";
 import homePromotionImage1 from "../../assets/images/header_slide_2.jpg";
 import { api } from "../../hook/useApi";
-interface IPuchaseList {
-  product: Product;
-  quantity: number;
-}
+
 export function Home() {
   const [search, setSearch] = useState<string>("");
   const [productData, setProductData] = useState<Product[]>([]);
@@ -27,6 +25,7 @@ export function Home() {
     "homeGetAllProd",
     async () => {
       const response = await api.get("/all-enable-products");
+      //getUserPosition();
       return response.data.products;
     },
     {
@@ -83,6 +82,28 @@ export function Home() {
     setProductData(filtedList);
   }
 
+  async function getUserPosition() {
+    if ("geolocation" in navigator) {
+      await navigator.geolocation.getCurrentPosition(function (position) {
+        const lat: number = position.coords.latitude;
+        const long: number = position.coords.longitude;
+        if (lat && long) {
+          axios
+            .get(
+              `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${long}&format=json`
+            )
+            .then((response) => {
+              console.log("response", response.data.address.city);
+            })
+            .catch((err) => {
+              console.log("erro get location", err);
+            });
+        }
+      });
+    } else {
+      alert("Not Available");
+    }
+  }
   return (
     <>
       <Header setSearch={setSearch} ItemSearched={search} />

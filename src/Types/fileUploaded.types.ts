@@ -13,3 +13,15 @@ export type FileUploaded = {
   isUploaded?: boolean;
   itsError?: boolean;
 };
+
+export type File = {
+  path: string;
+  preview: any;
+  lastModified: number;
+  lastModifiedDate: Date;
+  name: string;
+  type: string;
+  size: number;
+  file: any;
+  webkitRelativePath?: string;
+};

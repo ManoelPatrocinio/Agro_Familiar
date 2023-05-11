@@ -1,9 +1,9 @@
 import { ErrorMessage } from "@hookform/error-message";
 import classNames from "classnames";
 import { Question } from "phosphor-react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { DropzoneInput } from "../../../Components/Dropzone";
 import { ImgPreview } from "../../../Components/ImgPreview";
@@ -22,35 +22,15 @@ export function CreateProduct() {
   const [prodData, setProductData] = useState<Product>();
   const [filesData, setFileData] = useState<FileUploaded[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { productId } = useParams();
   const { userLogged } = useContext(AuthContext);
+
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm<Product>();
 
-  useEffect(() => {
-    setIsLoading(true);
-    if (productId) {
-      api
-        .get(`/product/${productId}`)
-        .then((response) => {
-          setProductData(response.data.product);
-        })
-        .catch((error) => {
-          console.error(error);
-          Swal.fire({
-            icon: "error",
-            title: "Oppss",
-            text: "Desculpe, não foi possível  exibir as informações do produto.",
-          });
-        });
-    }
-    setIsLoading(false);
-  }, []);
-
-  //receive the file from dropzone component and set news props to display on other component ex: ImgPreview
+  //receive the file from dropzone component
   const handleUpload = (file: File) => {
     let finalListFile = filesData.concat(file);
     if (finalListFile.length <= 4) {
@@ -59,11 +39,13 @@ export function CreateProduct() {
   };
   function resetFilds() {
     setFileData([]);
+    setProductData(undefined);
   }
   const handleDelete = (url: string) => {
     return setFileData(filesData.filter((file) => file.preview !== url));
   };
 
+  //do upload img for filebase storage
   async function uploadImgs(formaData: Product) {
     let newData: string[] = [];
     setIsLoading(true);
@@ -112,8 +94,6 @@ export function CreateProduct() {
       p_images: imgsUrl,
       p_status: true,
     };
-    console.log("imgsUrl on send", imgsUrl);
-    console.log("newProductFormated", newProductFormated);
 
     await api
       .post("/admin/add-product", newProductFormated)
@@ -133,7 +113,6 @@ export function CreateProduct() {
       .catch((error) => {
         console.error("data", error);
         setIsLoading(false);
-
         Swal.fire({
           icon: "error",
           title: "Oppss..",
@@ -173,9 +152,7 @@ export function CreateProduct() {
           ) : (
             <>
               <h1 className="w-full text-center md:text-left text-md md:text-xl text-palm-700 font-semibold my-8 ">
-                {productId
-                  ? "Editar Informações do Produto"
-                  : "Cadastro de Produto"}
+                Cadastro de Produto
               </h1>
               <form className="w-full  h-full   md:py-10  md:mx-auto">
                 <div className="w-full flex flex-col md:flex-row items-center ">
@@ -206,7 +183,6 @@ export function CreateProduct() {
                       id="productName"
                       aria-describedby="productName"
                       placeholder="Digite aqui"
-                      defaultValue={prodData?.p_name}
                       {...register("p_name", {
                         required: "Campo Obrigatório",
                         minLength: {
@@ -257,7 +233,6 @@ export function CreateProduct() {
                          focus:border-blue-600 focus:outline-none"
                         aria-label="Default select example"
                         id="productCategory"
-                        defaultValue={prodData?.p_category}
                         {...register("p_category", {
                           required: "Campo Obrigatório",
                         })}
@@ -326,7 +301,6 @@ export function CreateProduct() {
                         id="productPrice"
                         aria-describedby="productPrice"
                         placeholder="R$"
-                        defaultValue={prodData?.p_price}
                         {...register("p_price", {
                           required: "Campo Obrigatório",
                           minLength: {
@@ -372,7 +346,6 @@ export function CreateProduct() {
                        focus:border-blue-600 focus:outline-none"
                         id="productOldPrice"
                         placeholder="R$"
-                        defaultValue={prodData?.p_old_price}
                         {...register("p_old_price", {
                           minLength: {
                             value: 1,
@@ -417,7 +390,6 @@ export function CreateProduct() {
                     focus:border-blue-600 focus:outline-none"
                         id="productStock"
                         aria-describedby="product stock"
-                        defaultValue={prodData?.p_stock}
                         {...register("p_stock", {
                           minLength: {
                             value: 1,
@@ -466,7 +438,6 @@ export function CreateProduct() {
                       maxLength={12}
                       aria-describedby="productWhatsApp"
                       placeholder="(DDD)9XXXX-XXXX"
-                      defaultValue={prodData?.p_n_contact}
                       {...register("p_n_contact", {
                         required: "Campo Obrigatório",
                         minLength: {
@@ -523,13 +494,12 @@ export function CreateProduct() {
                       id="productDescription"
                       rows={3}
                       placeholder="Informe aqui o máximo  de informações sobre o produto."
-                      defaultValue={prodData?.p_description}
                       {...register("p_description", {
                         required:
                           "Informe os detalhes do produto para continuar",
                         minLength: {
                           value: 11,
-                          message: "O nome deve ter mais de 1 caracteres",
+                          message: "O nome deve ter no mínimo caracteres",
                         },
                       })}
                     />

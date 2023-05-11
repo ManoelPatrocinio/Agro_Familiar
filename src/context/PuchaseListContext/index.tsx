@@ -38,8 +38,6 @@ export const PuchaseListProvider = ({
       api
         .get(`get-purchaseList/${userLogged?._id}`)
         .then((response) => {
-          console.log("response.data.purchaseList", response.data.purchaseList);
-
           setProductPurchaseList(response.data.purchaseList);
         })
         .catch((error) => {

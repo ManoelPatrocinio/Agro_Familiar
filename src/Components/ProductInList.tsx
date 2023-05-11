@@ -136,7 +136,7 @@ export function ProductInList({ product, alterStatus, deleteProduct }: IProp) {
             Deletar
           </button>
           <Link
-            to={`/Admin/create-product/${product._id}`}
+            to={`/Admin/edit-product/${product._id}`}
             className="text-center text-sm text-palm-700"
           >
             {" "}
@@ -156,7 +156,7 @@ export function ProductInList({ product, alterStatus, deleteProduct }: IProp) {
               <img
                 className="mx-auto"
                 src={Icon_enable}
-                alt="icone desativar"
+                alt="icone ativar"
                 loading="lazy"
               />
             ) : (
