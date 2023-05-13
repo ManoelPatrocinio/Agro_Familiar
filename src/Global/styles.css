@@ -30,6 +30,8 @@ html {
   --palm-700: #789b3d;
   --palm-500: #89b045;
 }
+
+/* *****  START SCROLLBAR STYLE *******/
 *::-webkit-scrollbar {
   width: 0.2rem;
   height: 0.5rem;
@@ -46,6 +48,43 @@ html {
   -webkit-box-shadow: inset 0 0 6px var(--Color-purple);
   box-shadow: inset 0 0 6px var(--Color-purple);
 }
+
+/* *****  END SCROLLBAR STYLE *******/
+/* *****  START MAIN SLIDE CARROUSEL STYLE *******/
+
+.carrousel-with-bgImg {
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+#carrousel-item-1 {
+  background-image: url('../assets/images/header_slide_1.png');
+}
+#carrousel-item-2,
+#section-separate1 {
+  background-image: url('../assets/images/header_slide_2.jpg');
+}
+
+@media (max-width: 580px) {
+  #carrousel-item-1 {
+    background-image: url('../assets/images/header-slide-Mobile.jpg');
+  }
+  #carrousel-item-2,
+  #section-separate1 {
+    background-image: url('../assets/images/header_slide_2_Mobile.jpg');
+  }
+}
+
+/* *****  END MAIN SLIDE CARROUSEL STYLE *******/
+
+.section_separation__carrousel-indicator {
+  width: 15px !important;
+  height:15px !important;
+  border-radius: 50% !important;
+  background-color: var(--palm-500) !important;
+}
+
+/* *****  START START RAITING STYLE *******/
 
 .star-rating {
   display: flex;
@@ -80,14 +119,14 @@ html {
 
 /* set shape of unselected label */
 .star-rating label::before {
-  content: "\2606";
+  content: '\2606';
   position: absolute;
   top: 0px;
   line-height: 26px;
 }
 /* set full star shape for checked label and those that come after it */
 .star-rating input:checked ~ label:before {
-  content: "\2605";
+  content: '\2605';
 }
 
 @-moz-document url-prefix() {
@@ -102,16 +141,17 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+/* *****  END START RAITING STYLE *******/
 
-/* Works for Firefox */
-input[type="number"] {
+/*  Works for Firefox */
+input[type='number'] {
   -moz-appearance: textfield;
 }
 
 /* ***** ANIMATES ***** */
 
 .border-animated::after {
-  content: "";
+  content: '';
   position: absolute;
   width: 100%;
   transform: scaleX(0);
@@ -134,19 +174,19 @@ input[type="number"] {
   transition: all 0.6s ease-in-out !important;
 }
 
-[data-animate="down"] {
+[data-animate='down'] {
   transform: translate3d(0, -100%, 0);
 }
 
-[data-animate="up"] {
+[data-animate='up'] {
   transform: translate3d(0, 100%, 0) !important;
 }
 
-[data-animate="left"] {
+[data-animate='left'] {
   transform: translate3d(-100%, 0, 0);
 }
 
-[data-animate="right"] {
+[data-animate='right'] {
   transform: translate3d(50px, 0, 0);
 }
 

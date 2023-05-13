@@ -24,10 +24,11 @@ import {
 export function EditProduct() {
   const { productId } = useParams();
   const queryClient = useQueryClient();
+  const { userLogged } = useContext(AuthContext);
   const navigate = useNavigate();
   const [producUrls, setProductUrls] = useState<string[]>([]);
   const [filesUpload, setFilesUpload] = useState<File[]>([]);
-  const { userLogged } = useContext(AuthContext);
+  const [isLoading, setIsloading] = useState<boolean>(false);
 
   const {
     register,
@@ -66,10 +67,6 @@ export function EditProduct() {
       setFilesUpload(finalListFile);
     }
   };
-  function resetFilds() {
-    setFilesUpload([]);
-    setProductUrls([]);
-  }
   const handleDelete = (url: string) => {
     return setFilesUpload(
       filesUpload.filter((file: FileUploaded) => file.preview !== url)
@@ -97,23 +94,27 @@ export function EditProduct() {
         });
     }
   }
-
   //do upload img for filebase storage
-  async function uploadImgs(formaData: Product) {
+  async function uploadImgs(formData: Product) {
+    setIsloading(true);
     let newData: string[] = [];
-    filesUpload.forEach(async (item) => {
-      const { url } = await FirebaseUploadFile(item as File, '/products');
-      if (url) {
-        newData.push(url);
-        check(filesUpload, newData, formaData);
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Oppss',
-          text: 'Desculpe, uma imagem não pode ser salva',
-        });
-      }
-    });
+    if (filesUpload.length > 0) {
+      filesUpload.forEach(async (item) => {
+        const { url } = await FirebaseUploadFile(item as File, '/products');
+        if (url) {
+          newData.push(url);
+          check(filesUpload, newData, formData);
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oppss',
+            text: 'Desculpe, uma imagem não pode ser salva',
+          });
+        }
+      });
+    } else {
+      sendProductUpdated(formData, 'updateProduct', product.p_images);
+    }
   }
 
   function check(
@@ -159,9 +160,16 @@ export function EditProduct() {
           showConfirmButton: false,
           timer: 1500,
         });
-        setFilesUpload([]);
-        queryClient.invalidateQueries(['editProduct']);
-        navigate(`/Admin/edit-product/${productId}`);
+        if (typeRequest === 'updateImgs') {
+          console.log('img updated');
+          navigate('/Admin/create-product');
+        } else {
+          setFilesUpload([]);
+          queryClient.invalidateQueries(['manageProducts']);
+          setProductUrls(response.data.entityAndproduct.product.p_images);
+
+          // navigate('/Admin/create-product');
+        }
       })
       .catch((error) => {
         console.error('data', error);
@@ -171,6 +179,9 @@ export function EditProduct() {
           text: error.response.data.message,
           showConfirmButton: true,
         });
+      })
+      .finally(() => {
+        setIsloading(false);
       });
   };
 
@@ -191,10 +202,10 @@ export function EditProduct() {
           <MenuOfDashboard />
         </div>
         <div className='relative w-full md:w-[75%] h-full px-8'>
-          {isFetching ? (
+          {isFetching || isLoading ? (
             <Load_spinner
               adicionalClass='w-full h-screen bg-white '
-              message={'Salvando produto,aguarde ...'}
+              message={'Processando, aguarde ...'}
             />
           ) : (
             <>
@@ -674,6 +685,7 @@ export function EditProduct() {
                 <button
                   type='submit'
                   onClick={handleSubmit(uploadImgs)}
+                  disabled={isLoading}
                   className=' block w-[90%] md:w-1/4 mx-auto md:mx-0 my-8 py-3 px-3 text-white text-md font-semibold  bg-palm-700 rounded '
                 >
                   Atualizar produto
