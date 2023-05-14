@@ -103,7 +103,7 @@ export function ProductDetail() {
             a comentar e ajude o nosso perfil 😀
           </h4>
         ) : (
-          <div className='w-full max-h-[25rem] overflow-y-auto md:pl-20  '>
+          <div className='w-full max-h-[25rem] overflow-y-auto md:pl-8'>
             {commentsList.map((comment) => (
               <CardComment comment={comment} key={comment._id} />
             ))}
@@ -508,7 +508,7 @@ export function ProductDetail() {
       <section className='w-full flex flex-col items-start justify-start px-8 md:px-20 mt-8'>
         <header className='w-full flex items-center font-medium justify-evenly py-3 text-center text-lg text-palm-700   underline-offset-4 mb-8'>
           <button
-            className=' focus:underline '
+            className='hover:text-palm-900 focus:underline '
             onClick={() => {
               setViewProdDetail('description');
             }}
@@ -517,7 +517,7 @@ export function ProductDetail() {
             Descrição
           </button>
           <button
-            className=' focus:underline '
+            className='hover:text-palm-900 focus:underline '
             onClick={() => {
               setViewProdDetail('reviews');
             }}

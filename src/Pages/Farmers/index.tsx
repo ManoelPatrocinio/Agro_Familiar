@@ -150,42 +150,6 @@ export function Farmers() {
                       {farmersData?.map((entity) => (
                         <CardEntity entity={entity} key={entity._id} />
                       ))}
-                      {farmersData?.map((entity) => (
-                        <CardEntity entity={entity} key={entity._id} />
-                      ))}
-                      {farmersData?.map((entity) => (
-                        <CardEntity entity={entity} key={entity._id} />
-                      ))}
-                      {farmersData?.map((entity) => (
-                        <CardEntity entity={entity} key={entity._id} />
-                      ))}
-                      {farmersData?.map((entity) => (
-                        <CardEntity entity={entity} key={entity._id} />
-                      ))}
-                      {farmersData?.map((entity) => (
-                        <CardEntity entity={entity} key={entity._id} />
-                      ))}
-                      {farmersData?.map((entity) => (
-                        <CardEntity entity={entity} key={entity._id} />
-                      ))}
-                      {farmersData?.map((entity) => (
-                        <CardEntity entity={entity} key={entity._id} />
-                      ))}
-                      {farmersData?.map((entity) => (
-                        <CardEntity entity={entity} key={entity._id} />
-                      ))}
-                      {farmersData?.map((entity) => (
-                        <CardEntity entity={entity} key={entity._id} />
-                      ))}
-                      {farmersData?.map((entity) => (
-                        <CardEntity entity={entity} key={entity._id} />
-                      ))}
-                      {farmersData?.map((entity) => (
-                        <CardEntity entity={entity} key={entity._id} />
-                      ))}
-                      {farmersData?.map((entity) => (
-                        <CardEntity entity={entity} key={entity._id} />
-                      ))}
                     </div>
                   )}
                 </>

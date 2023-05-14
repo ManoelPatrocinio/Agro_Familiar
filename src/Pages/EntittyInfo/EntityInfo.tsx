@@ -276,7 +276,7 @@ export function EntityInfo() {
               comentar e ajude o nosso perfil 😀
             </h4>
           ) : (
-            <div className='w-full max-h-[25rem] overflow-y-auto md:pl-20  '>
+            <div className='w-full max-h-[25rem] overflow-y-auto md:pl-8  '>
               {commentsList.map((comment) => (
                 <CardComment comment={comment} key={comment._id} />
               ))}
