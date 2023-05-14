@@ -11,10 +11,10 @@ type Prop = {
 export function CardProduct({ product }: Prop) {
   const { AddToPuchaseList } = useContext(PuchaseListContext);
   return (
-    <div className='w-[15rem] md:w-[15rem] h-[18rem] flex flex-col  mb-4 md:mb-8 hover:scale-110 transition duration-300 ease-in-out rounded-lg shadow-lg bg-white '>
+    <div className='w-[10rem] h-[13rem] md:w-[15rem] md:h-[18rem] flex flex-col  hover:scale-110 transition duration-300 ease-in-out rounded-lg shadow-lg bg-white '>
       <Link
         to={`/Product-detail/${product._id}`}
-        className='block h-[57%] w-full'
+        className='block h-1/2 md:h-[57%] w-full'
       >
         <img
           className='rounded-t-lg w-full h-full'
@@ -23,8 +23,8 @@ export function CardProduct({ product }: Prop) {
           loading='lazy'
         />
       </Link>
-      <div className='py-2 px-3 w-full h-[43%] flex flex-col justify-between'>
-        <h5 className='w-full h-6 text-center text-ellipsis whitespace-nowrap overflow-hidden  text-gray-700 text-sm font-medium  '>
+      <div className='py-2 px-3 w-full h-1/2 md:h-[43%] flex flex-col justify-between'>
+        <h5 className='w-full h-6 text-center text-gray-700 text-xs md:text-sm font-medium text-ellipsis whitespace-nowrap overflow-hidden    '>
           {product.p_name}
         </h5>
 
@@ -37,7 +37,7 @@ export function CardProduct({ product }: Prop) {
         </div>
         <button
           type='button'
-          className='checked:bg-blue-500 w-full flex items-center justify-center py-3 md:py-2.5 bg-green-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-green-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out'
+          className='checked:bg-blue-500 w-full flex items-center justify-center py-2 md:py-2.5 bg-green-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-green-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out'
           onClick={() => AddToPuchaseList(product)}
         >
           <IconAddList w={'20'} h={'20'} color='#fff' className='mr-1' />

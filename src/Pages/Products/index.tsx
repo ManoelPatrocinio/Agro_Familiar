@@ -1,28 +1,28 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { Funnel } from "phosphor-react";
-import { useQuery } from "react-query";
-import Swal from "sweetalert2";
-import { CardProduct } from "../../Components/CardProduct";
-import { Carrousel } from "../../Components/Carrousel";
-import { Dropdrown } from "../../Components/Dropdrown";
-import { Empty_search } from "../../Components/Empty_search";
-import { Filter_category } from "../../Components/Filter_category";
-import { Footer } from "../../Components/Footer";
-import { Header } from "../../Components/Header";
-import { Pagination } from "../../Components/Pagination";
-import { SectionTitle } from "../../Components/SectionTitle";
-import { Load_spinner } from "../../Components/load_spinner";
-import { Product } from "../../Types/product.type";
-import { api } from "../../hook/useApi";
+import { Funnel } from 'phosphor-react';
+import { useQuery } from 'react-query';
+import Swal from 'sweetalert2';
+import { CardProduct } from '../../Components/CardProduct';
+import { Carrousel } from '../../Components/Carrousel';
+import { Dropdrown } from '../../Components/Dropdrown';
+import { Empty_search } from '../../Components/Empty_search';
+import { Filter_category } from '../../Components/Filter_category';
+import { Footer } from '../../Components/Footer';
+import { Header } from '../../Components/Header';
+import { Pagination } from '../../Components/Pagination';
+import { SectionTitle } from '../../Components/SectionTitle';
+import { Load_spinner } from '../../Components/load_spinner';
+import { Product } from '../../Types/product.type';
+import { api } from '../../hook/useApi';
 
 let total: number = 0; //number of products in the list, to calculate the number must be  pages shown
-let categorySelected: string = "Produtos";
+let categorySelected: string = 'Produtos';
 
 export function Products() {
   const [toggleFilterVisibility, SetToggleFilterVisibility] =
     useState<boolean>(false);
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
   const [productData, setProductData] = useState<Product[]>([]);
   const [offSet, setOffSet] = useState<number>(0);
   const Limit_perPage = 9; //cards number shown per page
@@ -31,9 +31,9 @@ export function Products() {
     isFetching,
     error,
   } = useQuery<Product[]>(
-    ["productsPage"],
+    ['productsPage'],
     async () => {
-      const response = await api.get("/all-enable-products");
+      const response = await api.get('/all-enable-products');
       filterByPagination(response.data.products, offSet);
 
       total = response.data.products.length;
@@ -46,9 +46,9 @@ export function Products() {
 
   if (error) {
     Swal.fire({
-      icon: "error",
-      title: "Oppss",
-      text: "Desculpe, não foi possível  exibir suas informações, tente novamente, por favor",
+      icon: 'error',
+      title: 'Oppss',
+      text: 'Desculpe, não foi possível  exibir suas informações, tente novamente, por favor',
     });
   }
 
@@ -67,10 +67,10 @@ export function Products() {
   }
 
   function filterByCategory(category: string) {
-    setSearch("");
+    setSearch('');
     setOffSet(0);
     categorySelected = category;
-    if (category === "Produtos") {
+    if (category === 'Produtos') {
       setPagination(offSet, productAPi);
       total = productAPi?.length!;
     } else {
@@ -95,15 +95,15 @@ export function Products() {
     let filtedList: Product[] = [];
     setOffSet(0);
 
-    if (orderType === "Menor Preço") {
+    if (orderType === 'Menor Preço') {
       filtedList = productAPi!.sort((prev, next) => {
         return prev.p_price! - next.p_price!;
       });
-    } else if (orderType === "Maior Preço") {
+    } else if (orderType === 'Maior Preço') {
       filtedList = productAPi!.sort((prev, next) => {
         return next.p_price! - prev.p_price!;
       });
-    } else if (orderType === "De A a Z") {
+    } else if (orderType === 'De A a Z') {
       filtedList = productAPi!.sort((prev, next) => {
         let prevUpperCase = prev.p_name?.toUpperCase(),
           nextUpperCase = next.p_name?.toUpperCase();
@@ -113,7 +113,7 @@ export function Products() {
           ? 1
           : -1;
       });
-    } else if (orderType == "De Z a A") {
+    } else if (orderType == 'De Z a A') {
       filtedList = productAPi!.sort((prev, next) => {
         let prevUpperCase = prev.p_name?.toUpperCase(),
           nextUpperCase = next.p_name?.toUpperCase();
@@ -132,68 +132,68 @@ export function Products() {
       <Header setSearch={setSearch} ItemSearched={search} />
       <Carrousel />
 
-      <main className="flex items-start flex-col px-8 md:px-20">
+      <main className='flex items-start flex-col px-1 md:px-20'>
         <SectionTitle
           title={categorySelected}
-          className={"my-6 mb-6 md:mb-12"}
+          className={'my-6 mb-6 md:mb-12'}
         />
 
-        <div className="relative w-full flex items-start justify-between ">
+        <div className='relative w-full flex items-start justify-between '>
           <Filter_category
             ToggleFilterVisibility={SetToggleFilterVisibility}
             mobileVisiblity={toggleFilterVisibility}
             filterByCategory={filterByCategory}
           />
-          <div className="w-full md:w-3/4 flex flex-col  items-start">
-            <div className="w-full flex justify-between md:justify-start ">
+          <div className='w-full md:w-3/4 flex flex-col  items-start'>
+            <div className='w-full flex justify-between md:justify-start px-2'>
               <Dropdrown
-                items={["Menor Preço", "Maior Preço", "De A a Z", "De Z a A"]}
+                items={['Menor Preço', 'Maior Preço', 'De A a Z', 'De Z a A']}
                 setOptionOrder={filteredProdListByOrderType}
               />
               <button
                 onClick={() =>
                   SetToggleFilterVisibility(!toggleFilterVisibility)
                 }
-                className=" md:hidden text-xs text-gray-800 flex items-center whitespace-nowrap "
+                className=' md:hidden text-xs text-gray-800 flex items-center whitespace-nowrap '
               >
-                <Funnel size={20} className="mr-2" />
+                <Funnel size={20} className='mr-2' />
                 Filtrar
               </button>
             </div>
-            <div className="w-full min-h-screen flex flex-wrap justify-around my-4 ">
+            <div className='w-full min-h-screen mb-8  '>
               {isFetching ? (
                 <Load_spinner
-                  adicionalClass="w-screen h-screen"
-                  message="Carregando Produtos ..."
+                  adicionalClass='w-full h-screen'
+                  message='Carregando Produtos ...'
                 />
               ) : (
-                <>
+                <div className='w-full h-full'>
                   {search?.length > 0 && (
-                    <>
+                    <div className='w-full  h-full min-h-screen flex flex-wrap justify-around my-4 gap-4 '>
                       {filteredProdList?.map((product) => (
                         <CardProduct product={product} key={product._id} />
                       ))}
-                    </>
+                    </div>
                   )}
 
                   {search?.length === 0 && (
-                    <>
-                      {" "}
+                    <div className='w-full h-full'>
+                      {' '}
                       {productData.length === 0 ? (
                         <Empty_search
-                          text="Ainda não temos itens nesta categoria "
-                          classAdicinonal="h-screen w-full justify-center"
+                          text='Ainda não temos itens nesta categoria '
+                          classAdicinonal='h-screen w-full justify-center'
                         />
                       ) : (
-                        <>
+                        <div className='w-full flex flex-wrap  justify-around gap-4 pt-4 '>
                           {productData?.map((product) => (
                             <CardProduct product={product} key={product._id} />
                           ))}
-                        </>
+                        </div>
                       )}
-                    </>
+                    </div>
                   )}
-                </>
+                </div>
               )}
             </div>
             {productData.length > 0 && (

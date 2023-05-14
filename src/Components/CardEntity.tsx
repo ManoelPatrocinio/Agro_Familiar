@@ -15,7 +15,7 @@ export function CardEntity({ entity }: Props) {
       className={classNames(
         'flex flex-col justify-between  pt-4 mt-4 mb-8 border border-gray-400 rounded  hover:scale-110 transition duration-300 ease-in-out',
         {
-          'w-[19rem] h-[14rem]': entity.u_type === 'farmer',
+          'w-[10rem] md:w-[19rem]  h-[14rem]': entity.u_type === 'farmer',
           'w-[21.25rem]  h-[13rem]': entity.u_type !== 'farmer',
         }
       )}
@@ -24,9 +24,9 @@ export function CardEntity({ entity }: Props) {
         <>
           <div className='w-[5rem] h-[5rem] mx-auto mb-2'>
             <img
-              src={UserPhoto}
+              src={!entity.u_img_profile ? UserPhoto : entity.u_img_profile}
               alt='foto de perfil'
-              className='w-full h-full'
+              className='w-full h-full rounded-[50%]'
               loading='lazy'
             />
           </div>
@@ -86,7 +86,7 @@ export function CardEntity({ entity }: Props) {
       <a
         href={`http://api.whatsapp.com/send?l=pt_BR&phone=+55${entity.u_main_contact}&text=Olá, tudo bem ?`}
         target='_blank'
-        className='w-full flex justify-center items-center px-2 py-2.5 bg-green-600 text-white  text-sm leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out'
+        className='w-full flex justify-center items-center px-2 py-2 md:py-2.5 bg-green-600 text-white text-xs md:text-sm leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out'
       >
         <WhatsappLogo size={32} color='#fff' />
         Conversar

@@ -1,25 +1,25 @@
-import { useState } from "react";
-import { useQuery } from "react-query";
-import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
-import { CardEntity } from "../../Components/CardEntity";
-import { Carrousel } from "../../Components/Carrousel";
-import { Dropdrown } from "../../Components/Dropdrown";
-import { Empty_search } from "../../Components/Empty_search";
-import { Footer } from "../../Components/Footer";
-import { Header } from "../../Components/Header";
-import { Pagination } from "../../Components/Pagination";
-import { SectionTitle } from "../../Components/SectionTitle";
-import { Load_spinner } from "../../Components/load_spinner";
-import { User } from "../../Types/user.type";
-import entitiesPromotionImage1 from "../../assets/images/banner_joinUs.jpeg";
-import iconFarmeWhite from "../../assets/images/icon-farmer-white.png";
-import iconEntityWhite from "../../assets/images/icone-entity-white.png";
-import { api } from "../../hook/useApi";
+import { useState } from 'react';
+import { useQuery } from 'react-query';
+import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { CardEntity } from '../../Components/CardEntity';
+import { Carrousel } from '../../Components/Carrousel';
+import { Dropdrown } from '../../Components/Dropdrown';
+import { Empty_search } from '../../Components/Empty_search';
+import { Footer } from '../../Components/Footer';
+import { Header } from '../../Components/Header';
+import { Pagination } from '../../Components/Pagination';
+import { SectionTitle } from '../../Components/SectionTitle';
+import { Load_spinner } from '../../Components/load_spinner';
+import { User } from '../../Types/user.type';
+import entitiesPromotionImage1 from '../../assets/images/banner_joinUs.jpeg';
+import iconFarmeWhite from '../../assets/images/icon-farmer-white.png';
+import iconEntityWhite from '../../assets/images/icone-entity-white.png';
+import { api } from '../../hook/useApi';
 let total: number = 0; //number of products in the list, to calculate the number must be  pages shown
 
 export function Entities() {
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
   const [entitiesData, setEntitiesData] = useState<User[]>([]);
   const [offSet, setOffSet] = useState<number>(0);
 
@@ -30,10 +30,10 @@ export function Entities() {
     isFetching,
     error,
   } = useQuery<User[]>(
-    ["entitiesPages"],
+    ['entitiesPages'],
     async () => {
-      const response = await api.get("/all-entity");
-      filterByTypeEntity("assoc", response.data.entities);
+      const response = await api.get('/all-entity');
+      filterByTypeEntity('assoc', response.data.entities);
       total = response.data.entities.length;
       return response.data.entities;
     },
@@ -44,12 +44,11 @@ export function Entities() {
 
   if (error) {
     Swal.fire({
-      icon: "error",
-      title: "Oppss",
-      text: "Desculpe, não foi possível  exibir as organizações cadastradas, tente novamente.",
+      icon: 'error',
+      title: 'Oppss',
+      text: 'Desculpe, não foi possível  exibir as organizações cadastradas, tente novamente.',
     });
   }
-  console.log("total", total);
   function setPagination(offset: number, entityArray?: User[]) {
     setOffSet(offset);
     entityArray
@@ -64,8 +63,8 @@ export function Entities() {
     list.length > 0 && setEntitiesData(list);
   }
 
-  function filterByTypeEntity(entityType: string = "assoc", entities?: User[]) {
-    setSearch("");
+  function filterByTypeEntity(entityType: string = 'assoc', entities?: User[]) {
+    setSearch('');
     setOffSet(0);
     let filtedList: User[] = [];
     if (entities) {
@@ -95,7 +94,7 @@ export function Entities() {
     let filtedList: User[] = [];
     setOffSet(0);
 
-    if (orderType === "De A a Z") {
+    if (orderType === 'De A a Z') {
       filtedList = entitiesAPi!.sort((prev, next) => {
         let prevUpperCase = prev.u_entity_name?.toUpperCase(),
           nextUpperCase = next.u_entity_name?.toUpperCase();
@@ -105,7 +104,7 @@ export function Entities() {
           ? 1
           : -1;
       });
-    } else if (orderType == "De Z a A") {
+    } else if (orderType == 'De Z a A') {
       filtedList = entitiesAPi!.sort((prev, next) => {
         let prevUpperCase = prev.u_entity_name?.toUpperCase(),
           nextUpperCase = next.u_entity_name?.toUpperCase();
@@ -123,34 +122,34 @@ export function Entities() {
     <>
       <Header setSearch={setSearch} ItemSearched={search} />
       <Carrousel />
-      <main className=" w-full flex items-start flex-col px-6 md:px-20">
-        <SectionTitle title="Entidades" className={"my-6 w-full"} />
+      <main className=' w-full flex items-start flex-col px-6 md:px-20'>
+        <SectionTitle title='Entidades' className={'my-6 w-full'} />
 
-        <div className="w-full flex justify-around py-3 ">
+        <div className='w-full flex justify-around py-3 '>
           <button
-            onClick={() => filterByTypeEntity("assoc")}
-            className="mx-2 md:mx-0 text-sm md:text-lg font-display text-center text-gray-800 hover:text-palm-700 focus:text-palm-700 transition-all"
+            onClick={() => filterByTypeEntity('assoc')}
+            className='mx-2 md:mx-0 text-sm md:text-lg font-display text-center text-gray-800 hover:text-palm-700 focus:text-palm-700 transition-all'
           >
             Associações
           </button>
 
           <button
-            onClick={() => filterByTypeEntity("coop")}
-            className="mx-2 md:mx-0  text-sm md:text-lg font-display text-center text-gray-800 hover:text-palm-700 focus:text-palm-700 transition-all"
+            onClick={() => filterByTypeEntity('coop')}
+            className='mx-2 md:mx-0  text-sm md:text-lg font-display text-center text-gray-800 hover:text-palm-700 focus:text-palm-700 transition-all'
           >
             Cooperativas
           </button>
         </div>
         <Dropdrown
-          items={["De A a Z", "De Z a A"]}
+          items={['De A a Z', 'De Z a A']}
           setOptionOrder={filteredProdListByOrderType}
         />
 
-        <div className="w-full h-auto min-h-[50vh] flex flex-wrap justify-around mb-4 ">
+        <div className='w-full h-auto min-h-[50vh] flex flex-wrap justify-around mb-4 '>
           {isFetching ? (
             <Load_spinner
-              adicionalClass="w-screen h-screen"
-              message="Carregando Organizações ..."
+              adicionalClass='w-screen h-screen'
+              message='Carregando Organizações ...'
             />
           ) : (
             <>
@@ -164,11 +163,11 @@ export function Entities() {
 
               {search?.length === 0 && (
                 <>
-                  {" "}
+                  {' '}
                   {entitiesData.length === 0 ? (
                     <Empty_search
-                      text="Ainda não temos esse tipo de organização nessa região "
-                      classAdicinonal="h-screen w-full justify-center"
+                      text='Ainda não temos esse tipo de organização nessa região '
+                      classAdicinonal='h-screen w-full justify-center'
                     />
                   ) : (
                     <>
@@ -191,50 +190,50 @@ export function Entities() {
           />
         )}
         <div
-          className="w-full  h-auto  bg-no-repeat bg-[length:100%_100%]  mt-8 rounded"
+          className='w-full  h-auto  bg-no-repeat bg-[length:100%_100%]  mt-8 rounded'
           style={{ backgroundImage: `url(${entitiesPromotionImage1})` }}
         >
-          <div className="bg-[rgba(0,0,0,0.7)] w-full h-auto px-2 py-8 rounded ">
-            <h3 className="w-full text-center text-md text-white font-bold mb-4">
+          <div className='bg-[rgba(0,0,0,0.7)] w-full h-auto px-2 py-8 rounded '>
+            <h3 className='w-full text-center text-md text-white font-bold mb-4'>
               Faça parte do Potal Agro Familiar
             </h3>
-            <p className="w-full text-justify md:text-center text-sm text-white mb-8 leading-6">
+            <p className='w-full text-justify md:text-center text-sm text-white mb-8 leading-6'>
               Esse portal foi criado como objetivo de aumentar a visibilidade e
               os meios de divulgação das Associações, Cooperativas e produtores
               individuais, além, de trazer maior proximidade com o consumidor
               interessado em produtos da agricultura familiar da sua região.
               <br />
-              <span className="underline decoration-1 ">
-                {" "}
-                Cadastre-se, e faça parte dessa iniciativa
+              <span className='underline decoration-1 '>
+                {' '}
+                Cadastre-se, e faça parte dessa iniciativa !
               </span>
             </p>
-            <div className="w-full h-auto flex  flex-wrap justify-around items-center">
+            <div className='w-full h-auto flex  flex-wrap justify-around items-center'>
               <Link
-                to="/Register-entity"
-                className="w-[17rem] h-[8.5rem] border border-white flex flex-col justify-center items-center  rounded hover:scale-110 transition duration-300 ease-in-out"
+                to='/Register-entity'
+                className='w-[17rem] h-[8.5rem] border border-white flex flex-col justify-center items-center  rounded hover:scale-110 transition duration-300 ease-in-out'
               >
                 <img
                   src={iconEntityWhite}
-                  alt="icon Cadastro como Associação"
-                  className="h-[5.5rem] max-h-24 mx-auto"
-                  loading="lazy"
+                  alt='icon Cadastro como Associação'
+                  className='h-[5.5rem] max-h-24 mx-auto'
+                  loading='lazy'
                 />
-                <span className="w-full text-center text-sm text-white font-bold">
+                <span className='w-full text-center text-sm text-white font-bold'>
                   Cadastro de Assoc/Coop
                 </span>
               </Link>
               <Link
-                to="/Register-farmer"
-                className="w-[17rem] h-[8.5rem] border border-white flex flex-col justify-center items-center py-4 my-6 md:my-0 rounded hover:scale-110 transition duration-300 ease-in-out"
+                to='/Register-farmer'
+                className='w-[17rem] h-[8.5rem] border border-white flex flex-col justify-center items-center py-4 my-6 md:my-0 rounded hover:scale-110 transition duration-300 ease-in-out'
               >
                 <img
                   src={iconFarmeWhite}
-                  alt="icon Cadastro como Associação"
-                  className="h-[5.5rem] max-h-24 mx-auto"
-                  loading="lazy"
+                  alt='icon Cadastro como Associação'
+                  className='h-[5.5rem] max-h-24 mx-auto'
+                  loading='lazy'
                 />
-                <span className="w-full text-center text-sm text-white font-bold">
+                <span className='w-full text-center text-sm text-white font-bold'>
                   Cadastro como Produtor Individual
                 </span>
               </Link>

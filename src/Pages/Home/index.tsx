@@ -125,7 +125,7 @@ export function Home() {
           setOptionOrder={filteredProdListByOrderType}
         />
 
-        <div className='w-full flex flex-wrap justify-around pt-4 px-2 '>
+        <div className='w-full flex flex-wrap justify-around gap-4 pt-4 px-2 '>
           {isFetching ? (
             <Load_spinner
               adicionalClass='w-screen h-screen'
@@ -164,10 +164,10 @@ export function Home() {
         </div>
         <div
           id='section-separate1'
-          className=' w-full  h-48 md:h-80  carrousel-with-bgImg my-4 rounded'
+          className='w-full  h-48 md:h-80  carrousel-with-bgImg my-4 rounded'
         ></div>
         <SectionTitle title={'Recém Adicionados'} className={'my-6 w-full'} />
-        <div className='w-full flex flex-wrap justify-around pt-4 px-2 '>
+        <div className='w-full flex flex-wrap  justify-around gap-4 pt-4 px-2 '>
           {isFetching ? (
             <Load_spinner
               adicionalClass='w-screen h-screen'

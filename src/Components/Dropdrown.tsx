@@ -1,5 +1,5 @@
-import { FunnelSimple } from "phosphor-react";
-import { Link } from "react-router-dom";
+import { FunnelSimple } from 'phosphor-react';
+import { Link } from 'react-router-dom';
 
 type Props = {
   items: string[];
@@ -7,13 +7,13 @@ type Props = {
 };
 export function Dropdrown({ items, setOptionOrder }: Props) {
   return (
-    <div className="flex justify-center">
+    <div className='flex justify-center'>
       <div>
-        <div className="dropdown relative">
+        <div className='dropdown relative'>
           <Link
-            className="
+            className='
               dropdown-toggle
-              px-0
+              px-2
               md:px-6
               py-2.5
               text-gray-800
@@ -28,33 +28,33 @@ export function Dropdrown({ items, setOptionOrder }: Props) {
               flex
               items-center
               whitespace-nowrap
-            "
-            to="#"
-            type="button"
-            id="dropdownMenuButton2"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
+            '
+            to='#'
+            type='button'
+            id='dropdownMenuButton2'
+            data-bs-toggle='dropdown'
+            aria-expanded='false'
           >
-            <FunnelSimple size={20} className="mr-2" />
+            <FunnelSimple size={20} className='mr-2' />
             Ordenar Por:
             <svg
-              aria-hidden="true"
-              focusable="false"
-              data-prefix="fas"
-              data-icon="caret-down"
-              className="w-2 ml-2"
-              role="img"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 320 512"
+              aria-hidden='true'
+              focusable='false'
+              data-prefix='fas'
+              data-icon='caret-down'
+              className='w-2 ml-2'
+              role='img'
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 320 512'
             >
               <path
-                fill="currentColor"
-                d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+                fill='currentColor'
+                d='M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z'
               ></path>
             </svg>
           </Link>
           <ul
-            className="
+            className='
               dropdown-menu
               min-w-max
               absolute
@@ -72,15 +72,15 @@ export function Dropdrown({ items, setOptionOrder }: Props) {
               m-0
               bg-clip-padding
               border-none
-            "
-            aria-labelledby="dropdownMenuButton2"
+            '
+            aria-labelledby='dropdownMenuButton2'
           >
             {items.map((item) => {
               return (
                 <li
                   key={item}
                   onClick={() => setOptionOrder(item)}
-                  className="
+                  className='
                       dropdown-item
           
                       text-sm
@@ -93,9 +93,9 @@ export function Dropdrown({ items, setOptionOrder }: Props) {
                       bg-transparent
                       text-gray-700
                       hover:bg-gray-100
-                    "
+                    '
                 >
-                  <button className="w-full h-full text-left">{item}</button>
+                  <button className='w-full h-full text-left'>{item}</button>
                 </li>
               );
             })}
