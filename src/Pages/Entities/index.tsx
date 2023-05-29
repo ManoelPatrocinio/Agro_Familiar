@@ -195,12 +195,12 @@ export function Entities() {
         >
           <div className='bg-[rgba(0,0,0,0.7)] w-full h-auto px-2 py-8 rounded '>
             <h3 className='w-full text-center text-md text-white font-bold mb-4'>
-              Faça parte do Potal Agro Familiar
+              Faça parte do Portal Agro Familiar
             </h3>
             <p className='w-full text-justify md:text-center text-sm text-white mb-8 leading-6'>
               Esse portal foi criado como objetivo de aumentar a visibilidade e
               os meios de divulgação das Associações, Cooperativas e produtores
-              individuais, além, de trazer maior proximidade com o consumidor
+              individuais, além de trazer maior proximidade com o consumidor
               interessado em produtos da agricultura familiar da sua região.
               <br />
               <span className='underline decoration-1 '>

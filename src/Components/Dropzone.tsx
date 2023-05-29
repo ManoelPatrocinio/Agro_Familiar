@@ -71,7 +71,7 @@ export function DropzoneInput({
       <input className="w-full h-full" {...getInputProps()} />
       {isDragReject ? (
         <p className="w-full text-center  text-red-500">
-          Formato ou quantidade de arquivos não suportado !{" "}
+          Não suportado !{" "}
         </p>
       ) : (
         <p className="w-full text-center text-palm-700 flex flex-col justify-center items-center font-semibold">
