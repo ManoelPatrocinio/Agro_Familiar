@@ -89,7 +89,6 @@ export function Home() {
       (product) => product.p_raiting && product.p_raiting >= 4
     );
   }
-  console.log('raitig', filterListByRaiting());
 
   async function getUserPosition() {
     if ('geolocation' in navigator) {

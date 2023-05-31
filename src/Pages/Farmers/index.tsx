@@ -22,6 +22,7 @@ export function Farmers() {
   const [search, setSearch] = useState<string>('');
   const [farmersData, setFarmersData] = useState<User[]>([]);
   const [offSet, setOffSet] = useState<number>(0);
+  const [city, setCity] = useState<string | null>(null);
 
   const Limit_perPage = 9; //cards number shown per page
 
@@ -30,9 +31,9 @@ export function Farmers() {
     isFetching,
     error,
   } = useQuery<User[]>(
-    ['farmersPages'],
+    ['farmersPages', city],
     async () => {
-      const response = await api.get('/all-entity');
+      const response = await api.get(`/all-entity/?city=${city}`);
       filterByTypeEntity(response.data.entities);
       total = await response.data.entities.length;
       return response.data.entities;
@@ -112,7 +113,11 @@ export function Farmers() {
   }
   return (
     <>
-      <Header setSearch={setSearch} ItemSearched={search} />
+      <Header
+        setSearch={setSearch}
+        ItemSearched={search}
+        filterByCity={setCity}
+      />
       <Carrousel />
       <main className=' w-full flex items-start flex-col px-1 md:px-20'>
         <SectionTitle title='Produtores' className={'my-6 w-full'} />

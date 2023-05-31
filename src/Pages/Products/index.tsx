@@ -25,15 +25,17 @@ export function Products() {
   const [search, setSearch] = useState<string>('');
   const [productData, setProductData] = useState<Product[]>([]);
   const [offSet, setOffSet] = useState<number>(0);
+  const [city, setCity] = useState<string | null>(null);
+
   const Limit_perPage = 9; //cards number shown per page
   const {
     data: productAPi,
     isFetching,
     error,
   } = useQuery<Product[]>(
-    ['productsPage'],
+    ['productsPage', city],
     async () => {
-      const response = await api.get('/all-enable-products');
+      const response = await api.get(`/all-enable-products/?city=${city}`);
       filterByPagination(response.data.products, offSet);
 
       total = response.data.products.length;
@@ -63,7 +65,7 @@ export function Products() {
     let start = page * Limit_perPage;
     let end = start + Limit_perPage;
     let list = products ? products.slice(start, end) : [];
-    list.length > 0 && setProductData(list);
+    setProductData(list);
   }
 
   function filterByCategory(category: string) {
@@ -129,7 +131,11 @@ export function Products() {
   }
   return (
     <>
-      <Header setSearch={setSearch} ItemSearched={search} />
+      <Header
+        setSearch={setSearch}
+        ItemSearched={search}
+        filterByCity={setCity}
+      />
       <Carrousel />
 
       <main className='flex items-start flex-col px-1 md:px-20'>

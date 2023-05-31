@@ -21,6 +21,7 @@ let total: number = 0; //number of products in the list, to calculate the number
 export function Entities() {
   const [search, setSearch] = useState<string>('');
   const [entitiesData, setEntitiesData] = useState<User[]>([]);
+  const [city, setCity] = useState<string | null>(null);
   const [offSet, setOffSet] = useState<number>(0);
 
   const Limit_perPage = 9; //cards number shown per page
@@ -30,9 +31,9 @@ export function Entities() {
     isFetching,
     error,
   } = useQuery<User[]>(
-    ['entitiesPages'],
+    ['entitiesPages', city],
     async () => {
-      const response = await api.get('/all-entity');
+      const response = await api.get(`/all-entity/?city=${city}`);
       filterByTypeEntity('assoc', response.data.entities);
       total = response.data.entities.length;
       return response.data.entities;
@@ -70,7 +71,7 @@ export function Entities() {
     if (entities) {
       filtedList = entities.filter((entity) => entity.u_type === entityType);
       filterByPagination(filtedList!, offSet);
-      total = entitiesAPi?.length!;
+      total = filtedList?.length!;
     } else {
       filtedList = entitiesAPi!.filter(
         (entity) => entity.u_type === entityType
@@ -118,9 +119,14 @@ export function Entities() {
     total = filtedList.length;
     setPagination(offSet, filtedList);
   }
+
   return (
     <>
-      <Header setSearch={setSearch} ItemSearched={search} />
+      <Header
+        setSearch={setSearch}
+        ItemSearched={search}
+        filterByCity={setCity}
+      />
       <Carrousel />
       <main className=' w-full flex items-start flex-col px-6 md:px-20'>
         <SectionTitle title='Entidades' className={'my-6 w-full'} />

@@ -9,6 +9,7 @@ import {
 import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { locationsList } from '../Global/locationsList';
 import Logo from '../assets/images/Logo.png';
 import exemple_user_profile from '../assets/images/exemple_user_profile.png';
 import { AuthContext } from '../context/AuthContext';
@@ -20,9 +21,10 @@ import { PurchaseList } from './PurchaseList';
 interface Iprop {
   setSearch: React.Dispatch<React.SetStateAction<string>>;
   ItemSearched: string;
+  filterByCity?: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export function Header({ setSearch, ItemSearched }: Iprop) {
+export function Header({ setSearch, ItemSearched, filterByCity }: Iprop) {
   const [showForm, setShowForm] = useState<boolean>(false);
   const { purchaseList } = useContext(PuchaseListContext);
   const { userLogged } = useContext(AuthContext);
@@ -215,13 +217,12 @@ export function Header({ setSearch, ItemSearched }: Iprop) {
           {' '}
           <Link
             to='/Entities'
-            className='text-lg text-palm-700 font-normal font-display relative border-animated hover:text-palm-900'
+            className='text-lg text-palm-700 ml-[2.313rem] font-normal font-display relative border-animated hover:text-palm-900'
           >
             Associações/Cooperativas
           </Link>
         </li>
         <li>
-          {' '}
           <Link
             to='/Farmers'
             className='text-lg text-palm-700 font-normal font-display relative border-animated hover:text-palm-900'
@@ -229,162 +230,46 @@ export function Header({ setSearch, ItemSearched }: Iprop) {
             Produtores
           </Link>
         </li>
-        <div className='flex justify-center'>
-          <div className='dropdown relative'>
-            <button
-              className='
-                text-lg 
-                text-palm-700 
-                font-normal 
-                font-display
-                dropdown-toggle
-                transition
-                duration-150
-                ease-in-out
-                flex
-                items-center
-                whitespace-nowrap
-                relative
-                border-animated
-                hover:text-palm-900
-              '
-              type='button'
-              id='dropdownMenuButton1'
-              data-bs-toggle='dropdown'
-              aria-expanded='false'
-            >
-              Territórios
-              <svg
-                aria-hidden='true'
-                focusable='false'
-                data-prefix='fas'
-                data-icon='caret-down'
-                className='w-2 ml-2'
-                role='img'
-                xmlns='http://www.w3.org/2000/svg'
-                viewBox='0 0 320 512'
-              >
-                <path
-                  fill='currentColor'
-                  d='M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z'
-                ></path>
-              </svg>
-            </button>
-            <ul
-              className='
-                dropdown-menu
-                min-w-max
-                w-[10rem]
-                absolute
-                hidden
-                bg-white
-                text-base
-                z-50
-                float-left
-                py-2
-                
-                list-none
-                text-left
-                rounded-lg
-                shadow-lg
-                mt-1
-                
-                m-0
-                bg-clip-padding
-                border-none
-              '
-              aria-labelledby='dropdownMenuButton1'
-            >
-              <li>
-                <p
-                  className='
-                    dropdown-item
-                    text-md
-                    text-left
-                    py-2
-                    px-4
-                    font-semibold
-                    block
-                    w-full
-                    whitespace-nowrap
-                    bg-transparent
-                    text-gray-400
-                    hover:bg-gray-100
-                  '
-                >
-                  Bahia
-                </p>
-              </li>
-              <li>
-                <button
-                  type='button'
-                  className='
-                    dropdown-item
-                    text-sm
-                    text-left
-                    py-2
-                    pr-4
-                    pl-6
-                    font-normal
-                    block
-                    w-full
-                    whitespace-nowrap
-                    bg-transparent
-                    text-gray-700
-                    hover:bg-gray-100
-                  '
-                >
-                  Barra
-                </button>
-              </li>
 
-              <li>
-                <button
-                  type='button'
-                  className='
-                    dropdown-item
-                    text-sm
-                    text-left
-                    py-2
-                    pr-4
-                    pl-6
-                    font-normal
-                    block
-                    w-full
-                    whitespace-nowrap
-                    bg-transparent
-                    text-gray-700
-                    hover:bg-gray-100
-                  '
-                >
-                  Irecê
-                </button>
-              </li>
-              <li>
-                <button
-                  type='button'
-                  className='
-                    dropdown-item
-                    text-sm
-                    text-left
-                    py-2
-                    pr-4
-                    pl-6
-                    font-normal
-                    block
-                    w-full
-                    whitespace-nowrap
-                    bg-transparent
-                    text-gray-700
-                    hover:bg-gray-100
-                  '
-                >
-                  Xique-Xique
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <li className='relative border-animated '>
+          <select
+            className='
+                appearance-none
+                block
+                w-full
+                text-center
+                text-lg 
+                font-normal
+                font-display
+                text-palm-700 
+                bg-white 
+                bg-clip-padding 
+                bg-no-repeat
+                transition
+                ease-in-out
+                duration-150
+                border-none
+                border-0
+                focus:border-none 
+                focus:outline-none
+                '
+            aria-label=' select city'
+            id='selectCity'
+            onChange={(e) => filterByCity && filterByCity(e.target.value)}
+          >
+            <option value={'null'}>Territórios</option>
+            <optgroup
+              label='Bahia'
+              className='text-gray-600 font-body text-sm text-left'
+            >
+              {locationsList.Bahia.map((city) => (
+                <option value={city} key={city} className='my-4'>
+                  {city}
+                </option>
+              ))}
+            </optgroup>
+          </select>
+        </li>
       </ul>
 
       <div className='relative w-full h-12 mt-4 md:hidden '>
