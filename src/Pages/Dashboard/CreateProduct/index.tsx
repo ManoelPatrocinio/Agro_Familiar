@@ -11,7 +11,6 @@ import { MenuOfDashboard } from "../../../Components/MenuOfDashboard";
 import { Menu_Sidebar } from "../../../Components/Menu_Sidebar";
 import { Load_spinner } from "../../../Components/load_spinner";
 import { categoriesList } from "../../../Global/categoriesList";
-import { FileUploaded } from "../../../Types/fileUploaded.types";
 import { Product } from "../../../Types/product.type";
 import Logo from "../../../assets/images/Logo.png";
 import { AuthContext } from "../../../context/AuthContext";
@@ -19,82 +18,53 @@ import { api } from "../../../hook/useApi";
 import { FirebaseUploadFile } from "../../../service/firebase";
 
 export function CreateProduct() {
-  const [prodData, setProductData] = useState<Product>();
-  const [filesData, setFileData] = useState<FileUploaded[]>([]);
+  const [filesData, setFileData] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { userLogged } = useContext(AuthContext);
 
   const {
     register,
     formState: { errors },
+    reset,
     handleSubmit,
   } = useForm<Product>();
 
   //receive the file from dropzone component
   const handleUpload = (file: File) => {
-    let finalListFile = filesData.concat(file);
-    if (finalListFile.length <= 4) {
-      setFileData(finalListFile);
+    if (filesData.length <= 4) {
+      setFileData( old => [...old,file]);
     }
   };
-  function resetFilds() {
-    setFileData([]);
-    setProductData(undefined);
-  }
   const handleDelete = (url: string) => {
     return setFileData(filesData.filter((file) => file.preview !== url));
   };
 
-  //do upload img for filebase storage
-  async function uploadImgs(formaData: Product) {
-    let newData: string[] = [];
-    setIsLoading(true);
-    filesData.forEach(async (item) => {
-      const { url } = await FirebaseUploadFile(item as File, "/products");
-      if (url) {
-        newData.push(url);
-        check(filesData, newData, formaData);
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Oppss",
-          text: "Desculpe, uma imagem não pode ser salva",
-        });
-      }
-    });
-  }
-
-  function check(
-    arrayChosenImg: FileUploaded[],
-    arrayUploadedImgs: string[],
-    formaData: Product
-  ) {
-    if (arrayChosenImg.length === arrayUploadedImgs.length) {
-      sendNewProduct(arrayUploadedImgs, formaData);
-    } else {
-      console.log("esperando...");
-    }
-  }
-
-  const sendNewProduct = async (imgsUrl: string[], formaData: Product) => {
+  async function sendNewProduct(formaData: Product) {
+    setIsLoading(true)
+    let  imgUrlArray: string[] | [] = [];
     const priceFormated = formaData.p_price?.toString().replace(",", ".");
     const oldPriceFormated = formaData.p_old_price
       ?.toString()
       .replace(",", ".");
 
-    const newProductFormated: Product = {
-      farmer_id: userLogged?._id,
-      p_name: formaData.p_name,
-      p_category: formaData.p_category,
-      p_price: priceFormated ? parseFloat(priceFormated) : 0,
-      p_old_price: oldPriceFormated ? parseFloat(oldPriceFormated) : 0,
-      p_stock: formaData.p_stock,
-      p_n_contact: formaData.p_n_contact,
-      p_description: formaData.p_description,
-      p_images: imgsUrl,
-      p_status: true,
-    };
-
+  for(const img of filesData){
+    const imgUrl = await FirebaseUploadFile(img, "products")
+    if( imgUrl.url){
+      imgUrlArray.push(imgUrl.url)
+    }
+  }
+  const newProductFormated: Product = {
+    farmer_id: userLogged?._id,
+    p_name: formaData.p_name,
+    p_category: formaData.p_category,
+    p_price: priceFormated ? parseFloat(priceFormated) : 0,
+    p_old_price: oldPriceFormated ? parseFloat(oldPriceFormated) : 0,
+    p_stock: formaData.p_stock,
+    p_n_contact: formaData.p_n_contact,
+    p_description: formaData.p_description,
+    p_images: imgUrlArray,
+    p_status: true,
+  };
     await api
       .post("/admin/add-product", newProductFormated)
       .then((response) => {
@@ -105,13 +75,9 @@ export function CreateProduct() {
           showConfirmButton: false,
           timer: 1500,
         });
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
       })
       .catch((error) => {
-        console.error("data", error);
+        console.error("add product erro:", error);
         setIsLoading(false);
         Swal.fire({
           icon: "error",
@@ -122,9 +88,11 @@ export function CreateProduct() {
         setTimeout(() => {
           window.location.reload();
         }, 2000);
-      });
-
-    resetFilds();
+      }).finally(()=>{
+        setIsLoading(false)
+        setFileData([]);
+        reset()
+      })
   };
 
   return (
@@ -154,7 +122,7 @@ export function CreateProduct() {
               <h1 className="w-full text-center md:text-left text-md md:text-xl text-palm-700 font-semibold my-8 ">
                 Cadastro de Produto
               </h1>
-              <form className="w-full  h-full   md:py-10  md:mx-auto">
+              <form onSubmit={handleSubmit(sendNewProduct)} className="w-full  h-full   md:py-10  md:mx-auto">
                 <div className="w-full flex flex-col md:flex-row items-center ">
                   <div className="w-full md:w-1/2 md:mr-[3%] form-group mb-6">
                     <label
@@ -525,26 +493,8 @@ export function CreateProduct() {
                   </p>
 
                   <div className="w-full flex flex-col md:flex-row justify-start items-center mb-4">
-                    {prodData?.p_images && prodData.p_images.length > 0 ? (
-                      <>
-                        {prodData.p_images.map((item) => (
-                          <div
-                            className="relative w-4/5 md:w-1/5 h-[14rem] rounded mb-4 md:mb-0 md:mr-6 "
-                            key={item}
-                          >
-                            <ImgPreview
-                              imgName={item}
-                              url={item}
-                              deleteFile={handleDelete}
-                              classNameAdditionalForImg={
-                                "w-full h-full rounded  "
-                              }
-                            />
-                          </div>
-                        ))}
-                      </>
-                    ) : (
-                      <>
+              
+                      
                         {filesData.map((item, index) => (
                           <div
                             className="relative w-4/5 md:w-1/5 h-[14rem] rounded mb-4 md:mb-0 md:mr-6 "
@@ -586,13 +536,12 @@ export function CreateProduct() {
                             />
                           </div>
                         )}
-                      </>
-                    )}
+                      
+                  
                   </div>
                 </div>
                 <button
                   type="submit"
-                  onClick={handleSubmit(uploadImgs)}
                   disabled={filesData.length <= 0 ? true : false}
                   className={classNames(
                     " block w-[90%] md:w-1/4 mx-auto md:mx-0 my-8 py-3 px-3 text-white text-md font-semibold   rounded ",
