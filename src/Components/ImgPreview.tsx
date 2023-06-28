@@ -33,6 +33,7 @@ export function ImgPreview({
         }
       >
         <button
+          type="button"
           onClick={() => deleteFile(url)}
           className="text-sm text-center font-semibold text-green-500 flex flex-col items-center justify-center"
         >

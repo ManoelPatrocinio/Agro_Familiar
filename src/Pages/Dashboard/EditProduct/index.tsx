@@ -22,11 +22,9 @@ import {
 } from '../../../service/firebase';
 
 export function EditProduct() {
-  const { productId } = useParams();
-  const queryClient = useQueryClient();
-  const { userLogged } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [producUrls, setProductUrls] = useState<string[]>([]);
+  const { productId } = useParams();
+  const { userLogged } = useContext(AuthContext);
   const [filesUpload, setFilesUpload] = useState<File[]>([]);
   const [isLoading, setIsloading] = useState<boolean>(false);
 
@@ -34,17 +32,18 @@ export function EditProduct() {
     register,
     formState: { errors },
     handleSubmit,
+    reset
   } = useForm<Product>();
 
   const {
     data: product,
     isFetching,
     error,
-  } = useQuery(
-    [`editProduct`],
+  } = useQuery<Product>(
+    [`editProduct`,productId],
     async () => {
       const response = await api.get(`/product/${productId}`);
-      setProductUrls(response.data.entityAndproduct.product.p_images);
+
       return response.data.entityAndproduct.product;
     },
     {
@@ -62,9 +61,8 @@ export function EditProduct() {
 
   //receive the file from dropzone component
   const handleUpload = (file: File) => {
-    let finalListFile = filesUpload.concat(file);
-    if (producUrls.length + finalListFile.length <= 4) {
-      setFilesUpload(finalListFile);
+    if ((product!.p_images!.length + filesUpload.length) <= 4) {
+      setFilesUpload(old => [...old,file]);
     }
   };
   const handleDelete = (url: string) => {
@@ -74,69 +72,37 @@ export function EditProduct() {
   };
   async function handleDeleteFromFirebase(url: string) {
     let imgName: string[];
-    const img_url = producUrls.filter((img_url) => img_url === url);
+    const img_url = product?.p_images!.filter((img_url) => img_url === url);
     if (img_url) {
       const splits = img_url[0].split('%2F');
       imgName = splits[1].split('?alt');
 
       await FirebaseDeleteFile(imgName![0], 'products')
-        .then(() => {
-          const urlFilted = producUrls.filter((file) => file !== url);
-          sendProductUpdated(product, 'updateImgs', urlFilted);
+        .then(()=>{
+          const  imgUrlListUpdaded =  product?.p_images!.filter((img_url) => img_url !== url)
+          sendProductUpdated(product!,imgUrlListUpdaded)
         })
-        .catch((err) => {
-          console.log('error on delete image on forebase:', err);
-          Swal.fire({
-            icon: 'error',
-            title: 'Oppss',
-            text: 'Desculpe, não foi possível excluir essa imagem, tente novamente, por favor',
-          });
-        });
-    }
-  }
-  //do upload img for filebase storage
-  async function uploadImgs(formData: Product) {
-    setIsloading(true);
-    let newData: string[] = [];
-    if (filesUpload.length > 0) {
-      filesUpload.forEach(async (item) => {
-        const { url } = await FirebaseUploadFile(item as File, '/products');
-        if (url) {
-          newData.push(url);
-          check(filesUpload, newData, formData);
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oppss',
-            text: 'Desculpe, uma imagem não pode ser salva',
-          });
-        }
-      });
-    } else {
-      sendProductUpdated(formData, 'updateProduct', product.p_images);
-    }
-  }
-
-  function check(
-    arrayChosenImg: FileUploaded[],
-    arrayUploadedImgs: string[],
-    formData: Product
-  ) {
-    if (arrayChosenImg.length === arrayUploadedImgs.length) {
-      const finalArrayUrl = producUrls.concat(arrayUploadedImgs);
-      sendProductUpdated(formData, 'updateProduct', finalArrayUrl);
-    } else {
-      console.log('esperando...');
+      
     }
   }
 
   const sendProductUpdated = async (
     formData: Product,
-    typeRequest: 'updateProduct' | 'updateImgs',
-    newImgUrls: string[]
+    prodUrlList?:string[]
   ) => {
+    setIsloading(true)
+    let imgUrlsList = prodUrlList && prodUrlList?.length > 0 ? prodUrlList : product?.p_images
     const priceFormated = formData.p_price?.toString().replace(',', '.');
     const oldPriceFormated = formData.p_old_price?.toString().replace(',', '.');
+    
+    if(filesUpload.length >  0 ){
+      for (const img of filesUpload){
+          const {url} = await FirebaseUploadFile(img,"/products")
+          if(url){
+            imgUrlsList!.push(url)
+          }
+      }
+    }
     const newProductFormated: Product = {
       farmer_id: userLogged?._id,
       p_name: formData.p_name,
@@ -146,10 +112,9 @@ export function EditProduct() {
       p_stock: formData.p_stock,
       p_n_contact: formData.p_n_contact,
       p_description: formData.p_description,
-      p_images: newImgUrls,
+      p_images: imgUrlsList,
       p_status: true,
     };
-
     await api
       .put(`/admin/update-product/${productId}`, newProductFormated)
       .then((response) => {
@@ -160,19 +125,12 @@ export function EditProduct() {
           showConfirmButton: false,
           timer: 1500,
         });
-        if (typeRequest === 'updateImgs') {
-          console.log('img updated');
-          navigate('/Admin/create-product');
-        } else {
-          setFilesUpload([]);
-          queryClient.invalidateQueries(['manageProducts']);
-          setProductUrls(response.data.entityAndproduct.product.p_images);
-
-          // navigate('/Admin/create-product');
-        }
+        setTimeout(()=>{
+          navigate(`/Admin/manager/${userLogged?._id}`);
+        },1700)
       })
       .catch((error) => {
-        console.error('data', error);
+        console.error('edite product error', error);
         Swal.fire({
           icon: 'error',
           title: 'Oppss..',
@@ -182,6 +140,7 @@ export function EditProduct() {
       })
       .finally(() => {
         setIsloading(false);
+        reset()
       });
   };
 
@@ -212,7 +171,7 @@ export function EditProduct() {
               <h1 className='w-full text-center md:text-left text-md md:text-xl text-palm-700 font-semibold my-8 '>
                 Editar Informações do Produto
               </h1>
-              <form className='w-full  h-full   md:py-10  md:mx-auto'>
+              <form onSubmit={handleSubmit(sendProductUpdated)} className='w-full  h-full   md:py-10  md:mx-auto'>
                 <div className='w-full flex flex-col md:flex-row items-center '>
                   <div className='w-full md:w-1/2 md:mr-[3%] form-group mb-6'>
                     <label
@@ -590,16 +549,14 @@ export function EditProduct() {
                   </p>
 
                   <div className='w-full flex flex-col md:flex-row justify-start items-center mb-4'>
-                    {producUrls && producUrls.length > 0 ? (
-                      <>
-                        {producUrls.map((p_img_url) => (
+                        {product?.p_images!.map((imgUrl:string , index) => (
                           <div
                             className='relative w-4/5 md:w-1/5 h-[14rem] rounded mb-4 md:mb-0 md:mr-6 '
-                            key={p_img_url}
+                            key={index}
                           >
                             <ImgPreview
-                              imgName={p_img_url}
-                              url={p_img_url}
+                              imgName={imgUrl!}
+                              url={imgUrl}
                               deleteFile={handleDeleteFromFirebase}
                               classNameAdditionalForImg={
                                 'w-full h-full rounded  '
@@ -607,36 +564,7 @@ export function EditProduct() {
                             />
                           </div>
                         ))}
-                        {filesUpload.map((img: FileUploaded, index) => (
-                          <div
-                            className='relative w-4/5 md:w-1/5 h-[14rem] rounded mb-4 md:mb-0 md:mr-6 '
-                            key={index}
-                          >
-                            <ImgPreview
-                              imgName={img.name!}
-                              url={img.preview}
-                              deleteFile={handleDelete}
-                              classNameAdditionalForImg={
-                                'w-full h-full rounded  '
-                              }
-                            />
-                          </div>
-                        ))}
-                        {producUrls.length + filesUpload.length < 4 && (
-                          <div className='dropzone w-4/5 md:w-1/5 h-[14rem] '>
-                            <DropzoneInput
-                              onUpload={handleUpload}
-                              typeFile='image'
-                              text='Adicionar outra imagem'
-                              classNameAdditional={
-                                ' bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0  rounded'
-                              }
-                            />
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <>
+        
                         {filesUpload.map((item: FileUploaded, index) => (
                           <div
                             className='relative w-4/5 md:w-1/5 h-[14rem] rounded mb-4 md:mb-0 md:mr-6 '
@@ -653,20 +581,8 @@ export function EditProduct() {
                           </div>
                         ))}
 
-                        {!filesUpload[0] && (
-                          <div className='dropzone w-4/5 md:w-1/5 h-[14rem] '>
-                            <DropzoneInput
-                              onUpload={handleUpload}
-                              typeFile='image'
-                              text='Imagem de capa'
-                              classNameAdditional={
-                                ' bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0 rounded'
-                              }
-                            />
-                          </div>
-                        )}
 
-                        {!!filesUpload[0] && filesUpload.length < 4 && (
+                        {product!.p_images!.length + filesUpload.length < 4 && (
                           <div className='dropzone w-4/5 md:w-1/5 h-[14rem] '>
                             <DropzoneInput
                               onUpload={handleUpload}
@@ -678,14 +594,11 @@ export function EditProduct() {
                             />
                           </div>
                         )}
-                      </>
-                    )}
+                  
                   </div>
                 </div>
                 <button
                   type='submit'
-                  onClick={handleSubmit(uploadImgs)}
-                  disabled={isLoading}
                   className=' block w-[90%] md:w-1/4 mx-auto md:mx-0 my-8 py-3 px-3 text-white text-md font-semibold  bg-palm-700 rounded '
                 >
                   Atualizar produto

@@ -44,9 +44,8 @@ export function ManageProducts() {
       total = response.data.products.length;
 
       return response.data;
-    },
-    {
-      staleTime: 1000 * 60, // 1 minute
+    },{
+      refetchOnWindowFocus: false
     }
   );
 
