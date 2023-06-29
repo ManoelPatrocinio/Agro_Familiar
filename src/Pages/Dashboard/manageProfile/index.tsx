@@ -3,7 +3,7 @@ import { destroyCookie } from "nookies";
 import { ArrowRight, Question } from "phosphor-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { DropzoneInput } from "../../../Components/Dropzone";
@@ -20,56 +20,37 @@ import {
   FirebaseUploadFile,
 } from "../../../service/firebase";
 
-const InitialUserState: User = {
-  u_type: "farmer",
-  u_full_name: "",
-  u_email: "",
-  u_password: "",
-  u_newPassword: "",
-  u_president_name: "",
-  u_entity_name: "",
-  u_CNPJ_CPF: "",
-  u_UF: "",
-  u_city: "",
-  u_district: "",
-  u_street: "",
-  u_number: "",
-  u_main_contact: "",
-  u_secondary_contact: "",
-  u_img_profile: "",
-  u_cover_photo: "",
-  u_description: "",
-};
+
+interface formEditUser extends User{
+  u_newPassword:string
+}
 
 export function ManageProfile() {
   const { entityId } = useParams();
   const navigate = useNavigate();
-  const [FormData, setFormData] = useState<User>(InitialUserState);
+  const queryClient = useQueryClient();
+
   const [toggleForm, setToggleForm] = useState<boolean>(false);
 
   const {
     register,
     formState: { errors },
-    handleSubmit,
-  } = useForm();
-  //function for add value input on state
-  const setValueFromFormInput = (newValue: any) => {
-    setFormData((inputValue) => ({ ...inputValue, ...newValue }));
-  };
+    handleSubmit,reset
+  } = useForm<formEditUser>();
 
   const {
     data: entityData,
     isFetching,
     error,
   } = useQuery<User>(
-    "manageProfile",
+    ["manageProfile",entityId],
     async () => {
       const response = await api.get(`/entity/${entityId}`);
-      setFormData(response.data.entity);
       return response.data.entity;
     },
     {
       staleTime: 1000 * 60, // 1 minute
+
     }
   );
 
@@ -81,112 +62,90 @@ export function ManageProfile() {
     });
   }
 
-  const handleImgUpload = async (file: File, whereSave?: string) => {
-    let newData;
-    const { url } = await FirebaseUploadFile(file, "/userImages");
-    if (!url) {
+  async function sendformWithBasicUserData  (FormData:(formEditUser|User)) {
+  
+      await api
+        .put(`/admin/update-user/${entityId}`, FormData)
+        .then((response) => {
+          Swal.fire({
+            icon: "success",
+            title: "Success !",
+            text: response.data.message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+
+          setTimeout(() => {
+            queryClient.invalidateQueries(['manageProfile']);
+            reset()
+          }, 2000);
+        })
+        .catch((error) => {
+          console.error("data", error);
+          Swal.fire({
+            icon: "error",
+            title: error.response.data.message,
+            showConfirmButton: true,
+          });
+        });
+    
+  };
+
+  async function formEditUserAccess(userAccessData:formEditUser) {
+    await api
+    .put(
+      `/admin/update-user-access-data/${entityId}`,
+      userAccessData
+    )
+    .then((response) => {
+      Swal.fire({
+        icon: "success",
+        title: "Success !",
+        text: response.data.message,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      setTimeout(() => {
+        destroyCookie(undefined, "@PAF:token");
+        queryClient.invalidateQueries(['manageProfile']);
+        window.location.reload()
+        navigate("/");
+      }, 1800);
+    })
+    .catch((error) => {
+      console.error("error on Edit User Access", error);
       Swal.fire({
         icon: "error",
-        title: "Oppss",
-        text: "Desculpe, não foi possível carregar essa imagem, tente novamente, por favor",
+        title: error.response.data.message,
+        showConfirmButton: true,
       });
-    }
+    });
+  }
 
-    if (whereSave === "coverPhoto") {
-      newData = {
-        ...entityData,
-        u_cover_photo: url,
-      };
-    } else if (whereSave === "profile") {
-      newData = {
-        ...entityData,
-        u_img_profile: url,
-      };
-    }
-
-    formSubmit("basicInfo", newData as User);
-  };
-
-  const formSubmit = async (type: string, UpdatedEntity: User) => {
-    if (type === "basicInfo") {
-      await api
-        .put(`/admin/update-user/${UpdatedEntity._id}`, UpdatedEntity)
-        .then((response) => {
-          Swal.fire({
-            icon: "success",
-            title: "Success !",
-            text: response.data.message,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
-        })
-        .catch((error) => {
-          console.error("data", error);
-          Swal.fire({
-            icon: "error",
-            title: error.response.data.message,
-            showConfirmButton: true,
-          });
-        });
-    } else if (type === "accessData") {
-      await api
-        .put(
-          `/admin/update-user-access-data/${UpdatedEntity._id}`,
-          UpdatedEntity
-        )
-        .then((response) => {
-          Swal.fire({
-            icon: "success",
-            title: "Success !",
-            text: response.data.message,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          destroyCookie(undefined, "@PAF:token");
-
-          setTimeout(() => {
-            navigate("/");
-          }, 2000);
-        })
-        .catch((error) => {
-          console.error("data", error);
-          Swal.fire({
-            icon: "error",
-            title: error.response.data.message,
-            showConfirmButton: true,
-          });
-        });
-    }
-  };
-
-  const handleDeleteImg = async (imgRef: string) => {
+  const handleDeleteUserImg = async (imgRef: string) => {
     let imgName: string[];
-    let newData: User;
+    let newUserData: User;
 
-    if (FormData.u_cover_photo === imgRef) {
-      const splits = FormData.u_cover_photo!.split("%2F");
+    if (entityData?.u_cover_photo === imgRef) {
+      const splits = entityData?.u_cover_photo!.split("%2F");
       imgName = splits[1].split("?alt");
 
-      newData = {
+      newUserData = {
         ...entityData!,
         u_cover_photo: "",
       };
     }
-    if (FormData.u_img_profile === imgRef) {
-      const splits = FormData.u_img_profile!.split("%2F");
+    if (entityData?.u_img_profile === imgRef) {
+      const splits = entityData?.u_img_profile!.split("%2F");
       imgName = splits[1].split("?alt");
-      newData = {
+      newUserData = {
         ...entityData!,
         u_img_profile: "",
       };
     }
     await FirebaseDeleteFile(imgName![0], "userImages")
       .then(() => {
-        formSubmit("basicInfo", newData as User);
+        sendformWithBasicUserData( newUserData as User);
       })
       .catch((err) => {
         console.log("error on delete image on forebase");
@@ -197,6 +156,31 @@ export function ManageProfile() {
         });
       });
   };
+  const handleUpdateUserImg = async (file: File, whereSave?: string) => {
+    let newUserData;
+    const { url } = await FirebaseUploadFile(file, "/userImages");
+    if (!url) {
+      Swal.fire({
+        icon: "error",
+        title: "Oppss",
+        text: "Desculpe, não foi possível carregar essa imagem, tente novamente, por favor",
+      });
+    }
+
+    if (whereSave === "coverPhoto") {
+      newUserData = {
+        ...entityData,
+        u_cover_photo: url,
+      };
+    } else if (whereSave === "profile") {
+      newUserData = {
+        ...entityData,
+        u_img_profile: url,
+      };
+    }
+
+    sendformWithBasicUserData(newUserData as User);
+  }; 
 
   return (
     <>
@@ -226,11 +210,11 @@ export function ManageProfile() {
                 {!entityData.u_cover_photo ? (
                   <div className="w-full h-full">
                     <DropzoneInput
-                      onUpload={handleImgUpload}
+                      onUpload={handleUpdateUserImg}
                       typeFile="image"
                       text="Clique ou arraste sua imagem de capa aqui..."
                       classNameAdditional={
-                        " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0 "
+                        " bg-gray-100 border border-dashed border-gray-400  mb-4 md:mb-0 "
                       }
                       whereSave="coverPhoto"
                     />
@@ -239,27 +223,27 @@ export function ManageProfile() {
                   <ImgPreview
                     imgName={entityData.u_cover_photo}
                     url={entityData.u_cover_photo}
-                    deleteFile={handleDeleteImg}
+                    deleteFile={handleDeleteUserImg}
                     classNameAdditionalForImg="w-full h-full "
                   />
                 )}
-                <div className=" w-auto absolute top-[80%] md:top-[87%] block   md:left-8 ">
-                  <div className="w-full flex flex-col md:flex-row items-center md:items-end">
-                    <div className="w-[7rem] h-[7rem] md:w-[8rem] md:h-[8rem] rounded-[50%]">
+                <div className=" w-full absolute top-[7rem] md:top-[87%] flex flex-col md:flex-row  justify-between items-center  md:px-8 ">
+                  <div className="flex flex-col md:flex-row items-center md:items-end">
+                    <div className="w-[6rem] h-[6rem] md:w-[9.5rem] md:h-[9.5rem] rounded-[50%] ">
                       {entityData.u_img_profile ? (
                         <ImgPreview
                           imgName={entityData.u_img_profile}
                           url={entityData.u_img_profile}
-                          deleteFile={handleDeleteImg}
-                          classNameAdditionalForImg="w-full h-full rounded-[50%]"
+                          deleteFile={handleDeleteUserImg}
+                          classNameAdditionalForImg="w-full h-full rounded-full"
                         />
                       ) : (
                         <DropzoneInput
-                          onUpload={handleImgUpload}
+                          onUpload={handleUpdateUserImg}
                           typeFile="image"
                           text="imagem de perfil"
                           classNameAdditional={
-                            " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0 rounded-[50%]"
+                            " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0 rounded-full"
                           }
                           whereSave="profile"
                         />
@@ -294,7 +278,10 @@ export function ManageProfile() {
                 </div>
               </div>
               {!toggleForm ? (
-                <form className="w-full  h-full px-4 md:py-10 md:p-10  mt-[11rem] md:mt-[8rem]">
+                <form
+                  onSubmit={handleSubmit(sendformWithBasicUserData)}
+                  className="w-full  h-full px-4 md:py-10 md:p-10  mt-[11rem] md:mt-[8rem]"
+                >
                   <h4 className="w-full text-center md:text-left  text-md md:text-lg font-semibold text-palm-700 mb-1">
                     Informações de registro
                   </h4>
@@ -306,7 +293,7 @@ export function ManageProfile() {
                   <div className="grid grid-col-2 md:grid-cols-2  md:gap-8">
                     <div className="form-group mb-6">
                       <label
-                        htmlFor="inputRegisterEntityName"
+                        htmlFor="inputEditUserFullName"
                         className="form-label inline-block mb-2 text-palm-700 mr-3"
                       >
                         Nome da completo
@@ -315,7 +302,6 @@ export function ManageProfile() {
                       <input
                         type="text"
                         className="form-control
-                    
                           w-full
                           px-3
                           py-1.5
@@ -327,31 +313,21 @@ export function ManageProfile() {
                           transition
                           ease-in-out
                           m-0
-                          focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                        id="inputRegisterEntityName"
-                        aria-describedby="entityName"
+                          focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
+                        id="inputEditUserFullName"
                         placeholder="Digite aqui"
-                        defaultValue={
-                          entityData.u_type === "farmer"
-                            ? entityData.u_full_name
-                            : entityData.u_entity_name
-                        }
-                        {...register("inputRegisterEntityName", {
+                        defaultValue={entityData?.u_full_name}
+                        {...register("u_full_name", {
                           required: "Campo obrigatório",
                           minLength: {
                             value: 6,
                             message: "Este campo deve ter mais de 6 caracteres",
                           },
                         })}
-                        onChange={(e) =>
-                          setValueFromFormInput({
-                            u_full_name: e.target.value,
-                          })
-                        }
                       />
                       <ErrorMessage
                         errors={errors}
-                        name="inputRegisterEntityName"
+                        name="u_full_name"
                         render={({ message }) => (
                           <small className="text-red-500 text-xs">
                             {message}
@@ -361,7 +337,7 @@ export function ManageProfile() {
                     </div>
                     <div className="form-group mb-6">
                       <label
-                        htmlFor="inputRegisterEntityCnpj"
+                        htmlFor="inputEditUserCNPJCPF"
                         className="form-label inline-block mb-2 text-palm-700 mr-3"
                       >
                         CPF <span className="text-red-500 font-bold"> *</span>:
@@ -382,14 +358,13 @@ export function ManageProfile() {
                           transition
                           ease-in-out
                           m-0
-                          focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                        id="inputRegisterEntityCnpj"
-                        aria-describedby="EntityCnpj"
+                          focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
+                        id="inputEditUserCNPJCPF"
                         placeholder="XXX.XXX.XXX-XX"
                         max={14}
                         maxLength={14}
                         defaultValue={entityData.u_CNPJ_CPF}
-                        {...register("inputRegisterEntityCnpj", {
+                        {...register("u_CNPJ_CPF", {
                           required: "Informe um CPF válido para continuar",
                           minLength: {
                             value: 11,
@@ -397,15 +372,10 @@ export function ManageProfile() {
                               "Este campo deve ter pelo menos 14 caracteres",
                           },
                         })}
-                        onChange={(e) =>
-                          setValueFromFormInput({
-                            u_CNPJ_CPF: e.target.value,
-                          })
-                        }
                       />
                       <ErrorMessage
                         errors={errors}
-                        name="inputRegisterEntityCnpj"
+                        name="u_CNPJ_CPF"
                         render={({ message }) => (
                           <small className="text-red-500 text-xs">
                             {message}
@@ -418,7 +388,7 @@ export function ManageProfile() {
                   <div className="w-full flex flex-col md:flex-row items-center ">
                     <div className="w-full md:w-[23%] md:mr-[3%] form-group mb-6">
                       <label
-                        htmlFor="iputRegisterEntityCity"
+                        htmlFor="inputEditUserCity"
                         className="form-label inline-block mb-2 text-palm-700 mr-3"
                       >
                         Cidade
@@ -438,29 +408,23 @@ export function ManageProfile() {
                           transition
                           ease-in-out
                           m-0
-                          focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                        id="iputRegisterEntityCity"
+                          focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
+                        id="inputEditUserCity"
                         maxLength={40}
                         max={40}
-                        aria-describedby="entity City"
                         defaultValue={entityData.u_city}
                         placeholder="Digite aqui"
-                        {...register("iputRegisterEntityCity", {
+                        {...register("u_city", {
                           required: "Campo Obrigatório",
                           minLength: {
                             value: 3,
                             message: "Caracteres insuficiente",
                           },
                         })}
-                        onChange={(e) =>
-                          setValueFromFormInput({
-                            u_city: e.target.value,
-                          })
-                        }
                       />
                       <ErrorMessage
                         errors={errors}
-                        name="iputRegisterEntityCity"
+                        name="u_city"
                         render={({ message }) => (
                           <small className="text-red-500 text-xs">
                             {message}
@@ -470,7 +434,7 @@ export function ManageProfile() {
                     </div>
                     <div className="w-full md:w-[22%] min-w-[132px] md:mr-[4%] form-group mb-6">
                       <label
-                        htmlFor="inputRegisterEntityDistrict"
+                        htmlFor="inputEditUserDistrict"
                         className="form-label inline-block mb-2 text-palm-700 mr-3"
                       >
                         Bairro
@@ -496,18 +460,27 @@ export function ManageProfile() {
                           transition
                           ease-in-out
                           m-0
-                          focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                        id="inputRegisterEntityDistrict"
-                        aria-describedby="inputRegisterEntityDistrict"
+                          focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
+                        id="inputEditUserDistrict"
                         placeholder="Digite aqui"
                         defaultValue={entityData.u_district}
                         max={40}
                         maxLength={40}
-                        onChange={(e) =>
-                          setValueFromFormInput({
-                            u_district: e.target.value,
-                          })
-                        }
+                        {...register("u_district", {
+                          minLength: {
+                            value: 2,
+                            message: "Caracteres insuficiente",
+                          },
+                        })}
+                      />
+                      <ErrorMessage
+                        errors={errors}
+                        name="u_district"
+                        render={({ message }) => (
+                          <small className="text-red-500 text-xs">
+                            {message}
+                          </small>
+                        )}
                       />
                     </div>
                     <div className="w-full md:w-[30%]  form-group mb-6">
@@ -538,24 +511,34 @@ export function ManageProfile() {
                           transition
                           ease-in-out
                           m-0
-                          focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                          focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                         id="inputRegisterEntityStreet"
                         placeholder="Digite aqui"
                         max={70}
                         maxLength={70}
                         defaultValue={entityData.u_street}
-                        onChange={(e) =>
-                          setValueFromFormInput({
-                            u_street: e.target.value,
-                          })
-                        }
+                        {...register("u_street", {
+                          minLength: {
+                            value: 2,
+                            message: "Caracteres insuficiente",
+                          },
+                        })}
+                      />
+                      <ErrorMessage
+                        errors={errors}
+                        name="u_street"
+                        render={({ message }) => (
+                          <small className="text-red-500 text-xs">
+                            {message}
+                          </small>
+                        )}
                       />
                     </div>
                   </div>
                   <div className="w-full flex flex-col md:flex-row items-center ">
                     <div className="w-full md:w-[23%] md:mr-[3%] form-group mb-6 ">
                       <label
-                        htmlFor="inputRegisterEntityNumber"
+                        htmlFor="inputEditUserNumber"
                         className="form-label inline-block mb-2 text-palm-700 mr-3"
                       >
                         Número{" "}
@@ -580,26 +563,21 @@ export function ManageProfile() {
                           transition
                           ease-in-out
                           m-0
-                          focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                        id="inputRegisterEntityNumber"
+                          focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
+                        id="inputEditUserNumber"
                         defaultValue={entityData.u_number}
                         max={6}
                         maxLength={6}
-                        {...register("inputRegisterEntityNumber", {
+                        {...register("u_number", {
                           pattern: {
                             value: /^[0-9]+$/,
                             message: "Por favor, apenas números",
                           },
                         })}
-                        onChange={(e) =>
-                          setValueFromFormInput({
-                            u_number: e.target.value,
-                          })
-                        }
                       />
                       <ErrorMessage
                         errors={errors}
-                        name="inputRegisterEntityNumber"
+                        name="u_number"
                         render={({ message }) => (
                           <small className="text-red-500 text-xs">
                             {message}
@@ -609,7 +587,7 @@ export function ManageProfile() {
                     </div>
                     <div className="w-full md:w-[23%] form-group mb-6 ">
                       <label
-                        htmlFor="inputRegisterEntityUf"
+                        htmlFor="inputEditUserUf"
                         className="form-label inline-block mb-2 text-palm-700 mr-3"
                       >
                         UF
@@ -631,18 +609,13 @@ export function ManageProfile() {
                             transition
                             ease-in-out
                             m-0
-                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                            focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                           aria-label="select entity Uf"
                           id="inputRegisterEntityUf"
                           defaultValue={entityData.u_UF}
-                          {...register("inputRegisterEntityUf", {
+                          {...register("u_UF", {
                             required: "Campo obrigatório",
                           })}
-                          onChange={(e) =>
-                            setValueFromFormInput({
-                              u_UF: e.target.value,
-                            })
-                          }
                         >
                           <option value="">Selecione</option>
                           <option value="AC">Acre</option>
@@ -675,7 +648,7 @@ export function ManageProfile() {
                         </select>
                         <ErrorMessage
                           errors={errors}
-                          name="inputRegisterEntityUf"
+                          name="u_UF"
                           render={({ message }) => (
                             <small className="text-red-500 text-xs">
                               {message}
@@ -688,7 +661,7 @@ export function ManageProfile() {
                   <div className="w-full flex flex-col md:flex-row items-center ">
                     <div className="w-full md:w-[23%] md:mr-[3%] form-group mb-6 ">
                       <label
-                        htmlFor="inputEntityMainPhone"
+                        htmlFor="inputUserMainPhone"
                         className="form-label inline-block mb-2 text-palm-700 mr-3"
                       >
                         Nº Whatsapp
@@ -711,13 +684,13 @@ export function ManageProfile() {
                           ease-in-out
                           m-0
                          focus:text-gray-700 focus:bg-white
-                         focus:border-blue-600 focus:outline-none"
-                        id="inputEntityMainPhone"
+                         focus:border-palm-700 focus:outline-none"
+                        id="inputUserMainPhone"
                         max={12}
                         maxLength={12}
                         placeholder="(DDD) 9XXXX-XXXX"
                         defaultValue={entityData.u_main_contact}
-                        {...register("inputEntityMainPhone", {
+                        {...register("u_main_contact", {
                           required: "Campo Obrigatório",
                           minLength: {
                             value: 11,
@@ -728,15 +701,10 @@ export function ManageProfile() {
                             message: "Por favor, apenas números",
                           },
                         })}
-                        onChange={(e) =>
-                          setValueFromFormInput({
-                            u_main_contact: e.target.value,
-                          })
-                        }
                       />
                       <ErrorMessage
                         errors={errors}
-                        name="inputEntityMainPhone"
+                        name="u_main_contact"
                         render={({ message }) => (
                           <small className="text-red-500 text-xs">
                             {message}
@@ -746,7 +714,7 @@ export function ManageProfile() {
                     </div>
                     <div className="w-full md:w-[23%] form-group mb-6 ">
                       <label
-                        htmlFor="inputRegisterEntitySecondaryPhone"
+                        htmlFor="inputEditUserSecondaryPhone"
                         className="form-label inline-block mb-2 text-palm-700 mr-3"
                       >
                         Nº Whatsapp 2
@@ -773,13 +741,13 @@ export function ManageProfile() {
                           ease-in-out
                           m-0
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                        id="inputRegisterEntitySecondaryPhone"
+                        id="inputEditUserSecondaryPhone"
                         placeholder="(DDD) 9XXXX-XXXX"
                         max={12}
                         maxLength={12}
                         defaultValue={entityData.u_secondary_contact}
                         aria-describedby="entity phone 2"
-                        {...register("inputRegisterEntitySecondaryPhone", {
+                        {...register("u_secondary_contact", {
                           minLength: {
                             value: 12,
                             message: "Números insuficiente",
@@ -789,15 +757,10 @@ export function ManageProfile() {
                             message: "Por favor, apenas números",
                           },
                         })}
-                        onChange={(e) =>
-                          setValueFromFormInput({
-                            u_secondary_contact: e.target.value,
-                          })
-                        }
                       />
                       <ErrorMessage
                         errors={errors}
-                        name="inputRegisterEntitySecondaryPhone"
+                        name="u_secondary_contact"
                         render={({ message }) => (
                           <small className="text-red-500 text-xs">
                             {message}
@@ -808,7 +771,7 @@ export function ManageProfile() {
                   </div>
                   <div className="form-group mb-6 w-full md:w-1/2">
                     <label
-                      htmlFor="InputUpdateUserInformation"
+                      htmlFor="inputEditUserDescription"
                       className="form-label inline-block mb-2 text-palm-700 mr-3"
                     >
                       Informações Sobre Você
@@ -831,26 +794,21 @@ export function ManageProfile() {
                         m-0
                         focus:text-gray-700 focus:outline-none
                       "
-                      id="InputUpdateUserInformation"
+                      id="inputEditUserDescription"
                       rows={3}
                       placeholder="Descreva aqui o que os cliente precisam ou querem saber sobre voçê, e, sobre o que produz."
                       defaultValue={entityData.u_description}
-                      {...register("InputUpdateUserInformation", {
+                      {...register("u_description", {
                         minLength: {
                           value: 30,
                           message:
                             "A descrição deve ter pelo menos 30 caracteres",
                         },
                       })}
-                      onChange={(e) =>
-                        setValueFromFormInput({
-                          u_description: e.target.value,
-                        })
-                      }
                     />
                     <ErrorMessage
                       errors={errors}
-                      name="InputUpdateUserInformation"
+                      name="u_description"
                       render={({ message }) => (
                         <small className="text-red-500 text-xs">
                           {message}
@@ -877,7 +835,7 @@ export function ManageProfile() {
                         text-left
            
                      "
-                      onClick={handleSubmit(() => setToggleForm(!toggleForm))}
+                      onClick={() => setToggleForm(!toggleForm)}
                     >
                       Alterar dados de acesso
                       <ArrowRight size={20} />
@@ -910,23 +868,23 @@ export function ManageProfile() {
                         transition
                         duration-150
                         ease-in-out"
-                      onClick={handleSubmit(() =>
-                        formSubmit("basicInfo", FormData)
-                      )}
                     >
                       Salvar
                     </button>
                   </div>
                 </form>
               ) : (
-                <form className="w-full md:w-[70%]  h-full px-4 md:px-0 md:py-10 md:p-10 mx-auto  mt-[11rem] md:mt-[7rem]">
+                <form
+                  onSubmit={handleSubmit(formEditUserAccess)}
+                  className="w-full md:w-[70%]  h-full px-4 md:px-0 md:py-10 md:p-10 mx-auto  mt-[11rem] md:mt-[7rem]"
+                >
                   <h4 className="w-full text-center text-lg font-semibold text-palm-700 mb-3">
                     Seus dados de acesso
                   </h4>
 
                   <div className="w-full mb-6">
                     <label
-                      htmlFor="inputUpdateUserEmail"
+                      htmlFor="inputEditUserEmail"
                       className="form-label inline-block text-sm mb-2 text-gray-700"
                     >
                       Seu E-mail
@@ -935,9 +893,9 @@ export function ManageProfile() {
                       type="email"
                       className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                       placeholder="exemplo@gmail.com"
-                      id="inputUpdateUserEmail"
+                      id="inputEditUserEmail"
                       defaultValue={entityData.u_email}
-                      {...register("inputUpdateUserEmail", {
+                      {...register("u_email", {
                         required: "Campo obrigatório",
                         pattern: {
                           value: /\S+@\S+\.\S+/,
@@ -948,15 +906,10 @@ export function ManageProfile() {
                           message: "O email deve ter mais de 14 caracteres",
                         },
                       })}
-                      onChange={(e) =>
-                        setValueFromFormInput({
-                          u_email: e.target.value,
-                        })
-                      }
                     />
                     <ErrorMessage
                       errors={errors}
-                      name="inputUpdateUserEmail"
+                      name="u_email"
                       render={({ message }) => (
                         <small className="text-red-500 text-xs">
                           {message}
@@ -967,7 +920,7 @@ export function ManageProfile() {
 
                   <div className="w-full mb-4">
                     <label
-                      htmlFor="inputRegisterUserPassword"
+                      htmlFor="inputEditUserPassword"
                       className="form-label inline-block text-sm mb-2 text-gray-700"
                     >
                       Senha Atual
@@ -977,23 +930,18 @@ export function ManageProfile() {
                       className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                       placeholder="******"
                       autoComplete="off"
-                      id="inputRegisterUserPassword"
-                      {...register("inputRegisterUserPassword", {
+                      id="inputEditUserPassword"
+                      {...register("u_password", {
                         required: "Campo Obrigatório",
                         minLength: {
                           value: 6,
                           message: "O senha deve ter no mínimo 6 caracteres",
                         },
                       })}
-                      onChange={(e) =>
-                        setValueFromFormInput({
-                          u_password: e.target.value,
-                        })
-                      }
                     />
                     <ErrorMessage
                       errors={errors}
-                      name="inputRegisterUserPassword"
+                      name="u_password"
                       render={({ message }) => (
                         <small className="text-red-500 text-xs">
                           {message}
@@ -1003,7 +951,7 @@ export function ManageProfile() {
                   </div>
                   <div className="w-full mb-4">
                     <label
-                      htmlFor="inputUpdateNewPassword"
+                      htmlFor="inputEditUserNewPassword"
                       className="form-label inline-block text-sm mb-2 text-gray-700"
                     >
                       Nova Senha
@@ -1013,23 +961,18 @@ export function ManageProfile() {
                       className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                       placeholder="******"
                       autoComplete="off"
-                      id="inputUpdateNewPassword"
-                      {...register("inputUpdateNewPassword", {
+                      id="inputEditUserNewPassword"
+                      {...register("u_newPassword", {
                         required: "Campo Obrigatório",
                         minLength: {
                           value: 6,
                           message: "O senha deve ter no mínimo 6 caracteres",
                         },
                       })}
-                      onChange={(e) =>
-                        setValueFromFormInput({
-                          u_newPassword: e.target.value,
-                        })
-                      }
                     />
                     <ErrorMessage
                       errors={errors}
-                      name="inputUpdateNewPassword"
+                      name="u_newPassword"
                       render={({ message }) => (
                         <small className="text-red-500 text-xs">
                           {message}
@@ -1040,9 +983,7 @@ export function ManageProfile() {
 
                   <button
                     type="button"
-                    onClick={handleSubmit(() =>
-                      formSubmit("basicInfo", FormData)
-                    )}
+                    onClick={handleSubmit(formEditUserAccess)}
                     className="block mx-auto  px-6   py-2.5 bg-palm-700 text-white font-medium text-sm 
                       leading-snug uppercase rounded shadow-md hover:bg-palm-500 hover:shadow-lg focus:bg-palm-700
                        focus:shadow-lg focus:outline-none focus:ring-0 active:bg-palm-700 active:shadow-lg transition duration-150 ease-in-out"
@@ -1051,7 +992,7 @@ export function ManageProfile() {
                   </button>
 
                   <button
-                    onClick={() => window.location.reload()}
+                    onClick={() => setToggleForm(!toggleForm)}
                     className="block relative text-center text-sm text-gray-500 mx-auto px-2 py-3"
                   >
                     Voltar

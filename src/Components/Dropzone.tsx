@@ -1,9 +1,10 @@
 import { PlusCircle } from "phosphor-react";
 import { useDropzone } from "react-dropzone";
 import Swal from "sweetalert2";
+import { MyFile } from "../Types/fileUploaded.types";
 
 type Props = {
-  onUpload: (files: File, whereSave?: string) => void;
+  onUpload: (files: MyFile, whereSave?: string) => void;
   typeFile: string;
   text: string;
   classNameAdditional: string;
@@ -24,10 +25,10 @@ export function DropzoneInput({
           accept: {
             "image/*": [".jpeg", ".png", ".jpg", ".webp"],
           },
-          onDrop: (acceptedFiles) => {
+          onDrop: (acceptedFiles:any) => {
             // check if the file is smaller than 2MB
             if (acceptedFiles[0].size <= 2097152) {
-              acceptedFiles.map((file) =>
+              acceptedFiles.map((file:File) =>
                 Object.assign(file, {
                   preview: URL.createObjectURL(file),
                 })

@@ -16,9 +16,12 @@ import Logo from "../../../assets/images/Logo.png";
 import { AuthContext } from "../../../context/AuthContext";
 import { api } from "../../../hook/useApi";
 import { FirebaseUploadFile } from "../../../service/firebase";
+import { MyFile } from "../../../Types/fileUploaded.types";
+
+
 
 export function CreateProduct() {
-  const [filesData, setFileData] = useState<File[]>([]);
+  const [filesData, setFileData] = useState<MyFile[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { userLogged } = useContext(AuthContext);
 
@@ -30,7 +33,7 @@ export function CreateProduct() {
   } = useForm<Product>();
 
   //receive the file from dropzone component
-  const handleUpload = (file: File) => {
+  const handleUpload = (file: MyFile) => {
     if (filesData.length <= 4) {
       setFileData( old => [...old,file]);
     }
@@ -41,7 +44,7 @@ export function CreateProduct() {
 
   async function sendNewProduct(formaData: Product) {
     setIsLoading(true)
-    let  imgUrlArray: string[] | [] = [];
+    let  imgUrlArray = [];
     const priceFormated = formaData.p_price?.toString().replace(",", ".");
     const oldPriceFormated = formaData.p_old_price
       ?.toString()

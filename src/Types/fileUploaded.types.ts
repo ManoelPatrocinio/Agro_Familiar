@@ -14,14 +14,6 @@ export type FileUploaded = {
   itsError?: boolean;
 };
 
-export type File = {
-  path: string;
-  preview: any;
-  lastModified: number;
-  lastModifiedDate: Date;
-  name: string;
-  type: string;
-  size: number;
-  file: any;
-  webkitRelativePath?: string;
-};
+export interface MyFile extends File{
+  preview:string
+}

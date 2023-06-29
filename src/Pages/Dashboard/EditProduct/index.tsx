@@ -21,12 +21,18 @@ import {
   FirebaseUploadFile,
 } from '../../../service/firebase';
 
+interface FormEdit {
+  product:Product,
+  imgUrlList?:string[]
+}
 export function EditProduct() {
-  const navigate = useNavigate();
   const { productId } = useParams();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { userLogged } = useContext(AuthContext);
   const [filesUpload, setFilesUpload] = useState<File[]>([]);
   const [isLoading, setIsloading] = useState<boolean>(false);
+
 
   const {
     register,
@@ -43,7 +49,6 @@ export function EditProduct() {
     [`editProduct`,productId],
     async () => {
       const response = await api.get(`/product/${productId}`);
-
       return response.data.entityAndproduct.product;
     },
     {
@@ -70,6 +75,9 @@ export function EditProduct() {
       filesUpload.filter((file: FileUploaded) => file.preview !== url)
     );
   };
+  async function handleSendForm( data:Product){
+    sendProductUpdated(data)
+  }
   async function handleDeleteFromFirebase(url: string) {
     let imgName: string[];
     const img_url = product?.p_images!.filter((img_url) => img_url === url);
@@ -86,10 +94,10 @@ export function EditProduct() {
     }
   }
 
-  const sendProductUpdated = async (
+  async function sendProductUpdated  (
     formData: Product,
     prodUrlList?:string[]
-  ) => {
+  ) {
     setIsloading(true)
     let imgUrlsList = prodUrlList && prodUrlList?.length > 0 ? prodUrlList : product?.p_images
     const priceFormated = formData.p_price?.toString().replace(',', '.');
@@ -126,7 +134,7 @@ export function EditProduct() {
           timer: 1500,
         });
         setTimeout(()=>{
-          navigate(`/Admin/manager/${userLogged?._id}`);
+          queryClient.invalidateQueries(['editProduct']);
         },1700)
       })
       .catch((error) => {
@@ -140,6 +148,7 @@ export function EditProduct() {
       })
       .finally(() => {
         setIsloading(false);
+        setFilesUpload([])
         reset()
       });
   };
@@ -171,7 +180,7 @@ export function EditProduct() {
               <h1 className='w-full text-center md:text-left text-md md:text-xl text-palm-700 font-semibold my-8 '>
                 Editar Informações do Produto
               </h1>
-              <form onSubmit={handleSubmit(sendProductUpdated)} className='w-full  h-full   md:py-10  md:mx-auto'>
+              <form onSubmit={handleSubmit(handleSendForm)} className='w-full  h-full   md:py-10  md:mx-auto'>
                 <div className='w-full flex flex-col md:flex-row items-center '>
                   <div className='w-full md:w-1/2 md:mr-[3%] form-group mb-6'>
                     <label

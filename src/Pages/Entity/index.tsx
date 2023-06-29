@@ -186,7 +186,7 @@ export function Entity() {
             className='w-full h-full object-cover'
           />
         )}
-        <div className=' w-full absolute top-[7rem] md:top-[87%] flex flex-col md:flex-row  justify-between items-center md:items-end md:px-16 '>
+        <div className=' w-full absolute top-[7rem] md:top-[87%] flex flex-col md:flex-row  justify-between items-center  md:px-16 '>
           <div className='flex flex-col md:flex-row items-center md:items-end'>
             <div className='w-[7rem] h-[7rem] md:w-[9.5rem] md:h-[9.5rem] rounded-[50%] '>
               {entityData && entityData.u_img_profile ? (
@@ -241,7 +241,7 @@ export function Entity() {
               </div>
             </div>
           </div>
-          <div className='hidden md:flex justify-center pt-8'>
+          <div className='hidden md:flex justify-center '>
             <div className='dropstart relative'>
               <button
                 className='

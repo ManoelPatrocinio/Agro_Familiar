@@ -36,6 +36,7 @@ export async function FirebaseDeleteFile(
   imgName: string,
   firebasePaste: string
 ) {
+  let status = false
   // Create a reference to the file to delete
   const desertRef = ref(storage, `${firebasePaste}/${imgName}`);
 
@@ -43,8 +44,14 @@ export async function FirebaseDeleteFile(
   deleteObject(desertRef)
     .then(() => {
       console.log('success on delete:', imgName);
+      status = true
     })
     .catch((error) => {
       console.log('erro on delete Object', error);
+      status = false
     });
+
+    return {
+      status
+    }
 }
