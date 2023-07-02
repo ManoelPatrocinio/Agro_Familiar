@@ -14,6 +14,8 @@ import Logo_Barra from '../../assets/images/barra_logo.png';
 import Logo_Irece from '../../assets/images/irece_logo.png';
 import Supporters_img_bg from '../../assets/images/supporters.png';
 import Logo_Xique from '../../assets/images/xique_logo.png';
+import Logo_Embrapa from '../../assets/images/embrapa.png'
+import Logo_Buritirama from '../../assets/images/buritirama.png'
 import { api } from '../../hook/useApi';
 
 export function Home() {
@@ -87,7 +89,7 @@ export function Home() {
   function filterListByRaiting() {
     return productAPi?.filter(
       (product) => product.p_raiting && product.p_raiting >= 4
-    );
+    )
   }
 
   async function getUserPosition() {
@@ -145,7 +147,7 @@ export function Home() {
                   {' '}
                   {productData.length === 0 ? (
                     <>
-                      {filterListByRaiting()?.map((product) => (
+                      {filterListByRaiting()?.slice(0,8).map((product) => (
                         <CardProduct product={product} key={product._id} />
                       ))}
                     </>
@@ -174,7 +176,7 @@ export function Home() {
             />
           ) : (
             <>
-              {filterListByRaiting()?.map((product) => (
+              {filterListByRaiting()?.slice(0,8).map((product) => (
                 <CardProduct product={product} key={product._id} />
               ))}
             </>
@@ -193,23 +195,23 @@ export function Home() {
               Nossos Apoiadores
             </h3>
             <div
-              id='carouselExampleCrossfade'
+              id='carouselSupportersCrossfade'
               className='carousel slide carousel-fade relative w-full h-[75%]'
               data-bs-ride='carousel'
             >
               <div className='carousel-indicators absolute right-0 bottom-0 left-0 flex justify-center p-0 mt-4 '>
                 <button
                   type='button'
-                  data-bs-target='#carouselExampleCrossfade'
-                  data-bs-slide-to='0'
                   className='active section_separation__carrousel-indicator '
+                  data-bs-target='#carouselSupportersCrossfade'
+                  data-bs-slide-to='0'
                   aria-current='true'
                   aria-label='Slide 1'
                 ></button>
                 <button
                   type='button'
                   className='section_separation__carrousel-indicator'
-                  data-bs-target='#carouselExampleCrossfade'
+                  data-bs-target='#carouselSupportersCrossfade'
                   data-bs-slide-to='1'
                   aria-label='Slide 2'
                 ></button>
@@ -234,13 +236,12 @@ export function Home() {
                     />
                   </div>
                 </div>
-                {/* <div className='carousel-item  float-left w-full h-full'>
-                  <div className='w-full h-full flex justify-evenly items-end'>
-                    <img src={Logo_Irece} className='w-20 h-20' alt='logo' />
-                    <img src={Logo_Barra} className='w-20 h-20' alt='logo' />
-                    <img src={Logo_Xique} className='w-28 h-28' alt='logo' />
+                <div className='  carousel-item  float-left w-full h-full'>
+                  <div className='w-full h-full flex justify-evenly items-center'>
+                    <img src={Logo_Embrapa} className='w-16 h-16 md:w-32 md:h-28'alt='logo' />
+                    <img src={Logo_Buritirama} className='w-16 h-16 md:w-36 md:h-28' alt='logo' />
                   </div>
-                </div> */}
+                </div>
               </div>
             </div>
           </div>

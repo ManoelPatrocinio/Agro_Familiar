@@ -54,9 +54,7 @@ export function Footer() {
             <li className="text-xs text-gray-800 py-2 hover:text-palm-700 transition-all">
               <Link to="/Products"> Produtos </Link>
             </li>
-            <li className="text-xs text-gray-800 py-2 hover:text-palm-700 transition-all">
-              <Link to=""> Territórios </Link>
-            </li>
+          
             <li className="text-xs text-gray-800 py-2 hover:text-palm-700 transition-all">
               <Link to="/Farmers"> Produtores </Link>
             </li>

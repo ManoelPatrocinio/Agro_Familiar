@@ -36,11 +36,9 @@ export function AboutUs() {
             O que fazemos ?
           </h3>
           <p className="w-full text-md text-gray-700 ">
-            Aproximamos o consumidor ao que de melhor é produzido pelas
-            Associações, Cooperativas e produtores individuais da sua região.
-            Possibilitamos que os produtores se cadastrem na plataforma e montem
-            o seu próprio catálogo digital com seus melhores produtos, para que
-            possam estar acessíveis para clientes de todas as regiões.
+          Aproximamos o consumidor ao que de melhor é produzido pelas Associações, Cooperativas e Produtores Individuais 
+          da sua região. Possibilitamos se cadastrem na plataforma e montem o seu próprio catálogo digital com seus melhores 
+          produtos, para que possam estar acessíveis para clientes de todas as regiões.
           </p>
         </div>
         <div
@@ -51,12 +49,9 @@ export function AboutUs() {
             O que nos motivou ?{" "}
           </h3>
           <p className="w-full text-md text-gray-700 ">
-            Mesmo com o aumento da procura por produtos naturais e orgânicos,
-            produtores adeptos a esse tipo de cultivo ainda enfrentam algumas
-            dificuldades, entre elas, está a distância entre o produtor e o
-            consumidor, além de, meios efetivos para anunciar e negociar seus
-            produtos. Logo, foi pensando nessas questões, que o Portal Agro
-            Familiar foi criado.
+          Mesmo com o aumento da procura por produtos naturais e orgânicos, produtores adeptos a esse tipo de cultivo ainda 
+          enfrentam algumas dificuldades, entre elas, está a distância entre o produtor e o consumidor, além de, meios efetivos
+           para anunciar e negociar seus produtos. Logo, foi pensando nessas questões, que o Portal Agro Familiar foi criado.
           </p>
         </div>
         <div className="w-full  h-full md:h-[22rem] text-justify md:text-center font-display ">
@@ -114,7 +109,7 @@ export function AboutUs() {
                   Contato e negociação direto com o produtor.
                 </li>
                 <li className="pl-2 py-2">
-                  Contato e negociação direto com o produtor.
+                Possibilidade de montar sua própria lista de interesse, com produtos que deseja receber mais informações ou promoções. 
                 </li>
               </ul>
             </div>
