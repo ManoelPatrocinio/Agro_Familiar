@@ -9,6 +9,9 @@ import { SectionTitle } from "../../Components/SectionTitle";
 import { User } from "../../Types/user.type";
 import { api } from "../../hook/useApi";
 import { useState } from "react";
+import { cnpj } from "cpf-cnpj-validator";
+import ReactInputMask from "react-input-mask";
+
 
 export function RegisterEntity() {
   const navigate = useNavigate();
@@ -20,15 +23,23 @@ export function RegisterEntity() {
   } = useForm<User>();
 
   async function formSubmit(FormData: User) {
-    if (FormData.u_type.length === 0) {
+    if (!FormData.u_type || FormData.u_type.length === 0) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Escolha o Tipo de Organização",
+        text: "Escolha o Tipo da Organização",
       });
     }
+    const cpfFromated =      FormData!.u_CNPJ_CPF!.replace(/[^0-9]+/g,'');
+    const number_main =      FormData!.u_main_contact!.replace(/[^0-9]+/g,'');
+    const number_secondary = FormData.u_secondary_contact ? FormData.u_secondary_contact.replace(/[^0-9]+/g,''): ""
 
-    await api
+    if(cnpj.isValid(FormData!.u_CNPJ_CPF!)){
+      FormData!.u_CNPJ_CPF! = cpfFromated
+      FormData!.u_main_contact = number_main
+      FormData.u_secondary_contact = number_secondary
+
+      await api
       .post("/register", FormData)
       .then((response) => {
         Swal.fire({
@@ -51,6 +62,17 @@ export function RegisterEntity() {
           showConfirmButton: true,
         });
       });
+    }else{
+      Swal.fire({
+        icon: "info",
+        title: "Oppss..",
+        text: "O CNPJ que você informou não é válido, verifique e tente novamente",
+        showConfirmButton: true,
+      });
+    }
+
+
+  
   }
 
   return (
@@ -136,7 +158,7 @@ export function RegisterEntity() {
                     id="inputRegisterEntityName"
                     aria-describedby="entityName"
                     placeholder="Digite aqui"
-                    {...register("u_entity_name", {
+                    {...register("u_full_name", {
                       required: "Campo obrigatório",
                       minLength: {
                         value: 6,
@@ -160,39 +182,36 @@ export function RegisterEntity() {
                     CNPJ
                     <span className="text-red-500 font-bold"> *</span>:
                   </label>
-                  <input
+                  <ReactInputMask
                     type="text"
                     className="form-control
-                  block
-                  w-full
-                  px-3
-                  py-1.5
-                  text-base
-                  font-normal
-                  text-gray-700
-                  bg-white bg-clip-padding
-                  border border-solid border-gray-300
-                  rounded
-                  transition
-                  ease-in-out
-                  m-0
+                    block
+                    w-full
+                    px-3
+                    py-1.5
+                    text-base
+                    font-normal
+                    text-gray-700
+                    bg-white bg-clip-padding
+                    border border-solid border-gray-300
+                    rounded
+                    transition
+                    ease-in-out
+                    m-0
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     id="inputRegisterEntityCnpj"
                     aria-describedby="EntityCnpj"
+                    mask='99.999.999/9999.99'
+
                     placeholder="XX.XXX.XXX/XXXX.XX"
-                    max={14}
-                    min={14}
-                    maxLength={14}
+                
                     {...register("u_CNPJ_CPF", {
                       required: "Informe um CNPJ válido para continuar",
                       minLength: {
                         value: 14,
-                        message: "Este campo deve ter pelo menos 14 caracteres",
+                        message: "Este campo deve ter 14 caracteres",
                       },
-                      pattern: {
-                        value: /^[0-9]+$/,
-                        message: "Por favor, apenas números",
-                      },
+              
                     })}
                   />
                   <ErrorMessage
@@ -510,38 +529,34 @@ export function RegisterEntity() {
                     Nº Whatsapp
                     <span className="text-red-500 font-bold"> *</span>:
                   </label>
-                  <input
+                  <ReactInputMask
                     type="text"
                     className="
-                  form-control  
-                  w-full
-                  px-3
-                  py-1.5
-                  text-base
-                  font-normal
-                  text-gray-700
-                  bg-white bg-clip-padding
-                  border border-solid border-gray-300
-                  rounded
-                  transition
-                  ease-in-out
-                  m-0
-                  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                      form-control  
+                      w-full
+                      px-3
+                      py-1.5
+                      text-base
+                      font-normal
+                      text-gray-700
+                      bg-white bg-clip-padding
+                      border border-solid border-gray-300
+                      rounded
+                      transition
+                      ease-in-out
+                      m-0
+                      focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     id="inputEntityMainPhone"
-                    max={12}
-                    min={12}
-                    maxLength={12}
+                    mask='(99) 99999-9999'
+               
                     placeholder="(XX) 9XXXX-XXXX"
                     {...register("u_main_contact", {
                       required: "Campo Obrigatório",
                       minLength: {
-                        value: 12,
-                        message: "Números insuficiente",
-                      },
-                      pattern: {
-                        value: /^[0-9]+$/,
-                        message: "Por favor, apenas números",
-                      },
+                        value: 11,
+                        message: "Contato incompleto",
+                      }
+                     
                     })}
                   />
                   <ErrorMessage
@@ -560,7 +575,7 @@ export function RegisterEntity() {
                     Nº Whatsapp 2
                     <span className=" text-xs text-gray-400"> (opcional)</span>:
                   </label>
-                  <input
+                  <ReactInputMask
                     type="text"
                     className="form-control
                 
@@ -579,19 +594,15 @@ export function RegisterEntity() {
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     id="inputRegisterEntitySecondaryPhone"
                     placeholder="(XX) 9XXXX-XXXX"
-                    max={12}
-                    min={12}
-                    maxLength={12}
+                    mask='(99) 99999-9999'
+                  
                     aria-describedby="entity phone 2"
                     {...register("u_secondary_contact", {
                       minLength: {
-                        value: 12,
+                        value: 11,
                         message: "Números insuficiente",
-                      },
-                      pattern: {
-                        value: /^[0-9]+$/,
-                        message: "Por favor, apenas números",
-                      },
+                      }
+                     
                     })}
                   />
                   <ErrorMessage

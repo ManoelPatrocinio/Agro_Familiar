@@ -1,3 +1,5 @@
+import { ErrorMessage } from "@hookform/error-message";
+import { useForm } from "react-hook-form";
 import InputMask from "react-input-mask";
 
 type Props = {
@@ -6,14 +8,20 @@ type Props = {
   onChange: (e: any) => void;
   texthelp: string;
 };
-export function MaskedInput({ mask, onChange, texthelp, id }: Props) {
+export function MaskedInput({ mask, texthelp, id }: Props) {
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
+
   return (
-    <InputMask
-      id={id}
-      mask={mask}
-      onChange={onChange}
-      placeholder={texthelp}
-      className=" 
+    <>
+      <InputMask
+        id={id}
+        mask={mask}
+        placeholder={texthelp}
+        className=" 
           form-control  
           w-full
           px-3
@@ -31,7 +39,22 @@ export function MaskedInput({ mask, onChange, texthelp, id }: Props) {
           focus:bg-white 
           focus:border-blue-600 
           focus:outline-none"
-      required
-    />
+        required
+        {...register("u_full_name", {
+          required: "Campo obrigatório",
+          minLength: {
+            value: 6,
+            message: "Este campo deve ter mais de 6 caracteres",
+          },
+        })}
+      />
+      <ErrorMessage
+        errors={errors}
+        name="u_entity_name"
+        render={({ message }) => (
+          <small className="text-red-500 text-xs">{message}</small>
+        )}
+      />
+    </>
   );
 }

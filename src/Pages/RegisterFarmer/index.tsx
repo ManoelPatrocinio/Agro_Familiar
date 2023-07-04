@@ -9,8 +9,8 @@ import { SectionTitle } from "../../Components/SectionTitle";
 import { User } from "../../Types/user.type";
 import { api } from "../../hook/useApi";
 import { useState } from "react";
-
-let toggleForm: boolean = false;
+import { cpf } from "cpf-cnpj-validator";
+import ReactInputMask from "react-input-mask";
 
 export function RegisterFarmer() {
   const navigate = useNavigate();
@@ -23,8 +23,16 @@ export function RegisterFarmer() {
 
   async function formSubmit(FormData: User) {
     FormData.u_type = "farmer";
+    const cpfFromated =      FormData!.u_CNPJ_CPF!.replace(/[^\d]+/g,'');
+    const number_main =      FormData!.u_main_contact!.replace(/[^0-9]+/g,'');
+    const number_secondary = FormData.u_secondary_contact ? FormData.u_secondary_contact.replace(/[^0-9]+/g,''): ""
 
-    await api
+    
+    if(cpf.isValid(cpfFromated)){
+      FormData!.u_CNPJ_CPF! = cpfFromated
+      FormData!.u_main_contact = number_main
+      FormData.u_secondary_contact = number_secondary
+      await api
       .post("/register", FormData)
       .then((response) => {
         Swal.fire({
@@ -47,6 +55,16 @@ export function RegisterFarmer() {
           showConfirmButton: true,
         });
       });
+    }else{
+      Swal.fire({
+        icon: "info",
+        title: "Oppss..",
+        text: "O CPF que você informou não é válido, verifique e tente novamente",
+        showConfirmButton: true,
+      });
+    }
+
+
   }
 
   return (
@@ -67,7 +85,7 @@ export function RegisterFarmer() {
                     htmlFor="inputRegisterFarmerName"
                     className="form-label inline-block mb-2 text-palm-700 mr-3"
                   >
-                    Nome da completo
+                    Nome  completo
                     <span className="text-red-500 font-bold"> *</span>:
                   </label>
                   <input
@@ -111,37 +129,33 @@ export function RegisterFarmer() {
                   >
                     CPF <span className="text-red-500 font-bold"> *</span>:
                   </label>
-                  <input
-                    type="text"
-                    className="form-control
-                  block
-                  w-full
-                  px-3
-                  py-1.5
-                  text-base
-                  font-normal
-                  text-gray-700
-                  bg-white bg-clip-padding
-                  border border-solid border-gray-300
-                  rounded
-                  transition
-                  ease-in-out
-                  m-0
-                  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                    id="inputRegisterUserCPF"
-                    placeholder="XXX.XXX.XXX-XX"
-                    max={11}
-                    maxLength={11}
+                  <ReactInputMask
+                  id="inputRegisterUserCPF"
+                  type="text"
+                  className="form-control
+                    block
+                    w-full
+                    px-3
+                    py-1.5
+                    text-base
+                    font-normal
+                    text-gray-700
+                    bg-white bg-clip-padding
+                    border border-solid border-gray-300
+                    rounded
+                    transition
+                    ease-in-out
+                    m-0
+                    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                  mask="999.999.999-99"
+                  
                     {...register("u_CNPJ_CPF", {
                       required: "Informe um CPF válido para continuar",
                       minLength: {
                         value: 11,
-                        message: "Este campo deve ter pelo menos 14 caracteres",
-                      },
-                      pattern: {
-                        value: /^[0-9]+$/,
-                        message: "Por favor, apenas números",
-                      },
+                        message: "Este campo deve ter 11 caracteres",
+                      },maxLength:14
+                      
                     })}
                   />
                   <ErrorMessage
@@ -413,37 +427,34 @@ export function RegisterFarmer() {
                     Nº Whatsapp
                     <span className="text-red-500 font-bold"> *</span>:
                   </label>
-                  <input
+                  <ReactInputMask
                     type="text"
                     className="
-                  form-control  
-                  w-full
-                  px-3
-                  py-1.5
-                  text-base
-                  font-normal
-                  text-gray-700
-                  bg-white bg-clip-padding
-                  border border-solid border-gray-300
-                  rounded
-                  transition
-                  ease-in-out
-                  m-0
-                  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                      form-control  
+                      w-full
+                      px-3
+                      py-1.5
+                      text-base
+                      font-normal
+                      text-gray-700
+                      bg-white bg-clip-padding
+                      border border-solid border-gray-300
+                      rounded
+                      transition
+                      ease-in-out
+                      m-0
+                      focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     id="inputFarmerMainPhone"
-                    max={12}
-                    maxLength={12}
-                    placeholder="(DDD) 9XXXX-XXXX"
+                    mask='(99) 99999-9999'
+                    placeholder="(XX) 9XXXX-XXXX"
+      
                     {...register("u_main_contact", {
                       required: "Campo Obrigatório",
                       minLength: {
-                        value: 12,
-                        message: "Números insuficiente",
-                      },
-                      pattern: {
-                        value: /^[0-9]+$/,
-                        message: "Por favor, apenas números",
-                      },
+                        value: 11,
+                        message: "Contato incompleto",
+                      }
+            
                     })}
                   />
                   <ErrorMessage
@@ -462,7 +473,7 @@ export function RegisterFarmer() {
                     Nº Whatsapp 2
                     <span className=" text-xs text-gray-400"> (opcional)</span>:
                   </label>
-                  <input
+                  <ReactInputMask
                     type="text"
                     className="form-control
                  
@@ -480,18 +491,17 @@ export function RegisterFarmer() {
                     m-0
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     id="inputRegisterFarmerSecondaryPhone"
-                    placeholder="(DDD) 9XXXX-XXXX"
-                    max={12}
-                    maxLength={12}
+                    placeholder="(XX) 9XXXX-XXXX"
+                    mask='(99) 99999-9999'
                     {...register("u_secondary_contact", {
                       minLength: {
-                        value: 12,
-                        message: "Números insuficiente",
-                      },
-                      pattern: {
-                        value: /^[0-9]+$/,
-                        message: "Por favor, apenas números",
-                      },
+                        value: 11,
+                        message: "Contato incompleto",
+                      }
+                      // pattern: {
+                      //   value: /^[0-9]+$/,
+                      //   message: "Por favor, apenas números",
+                      // },
                     })}
                   />
                   <ErrorMessage
@@ -615,7 +625,7 @@ export function RegisterFarmer() {
 
               <div className="flex flex-col justify-center  text-center lg:text-left mt-6">
                 <button
-                  type="button"
+                  type="submit"
                   onClick={handleSubmit(formSubmit)}
                   className="w-full inline-block px-7 py-2 bg-palm-700 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-palm-500 hover:shadow-lg focus:bg-palm-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-palm-700 active:shadow-lg transition duration-150 ease-in-out"
                 >
