@@ -251,11 +251,8 @@ export function ManageProfile() {
                     </div>
                     <div className=" text-center md:text-left px-2 md:px-4 py-4">
                       <h4 className="text-sm md:text-lg  text-palm-700 font-display font-semibold md:mb-2  ">
-                        {" "}
-                        {entityData?.u_entity_name
-                          ? entityData?.u_entity_name
-                          : entityData?.u_full_name}
-                      </h4>{" "}
+                        { entityData?.u_full_name}
+                      </h4>
                       <p className="text-xs md:text-sm text-gray-400 font-semibold md:mb-2">
                         {" "}
                         {entityData?.u_city}

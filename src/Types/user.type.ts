@@ -6,7 +6,6 @@ export type User = {
   u_password: string;
   u_newPassword?: string;
   u_president_name?: string;
-  u_entity_name?: string;
   u_CNPJ_CPF?: string;
   u_UF?: string;
   u_city?: string;

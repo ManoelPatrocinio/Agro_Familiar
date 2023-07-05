@@ -215,9 +215,7 @@ export function Entity() {
             </div>
             <div className='flex flex-col items-center md:items-start justify-evenly px-4 pb-4'>
               <h4 className='text-sm md:text-lg text-center md:text-left text-palm-700 font-display font-semibold pt-3 md:pt-0'>
-                {entityData?.u_type === 'farmer'
-                  ? entityData.u_full_name
-                  : entityData?.u_entity_name}
+                {entityData?.u_full_name}
               </h4>
               <p className='text-xs md:text-sm text-gray-400 font-semibold'>
                 {' '}

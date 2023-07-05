@@ -168,7 +168,7 @@ export function RegisterEntity() {
                   />
                   <ErrorMessage
                     errors={errors}
-                    name="u_entity_name"
+                    name="u_full_name"
                     render={({ message }) => (
                       <small className="text-red-500 text-xs">{message}</small>
                     )}

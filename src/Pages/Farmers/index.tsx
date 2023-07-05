@@ -79,7 +79,7 @@ export function Farmers() {
   const filtedEntityListBySearch =
     search.length > 0
       ? farmersAPi?.filter((entity) =>
-          entity.u_entity_name?.toLowerCase().includes(search.toLowerCase())
+          entity.u_full_name?.toLowerCase().includes(search.toLowerCase())
         )
       : [];
 
@@ -89,8 +89,8 @@ export function Farmers() {
 
     if (orderType === 'De A a Z') {
       filtedList = farmersAPi!.sort((prev, next) => {
-        let prevUpperCase = prev.u_entity_name?.toUpperCase(),
-          nextUpperCase = next.u_entity_name?.toUpperCase();
+        let prevUpperCase = prev.u_full_name?.toUpperCase(),
+          nextUpperCase = next.u_full_name?.toUpperCase();
         return prevUpperCase == nextUpperCase
           ? 0
           : prevUpperCase! > nextUpperCase!
@@ -99,8 +99,8 @@ export function Farmers() {
       });
     } else if (orderType == 'De Z a A') {
       filtedList = farmersAPi!.sort((prev, next) => {
-        let prevUpperCase = prev.u_entity_name?.toUpperCase(),
-          nextUpperCase = next.u_entity_name?.toUpperCase();
+        let prevUpperCase = prev.u_full_name?.toUpperCase(),
+          nextUpperCase = next.u_full_name?.toUpperCase();
         return prevUpperCase == nextUpperCase
           ? 0
           : nextUpperCase! > prevUpperCase!
