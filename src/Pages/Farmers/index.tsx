@@ -35,7 +35,6 @@ export function Farmers() {
     async () => {
       const response = await api.get(`/all-entity/?city=${city}`);
       filterByTypeEntity(response.data.entities);
-      total = await response.data.entities.length;
       return response.data.entities;
     },
     {

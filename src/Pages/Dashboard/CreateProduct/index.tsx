@@ -254,7 +254,7 @@ export function CreateProduct() {
                         <span className="text-red-500 font-bold"> *</span>:
                       </label>
                       <input
-                        type="number"
+                        type="text"
                         className="form-control
                     
                         w-full
@@ -299,7 +299,8 @@ export function CreateProduct() {
                         <span className=" text-xs text-gray-400"></span>:
                       </label>
                       <input
-                        type="number"
+                       type="text"
+
                         className="form-control
                         block
                         w-full

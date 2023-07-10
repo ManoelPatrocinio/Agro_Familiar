@@ -87,12 +87,11 @@ export function ManageProducts() {
       text: 'Tem certeja que deseja apagar esse produto ?',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        produc.p_images?.forEach(async (ImageUrl) => {
-          const splits = ImageUrl.split('%2F');
+        for(const imgUrl of  produc.p_images!){
+          const splits = imgUrl.split('%2F');
           const imgName = splits[1].split('?alt');
           await FirebaseDeleteFile(imgName![0], 'products');
-        });
-
+        }
         await api
           .delete(`/admin/remove-product-byId/${produc._id}`)
           .then((response) => {
@@ -113,9 +112,7 @@ export function ManageProducts() {
               text: error.response.data.message,
               showConfirmButton: true,
             });
-            setTimeout(() => {
-              window.location.reload();
-            }, 2000);
+           
           });
       }
     });

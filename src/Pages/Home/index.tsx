@@ -18,26 +18,28 @@ import Logo_Embrapa from '../../assets/images/embrapa.png'
 import Logo_Buritirama from '../../assets/images/buritirama.png'
 import { api } from '../../hook/useApi';
 
+const backendUrl = import.meta.env.VITE_BACKEND_PORT;
 export function Home() {
   const [search, setSearch] = useState<string>('');
-  const [productData, setProductData] = useState<Product[]>([]);
+  const [productsMostRating, setProductMostRating] = useState<Product[]>([]);
+  const [productsRecents, setProductRecents] = useState<Product[]>([]);
 
   const {
-    data: productAPi,
+    data: allProducts,
     isFetching,
     error,
   } = useQuery<Product[]>(
     'homeGetAllProd',
     async () => {
-      const response = await api.get('/all-enable-products');
       //getUserPosition();
-      return response.data.products;
+      getProductsForSections()
+      const response = await api.get('/all-enable-products')
+      return response.data.products
     },
-    {
-      staleTime: 1000 * 60, // 1 minute
-    }
+    // {
+    //   staleTime: 1000 * 60, // 1 minute
+    // }
   );
-
   if (error) {
     Swal.fire({
       icon: 'error',
@@ -47,51 +49,25 @@ export function Home() {
   }
   const filteredProdList =
     search.length > 0
-      ? productAPi?.filter((product) =>
+      ? allProducts?.filter((product) =>
           product.p_name?.toLowerCase().includes(search.toLowerCase())
         )
       : [];
 
-  function filteredProdListByOrderType(orderType: string) {
-    let filtedList: Product[] = [];
-
-    if (orderType === 'Menor Preço') {
-      filtedList = productAPi!.sort((prev, next) => {
-        return prev.p_price! - next.p_price!;
-      });
-    } else if (orderType === 'Maior Preço') {
-      filtedList = productAPi!.sort((prev, next) => {
-        return next.p_price! - prev.p_price!;
-      });
-    } else if (orderType === 'De A a Z') {
-      filtedList = productAPi!.sort((prev, next) => {
-        let prevUpperCase = prev.p_name?.toUpperCase(),
-          nextUpperCase = next.p_name?.toUpperCase();
-        return prevUpperCase == nextUpperCase
-          ? 0
-          : prevUpperCase! > nextUpperCase!
-          ? 1
-          : -1;
-      });
-    } else if (orderType == 'De Z a A') {
-      filtedList = productAPi!.sort((prev, next) => {
-        let prevUpperCase = prev.p_name?.toUpperCase(),
-          nextUpperCase = next.p_name?.toUpperCase();
-        return prevUpperCase == nextUpperCase
-          ? 0
-          : nextUpperCase! > prevUpperCase!
-          ? 1
-          : -1;
-      });
-    }
-    setProductData(filtedList);
+  async function getProductsForSections(){
+    axios
+    .all([
+      axios.get(`${backendUrl}/most-rating`),
+      axios.get(`${backendUrl}/racent-added`),
+    ])
+    .then(
+      axios.spread((productsMostRating, productsRecentAdded) => {
+        setProductMostRating(productsMostRating.data.products),
+        setProductRecents(productsRecentAdded.data.products)
+  
+      })
+    );
   }
-  function filterListByRaiting() {
-    return productAPi?.filter(
-      (product) => product.p_raiting && product.p_raiting >= 4
-    )
-  }
-
   async function getUserPosition() {
     if ('geolocation' in navigator) {
       await navigator.geolocation.getCurrentPosition(function (position) {
@@ -121,11 +97,7 @@ export function Home() {
 
       <main className='w-full flex items-start flex-col px-1 md:px-20 '>
         <SectionTitle title={'Destaques'} className={'my-6 w-full'} />
-        <Dropdrown
-          items={['Menor Preço', 'Maior Preço', 'De A a Z', 'De Z a A']}
-          setOptionOrder={filteredProdListByOrderType}
-        />
-
+  
         <div className='w-full flex flex-wrap justify-around gap-4 pt-4 px-2 '>
           {isFetching ? (
             <Load_spinner
@@ -143,23 +115,14 @@ export function Home() {
               )}
 
               {search?.length === 0 && (
-                <>
-                  {' '}
-                  {productData.length === 0 ? (
                     <>
-                      {filterListByRaiting()?.slice(0,8).map((product) => (
-                        <CardProduct product={product} key={product._id} />
-                      ))}
-                    </>
-                  ) : (
-                    <>
-                      {productData?.map((product) => (
+                      {productsMostRating.map((product) => (
                         <CardProduct product={product} key={product._id} />
                       ))}
                     </>
                   )}
-                </>
-              )}
+          
+      
             </>
           )}
         </div>
@@ -176,7 +139,7 @@ export function Home() {
             />
           ) : (
             <>
-              {filterListByRaiting()?.slice(0,8).map((product) => (
+              {productsRecents.map((product) => (
                 <CardProduct product={product} key={product._id} />
               ))}
             </>

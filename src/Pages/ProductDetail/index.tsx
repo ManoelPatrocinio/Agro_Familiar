@@ -1,6 +1,6 @@
 import { ErrorMessage } from '@hookform/error-message';
 import classNames from 'classnames';
-import { ChatText, WhatsappLogo } from 'phosphor-react';
+import { CaretLeft, CaretRight, ChatText, WhatsappLogo } from 'phosphor-react';
 import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
@@ -376,7 +376,7 @@ export function ProductDetail() {
           <div className='carousel-inner relative w-full h-full overflow-hidden rounded'>
             {productData?.p_images?.map((img, index) => (
               <div
-                className={classNames('carousel-item float-left h-full', {
+                className={classNames('carousel-item float-left h-full rounded-md', {
                   'active  w-full': index === 0,
                   ' w-full': index != 0,
                 })}
@@ -384,7 +384,7 @@ export function ProductDetail() {
               >
                 <img
                   src={img}
-                  className='block w-full h-full'
+                  className='block w-full h-full object-contain rounded-md'
                   alt='imagem do produto'
                 />
               </div>
@@ -397,9 +397,9 @@ export function ProductDetail() {
             data-bs-slide='prev'
           >
             <span
-              className='carousel-control-prev-icon inline-block bg-no-repeat'
+              className=' inline-block bg-no-repeat rounded-full '
               aria-hidden='true'
-            ></span>
+            > <CaretLeft size={32} color='#789B3D'/>  </span>
             <span className='visually-hidden'>Previous</span>
           </button>
           <button
@@ -409,9 +409,10 @@ export function ProductDetail() {
             data-bs-slide='next'
           >
             <span
-              className='carousel-control-next-icon inline-block bg-no-repeat'
+              className='inline-block bg-no-repeat  rounded-full '
               aria-hidden='true'
-            ></span>
+            ><CaretRight size={32} color='#789B3D'/> </span>
+
             <span className='visually-hidden'>Next</span>
           </button>
         </div>

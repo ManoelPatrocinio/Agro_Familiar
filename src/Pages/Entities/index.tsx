@@ -35,7 +35,6 @@ export function Entities() {
     async () => {
       const response = await api.get(`/all-entity/?city=${city}`);
       filterByTypeEntity('assoc', response.data.entities);
-      total = response.data.entities.length;
       return response.data.entities;
     },
     {
