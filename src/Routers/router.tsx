@@ -16,6 +16,7 @@ import { Products } from '../Pages/Products';
 import { RegisterEntity } from '../Pages/RegisterEntity';
 import { RegisterFarmer } from '../Pages/RegisterFarmer';
 import { AuthContext } from '../context/AuthContext';
+import { ClientProfile } from '../Pages/ClientProfile';
 interface IprotectedRoute {
   isAllowed: boolean;
   redirectPath: string;
@@ -50,6 +51,7 @@ export const SystemRoutes = () => {
         <Route path='/ContactUs' element={<ContactUs />} />
         <Route path='/Register-entity' element={<RegisterEntity />} />
         <Route path='/Register-farmer' element={<RegisterFarmer />} />
+        <Route path='/my-profile/:userId' element={<ClientProfile />} />
         <Route
           path='/Admin/create-product'
           element={

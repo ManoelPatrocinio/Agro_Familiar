@@ -1,5 +1,4 @@
 import classNames from "classnames";
-import { destroyCookie } from "nookies";
 import {
   House,
   List,
@@ -11,6 +10,7 @@ import {
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import Cookies from 'js-cookie';
 import exemple_user_profile from "../assets/images/exemple_user_profile.png";
 import { AuthContext } from "../context/AuthContext";
 import { FormUserAccess } from "./FormUserAccess";
@@ -30,7 +30,7 @@ export function Menu_Sidebar({ type }: Prop) {
       text: "Deseja mesmo nos deixar ?",
     }).then((result) => {
       if (result.isConfirmed) {
-        destroyCookie(undefined, "@PAF:token");
+        Cookies.remove('token');
         window.location.reload();
       }
     });

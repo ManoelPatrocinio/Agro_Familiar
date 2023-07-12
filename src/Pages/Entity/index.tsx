@@ -19,6 +19,7 @@ import exemple_user_profile from '../../assets/images/exemple_user_profile.png';
 import Icon_WhatsApp from '../../assets/images/icon-whatsapp.svg';
 import Star from '../../assets/images/star_icon.png';
 import exemple_user_cover_background from '../../assets/images/user_cover_background.jpg';
+import Cookies from 'js-cookie';
 
 let total: number = 0; //number of products in the list, to calculate the number must be  pages shown
 let categorySelected: string = 'Produtos';
@@ -169,6 +170,23 @@ export function Entity() {
     total = filtedList.length;
     setPagination(offSet, filtedList);
   }
+  async function deleteUserAcount() {
+    Swal.fire({
+      icon: 'question',
+      title: 'Sair',
+      showCancelButton: true,
+      confirmButtonText: 'Sim',
+      text: 'Ao excluir essa conta, todos seus dados e informações serão perdidas, tem certeza ?',
+
+    }).then((result) => {
+      if (result.isConfirmed) {
+
+        Cookies.remove('token');
+
+        window.location.reload();
+      }
+    });
+  }
   return (
     <>
       <Header setSearch={setSearch} ItemSearched={search} />
@@ -186,7 +204,7 @@ export function Entity() {
             className='w-full h-full object-cover'
           />
         )}
-        <div className=' w-full absolute top-[7rem] md:top-[87%] flex flex-col md:flex-row  justify-between items-center  md:px-16 '>
+        <div className='w-full absolute top-[7rem] md:top-[87%] flex flex-col md:flex-row  justify-between items-center  md:px-16 '>
           <div className='flex flex-col md:flex-row items-center md:items-end'>
             <div className='w-[7rem] h-[7rem] md:w-[9.5rem] md:h-[9.5rem] rounded-[50%] '>
               {entityData && entityData.u_img_profile ? (
@@ -334,7 +352,7 @@ export function Entity() {
                 data-bs-toggle='dropdown'
                 aria-expanded='false'
               >
-                <DotsThreeVertical size={38} weight='bold' />
+                <DotsThreeVertical size={38} weight='bold' color='#789B3D' />
               </button>
               <ul
                 className='
@@ -377,6 +395,27 @@ export function Entity() {
                   >
                     Sobre
                   </Link>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    className='
+                        dropdown-item
+                        text-sm
+                        py-2
+                        px-4
+                        font-normal
+                        block
+                        w-full
+                        whitespace-nowrap
+                        bg-transparent
+                        text-gray-700
+                        hover:bg-gray-100
+                      '
+                    onClick={()=>deleteUserAcount()}  
+                  >
+                    Exluir conta
+                  </button>
                 </li>
               </ul>
             </div>

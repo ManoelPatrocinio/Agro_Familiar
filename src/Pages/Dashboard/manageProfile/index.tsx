@@ -1,5 +1,4 @@
 import { ErrorMessage } from "@hookform/error-message";
-import { destroyCookie } from "nookies";
 import { ArrowRight, Question } from "phosphor-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -19,6 +18,7 @@ import {
   FirebaseDeleteFile,
   FirebaseUploadFile,
 } from "../../../service/firebase";
+import Cookies from "js-cookie";
 
 
 interface formEditUser extends User{
@@ -106,7 +106,7 @@ export function ManageProfile() {
         timer: 1500,
       });
       setTimeout(() => {
-        destroyCookie(undefined, "@PAF:token");
+        Cookies.remove('token');
         queryClient.invalidateQueries(['manageProfile']);
         window.location.reload()
         navigate("/");

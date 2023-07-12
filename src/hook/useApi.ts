@@ -1,9 +1,9 @@
 import axios from "axios";
-import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { Product } from "../Types/product.type";
 import { User } from "../Types/user.type";
+import Cookies from "js-cookie";
 interface IapiResponse {
   error: boolean;
   message: string;
@@ -11,8 +11,7 @@ interface IapiResponse {
   user?: User;
 }
 const backendUrl = import.meta.env.VITE_BACKEND_PORT;
-const { "@PAF:token": token } = parseCookies();
-
+const token = Cookies.get('token');
 export const api = axios.create({
   baseURL: backendUrl,
 });

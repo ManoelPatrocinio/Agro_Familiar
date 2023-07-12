@@ -1,8 +1,8 @@
-import { parseCookies, setCookie } from "nookies";
 import { createContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { User } from "../../Types/user.type";
 import { api } from "../../hook/useApi";
+import Cookies from "js-cookie";
 interface IAuthProviderProps {
   children: React.ReactNode;
 }
@@ -45,7 +45,9 @@ export function AuthProvider({ children }: IAuthProviderProps) {
 
   //check if there is a token saved in the Cookies, decode that token to get User_id and make a request to the backend to always return an updated user
   useEffect(() => {
-    const { "@PAF:token": token } = parseCookies();
+   
+    const token = Cookies.get('token');
+
     if (token) {
       const decodeJWT = decodeJwt(token);
       api
@@ -70,9 +72,9 @@ export function AuthProvider({ children }: IAuthProviderProps) {
     await api
       .post<IapiResponse>("/login", user)
       .then((response) => {
-        setCookie(undefined, "@PAF:token", response.data.token, {
-          maxAge: 60 * 60 * 24, //24 hours
-        });
+    
+        Cookies.set('token', response.data.token, { expires: 1 }); //expires 24 hours
+
         setUseLogged(response.data.user);
         Swal.fire({
           icon: "success",

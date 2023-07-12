@@ -1,11 +1,11 @@
 import classNames from 'classnames';
-import { destroyCookie } from 'nookies';
 import {
   ClipboardText,
   MagnifyingGlass,
   User,
   UserCircle,
 } from 'phosphor-react';
+import Cookies from 'js-cookie';
 import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -37,8 +37,11 @@ export function Header({ setSearch, ItemSearched, filterByCity }: Iprop) {
       text: 'Deseja mesmo nos deixar ?',
     }).then((result) => {
       if (result.isConfirmed) {
-        destroyCookie(undefined, '@PAF:token');
-        window.location.reload();
+        Cookies.remove('token');
+        setTimeout(()=>{
+          window.location.reload();
+
+        },1200)
       }
     });
   };
@@ -145,7 +148,7 @@ export function Header({ setSearch, ItemSearched, filterByCity }: Iprop) {
                     </span>
                   </div>
                   <div className='w-full h-full'>
-                    {userLogged?.u_type !== 'customer' && (
+                    {userLogged?.u_type !== 'customer' ? (
                       <>
                         <Link
                           to='/Admin/create-product'
@@ -162,7 +165,17 @@ export function Header({ setSearch, ItemSearched, filterByCity }: Iprop) {
                           Meu Espaço
                         </Link>
                       </>
+                    ):(
+                      <Link
+                          to={`/my-profile/${userLogged?._id}`}
+                          className='block w-max mx-auto text-center text-palm-700 text-sm pt-2 mb-2 relative border-animated hover:text-palm-900 transition-all '
+                        >
+                          {' '}
+                          Minha conta
+                        </Link>
                     )}
+
+                   
 
                     <button
                       className='block mx-auto text-center text-palm-700 text-sm pt-2 mb-2 relative border-animated hover:text-palm-900 transition-all '
