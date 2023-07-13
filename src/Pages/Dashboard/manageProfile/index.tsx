@@ -84,7 +84,7 @@ export function ManageProfile() {
           console.error("data", error);
           Swal.fire({
             icon: "error",
-            title: error.response.data.message,
+            text: error.response.data.message,
             showConfirmButton: true,
           });
         });
@@ -116,7 +116,8 @@ export function ManageProfile() {
       console.error("error on Edit User Access", error);
       Swal.fire({
         icon: "error",
-        title: error.response.data.message,
+
+        text: error.response.data.message,
         showConfirmButton: true,
       });
     });
@@ -979,8 +980,7 @@ export function ManageProfile() {
                   </div>
 
                   <button
-                    type="button"
-                    onClick={handleSubmit(formEditUserAccess)}
+                    type="submit"
                     className="block mx-auto  px-6   py-2.5 bg-palm-700 text-white font-medium text-sm 
                       leading-snug uppercase rounded shadow-md hover:bg-palm-500 hover:shadow-lg focus:bg-palm-700
                        focus:shadow-lg focus:outline-none focus:ring-0 active:bg-palm-700 active:shadow-lg transition duration-150 ease-in-out"

@@ -62,6 +62,7 @@ export function ClientProfile() {
         icon: "success",
         title:"Sucesso",
         text: response.data.message,
+        showConfirmButton: false,
         timer: 1700
       });
       setTimeout(()=>{
@@ -92,12 +93,11 @@ export function ClientProfile() {
     await api.put(`/admin/alter-password/${userId}`,userFormData)
     .then((response)=>{
       Cookies.remove('token');
-
-     
       Swal.fire({
         icon: "success",
         title:"Sucesso",
         text: response.data.message,
+        showConfirmButton: false,
         timer: 1700
       });
       setTimeout(()=>{
@@ -119,10 +119,10 @@ export function ClientProfile() {
   async function handleDeleteUserAcount() {
     Swal.fire({
       icon: 'question',
-      title: 'Sair',
+      title: 'Excluir conta ?',
       showCancelButton: true,
       confirmButtonText: 'Sim',
-      text: 'Ao excluir essa conta, todos seus dados e informações serão perdidas, tem certeza ?',
+      text: 'Ao excluir essa conta, todos os seus dados e informações serão perdidas, tem certeza ?',
     }).then((result) => {
       if (result.isConfirmed) {
         deleteUserAcount()
@@ -134,13 +134,18 @@ export function ClientProfile() {
   async function deleteUserAcount() {
     await api.delete(`/admin/delete-account/${userId}`).then((response)=>{
       Cookies.remove('token');
-
-      window.location.reload();
       Swal.fire({
         icon: "success",
         title:"Sucesso",
         text: response.data.message,
+        showConfirmButton: false,
+        timer: 1700
+
       });
+      setTimeout(()=>{
+        navigate('/')
+        window.location.reload();
+      },1900)
     })
   }
   return (
