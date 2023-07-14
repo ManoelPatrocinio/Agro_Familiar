@@ -357,6 +357,13 @@ export function ProductDetail() {
     }
   }
 
+  function alterMainImg(e:React.MouseEvent<HTMLButtonElement, MouseEvent>){
+    const mainImg =  window.document.getElementById("mainImg")
+    if(mainImg){
+      mainImg.src = e.target.currentSrc
+    }
+  }
+
   return (
     <>
       <Header setSearch={() => {}} ItemSearched={''} />
@@ -366,14 +373,14 @@ export function ProductDetail() {
         entityLink={`/my-shop/${productData?.farmer_id}`}
         className={'my-10'}
       />
-      <main className='w-full h-full md:h-[22rem]  flex flex-col md:flex-row px-4 md:px-20'>
+      <main className='w-full h-full md:h-[20rem]  flex flex-col md:flex-row px-4 md:px-20'>
         <div
           id='carouselProductImg'
-          className='carousel slide carousel-fade relative w-full md:w-1/2 h-[12rem]  md:h-full   '
+          className='carousel slide carousel-fade relative w-full h-[25rem] md:w-1/2  md:h-full   '
           data-bs-ride='carousel'
           data-bs-interval='false'
         >
-          <div className='carousel-inner relative w-full h-full overflow-hidden rounded'>
+          <div className='carousel-inner relative w-full h-[78%] mb-[2%] overflow-hidden rounded'>
             {productData?.p_images?.map((img, index) => (
               <div
                 className={classNames('carousel-item float-left h-full rounded-md', {
@@ -383,41 +390,57 @@ export function ProductDetail() {
                 key={index}
               >
                 <img
+                  id="mainImg"
                   src={img}
-                  className='block w-full h-full object-contain rounded-md'
+                  className='block w-full h-full  object-contain rounded-md'
                   alt='imagem do produto'
                 />
               </div>
             ))}
           </div>
-          <button
-            className='carousel-control-prev absolute top-0 bottom-0 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline left-0'
-            type='button'
-            data-bs-target='#carouselProductImg'
-            data-bs-slide='prev'
-          >
-            <span
-              className=' inline-block bg-no-repeat rounded-full '
-              aria-hidden='true'
-            > <CaretLeft size={32} color='#789B3D'/>  </span>
-            <span className='visually-hidden'>Previous</span>
-          </button>
-          <button
-            className='carousel-control-next absolute top-0 bottom-0 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline right-0'
-            type='button'
-            data-bs-target='#carouselProductImg'
-            data-bs-slide='next'
-          >
-            <span
-              className='inline-block bg-no-repeat  rounded-full '
-              aria-hidden='true'
-            ><CaretRight size={32} color='#789B3D'/> </span>
+          <div className='relative w-full h-[20%] flex justify-between items-center '>
+            {/* <button
+              className='carousel-control-prev w-[5%] h-full  flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline left-0'
+              type='button'
+              data-bs-target='#carouselProductImg'
+              data-bs-slide='prev'
+            >
+              <span
+                className=' inline-block bg-no-repeat rounded-full '
+                aria-hidden='true'
+              > <CaretLeft size={32} color='#789B3D'/>  </span>
+              <span className='visually-hidden'>Previous</span>
+            </button> */}
+            <div className='w-[100%] h-full flex justify-center items-center space-x-2'>
+              {productData?.p_images?.map((url,index)=>(
+                <button 
+                  onClick={(e)=>alterMainImg(e)}
+                  className='w-1/4 h-full rounded cursor-pointer bg-black hover:border hover:border-palm-700 ' key={index}>
+                  <img src={url} alt="foto" className='w-full h-full object-cover rounded hover:opacity-50 smallImg'/>
+                </button>
+              ))}
+                  
+            </div>
 
-            <span className='visually-hidden'>Next</span>
-          </button>
+            {/* <button
+              className='carousel-control-next w-[5%] h-full flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline right-0'
+              type='button'
+              data-bs-target='#carouselProductImg'
+              data-bs-slide='next'
+            >
+              <span
+                className='inline-block bg-no-repeat  rounded-full '
+                aria-hidden='true'
+              ><CaretRight size={32} color='#789B3D'/> </span>
+
+              <span className='visually-hidden'>Next</span>
+            </button> */}
+          </div>
+         
+        
         </div>
 
-        <div className='w-full md:w-1/2 h-100 flex flex-col justify-between items-start  pt-4 md:pt-0 md:pl-8 md:pr-20'>
+        <div className='w-full md:w-1/2 h-auto flex flex-col justify-between items-start  pt-4 md:pt-0 md:pl-8 md:pr-20'>
           <div className='w-full   flex flex-col items-center md:items-start justify-between '>
             <div className='text-left'>
               <h2 className='w-full text-center md:text-start text-palm-700 text-lg md:text-xl font-medium mb-3 '>
