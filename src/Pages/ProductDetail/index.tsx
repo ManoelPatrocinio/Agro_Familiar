@@ -357,8 +357,8 @@ export function ProductDetail() {
     }
   }
 
-  function alterMainImg(e:React.MouseEvent<HTMLButtonElement, MouseEvent>){
-    const mainImg =  window.document.getElementById("mainImg")
+  function alterMainImg(e:any){
+    const mainImg:any =  window.document.getElementById("mainImg")
     if(mainImg){
       mainImg.src = e.target.currentSrc
     }
