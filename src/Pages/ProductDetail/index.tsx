@@ -18,6 +18,11 @@ import { AuthContext } from '../../context/AuthContext';
 import { PuchaseListContext } from '../../context/PuchaseListContext';
 import { api } from '../../hook/useApi';
 
+import Icon_money from "../../assets/images/icon-money.png"
+import Icon_pix from "../../assets/images/icon-pix.png"
+import Icon_cart from "../../assets/images/icon-cart.png"
+
+
 let FarmerName: string;
 
 export function ProductDetail() {
@@ -30,7 +35,7 @@ export function ProductDetail() {
   const [commentsList, setCommentsList] = useState<Comment[]>([]);
 
   const { AddToPuchaseList } = useContext(PuchaseListContext);
-  const { userLogged } = useContext(AuthContext);
+  const { userLogged, isAuthenticated } = useContext(AuthContext);
   const {
     register,
     formState: { errors },
@@ -99,8 +104,8 @@ export function ProductDetail() {
         </h4>
         {commentsList.length === 0 ? (
           <h4 className='w-full text-left text-sm md:text-md text-gray-500 md:pl-6 mb-20'>
-            Este produto ainda não tem comentários e avaliações, seja o primeiro
-            a comentar e ajude o nosso perfil 😀
+            Este produto ainda não tem comentários e avaliações, {!isAuthenticated && "logue com sua conta e "} seja o primeiro
+            a comentar 😀
           </h4>
         ) : (
           <div className='w-full max-h-[25rem] overflow-y-auto md:pl-8'>
@@ -365,7 +370,7 @@ export function ProductDetail() {
   }
 
   return (
-    <>
+    <div className='w-full h-full'>
       <Header setSearch={() => {}} ItemSearched={''} />
       <Carrousel />
       <SectionTitle
@@ -373,104 +378,76 @@ export function ProductDetail() {
         entityLink={`/my-shop/${productData?.farmer_id}`}
         className={'my-10'}
       />
-      <main className='w-full h-full md:h-[20rem]  flex flex-col md:flex-row px-4 md:px-20'>
+      <main className='w-full h-full md:h-[20rem] md:max-h-screen  flex flex-col md:flex-row px-4 lg:px-20 mb-10'>
         <div
-          id='carouselProductImg'
-          className='carousel slide carousel-fade relative w-full h-[25rem] md:w-1/2  md:h-full   '
-          data-bs-ride='carousel'
-          data-bs-interval='false'
+          className='relative w-full h-full max-h-screen  md:w-1/2   '
         >
-          <div className='carousel-inner relative w-full h-[78%] mb-[2%] overflow-hidden rounded'>
-            {productData?.p_images?.map((img, index) => (
-              <div
-                className={classNames('carousel-item float-left h-full rounded-md', {
-                  'active  w-full': index === 0,
-                  ' w-full': index != 0,
-                })}
-                key={index}
-              >
-                <img
-                  id="mainImg"
-                  src={img}
-                  className='block w-full h-full  object-contain rounded-md'
-                  alt='imagem do produto'
-                />
-              </div>
-            ))}
+          <div className=' relative w-full h-[75%] mb-[2%] overflow-hidden rounded'>
+            <img
+              id="mainImg"
+              src={productData?.p_images![0]}
+              className='block w-full h-full  object-contain rounded-md'
+              alt='imagem do produto'
+            />
           </div>
           <div className='relative w-full h-[20%] flex justify-between items-center '>
-            {/* <button
-              className='carousel-control-prev w-[5%] h-full  flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline left-0'
-              type='button'
-              data-bs-target='#carouselProductImg'
-              data-bs-slide='prev'
-            >
-              <span
-                className=' inline-block bg-no-repeat rounded-full '
-                aria-hidden='true'
-              > <CaretLeft size={32} color='#789B3D'/>  </span>
-              <span className='visually-hidden'>Previous</span>
-            </button> */}
-            <div className='w-[100%] h-full flex justify-center items-center space-x-2'>
+            <div className='w-full h-full flex justify-center items-start space-x-2'>
               {productData?.p_images?.map((url,index)=>(
                 <button 
                   onClick={(e)=>alterMainImg(e)}
-                  className='w-1/4 h-full rounded cursor-pointer bg-black hover:border hover:border-palm-700 ' key={index}>
+                  className='w-[6rem] h-[6rem] md:w-1/4 md:h-full rounded cursor-pointer bg-black hover:border hover:border-palm-700 ' key={index}>
                   <img src={url} alt="foto" className='w-full h-full object-cover rounded hover:opacity-50 smallImg'/>
                 </button>
               ))}
                   
             </div>
-
-            {/* <button
-              className='carousel-control-next w-[5%] h-full flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline right-0'
-              type='button'
-              data-bs-target='#carouselProductImg'
-              data-bs-slide='next'
-            >
-              <span
-                className='inline-block bg-no-repeat  rounded-full '
-                aria-hidden='true'
-              ><CaretRight size={32} color='#789B3D'/> </span>
-
-              <span className='visually-hidden'>Next</span>
-            </button> */}
           </div>
-         
-        
         </div>
 
-        <div className='w-full md:w-1/2 h-auto flex flex-col justify-between items-start  pt-4 md:pt-0 md:pl-8 md:pr-20'>
-          <div className='w-full   flex flex-col items-center md:items-start justify-between '>
-            <div className='text-left'>
-              <h2 className='w-full text-center md:text-start text-palm-700 text-lg md:text-xl font-medium mb-3 '>
+        <div className='w-full md:w-1/2 h-auto flex flex-col justify-between items-start  pt-4 md:px-4 md:pt-0 lg:pl-8 lg:pr-20'>
+          <div className='w-full  max-h-1/3 flex flex-col items-center md:items-start justify-start '>
+           
+              <h2 className='w-full text-center md:text-start text-palm-700 text-lg md:text-xl font-medium mb-2 '>
                 {productData?.p_name}
               </h2>
-              <div className='flex w-[100%] items-center justify-center md:justify-start mb-2'>
-                <span className='text-sm text-gray-400'>
-                  {' '}
-                  {commentsList.length === 0
-                    ? 0
-                    : raitingCalculate(commentsList)}
-                </span>
-                <img
-                  src={Star}
-                  className='w-4 h-4 md:w-[17px] md:h-[17px] ml-1 mr-1'
-                />
-                <span className='text-xs md:text-xs text-gray-400'>
-                  ({commentsList.length})
-                </span>
-                {productData?.p_stock! > 0 && (
-                  <span className='text-left text-gray-500 text-xs ml-4'>
-                    Em estoque: {productData?.p_stock}
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
+              <div className='w-full flex flex-col md:flex-row justify-center md:justify-between items-center'>
 
-          <div>
-            <div className='w-full flex justify-center md:justify-start items-start text-base mb-2'>
+                <div className='md:w-1/2 md:min-w-[10.75] flex  items-center justify-center md:justify-start '>
+                  <p className='text-sm text-gray-400'>
+                    {' '}
+                    {commentsList.length === 0
+                      ? 0
+                      : raitingCalculate(commentsList)}
+                  </p>
+                  <img
+                    src={Star}
+                    className='w-4 h-4 md:w-[17px] md:h-[17px] ml-1 mr-1'
+                  />
+                  <span className='text-xs md:text-xs text-gray-400'>
+                    ({commentsList.length})
+                  </span>
+
+
+                  {productData?.p_stock && productData?.p_stock > 0 && (
+                    <p className='whitespace-nowrap text-left text-gray-500 text-xs ml-4'>
+                      Em estoque: {productData?.p_stock}
+                    </p>
+                  )}
+                </div>
+
+                <div className='flex justify-start items-center'>
+                  <p  className='text-sm text-gray-400 mr-2'>Pagamento:</p>
+                  <div className=' flex items-center space-x-2'>
+                    <img src={Icon_money} alt="dinheiro" className='w-8 h-8' loading='lazy'/>
+                    <img src={Icon_pix} alt="pix" className='w-10 h-8' loading='lazy'/>
+                    <img src={Icon_cart} alt="cartão" className='w-7 h-7' loading='lazy'/>
+                  </div>
+                </div>
+              </div>
+
+         
+          </div>
+          <div className='w-full h-[10%] flex justify-center md:justify-start items-start text-base my-4 mb:my-0'>
               <span className=' text-lg text-green-600'>
                 {' '}
                 R$ {productData?.p_price}
@@ -479,13 +456,14 @@ export function ProductDetail() {
                 R$ {productData?.p_old_price}
               </span>
             </div>
-            <p className='w-full text-justify md:text-start text-xs md:text-sm text-gray-400 pt-4  pb-8'>
+          <div className='w-full max-h-2/3'>
+            <p className='w-full min-h-[20%] text-justify md:text-start text-xs md:text-sm text-gray-400 mb-3'>
               <span className='text-red-500'> Aviso:</span> Todo o processo de
-              negociação e entrega , deve ser feito entre o cliente e
-              responsavel por este produto.
+              negociação e entrega, deve ser feito entre o cliente e
+              responsável por este produto.
             </p>
 
-            <div className='w-full flex flex-col md:flex-row  items-center mt-2 md:mt-0 mb-4'>
+            <div className='w-full max-h-[40%] flex flex-col md:flex-row  items-center mt-2 md:mt-0 mb-4'>
               <div className='w-[75%] md:w-1/4 flex justify-start rounded border border-palm-700 py-1 mb-4 md:mb-0 md:mr-8 '>
                 <button
                   className='w-1/4 h-full text-center text-xl text-palm-700'
@@ -521,7 +499,7 @@ export function ProductDetail() {
             <a
               href={`http://api.whatsapp.com/send?l=pt_BR&phone=+5574988393944&text=Olá tudo bem ? Eu Tenho interesse no produto: ${productData?.p_name}, de preço: ${productData?.p_price} reais. Ainda estar disponível ?`}
               target='_blank'
-              className='w-full flex justify-center items-center px-2 py-2.5 bg-green-600 text-white  text-sm leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out'
+              className='w-full max-h-[40%] flex justify-center items-center px-2 py-2.5 bg-green-600 text-white  text-sm leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out'
             >
               <WhatsappLogo size={32} color='#fff' />
               Conversar
@@ -529,7 +507,7 @@ export function ProductDetail() {
           </div>
         </div>
       </main>
-      <section className='w-full flex flex-col items-start justify-start px-8 md:px-20 mt-8'>
+      <section className='w-full h-full flex flex-col items-start justify-start px-8 '>
         <header className='w-full flex items-center font-medium justify-evenly py-3 text-center text-lg text-palm-700   underline-offset-4 mb-8'>
           <button
             className='hover:text-palm-900 focus:underline '
@@ -552,6 +530,6 @@ export function ProductDetail() {
         {viewProdDetail === 'description' ? description : reviews}
       </section>
       <Footer />
-    </>
+    </div>
   );
 }

@@ -18,8 +18,9 @@ import { MenuOfDashboard } from "./MenuOfDashboard";
 
 type Prop = {
   type: "default" | "admin";
+  setFilterByCity?: React.Dispatch<React.SetStateAction<string | null>>;
 };
-export function Menu_Sidebar({ type }: Prop) {
+export function Menu_Sidebar({ type,setFilterByCity }: Prop) {
   const { userLogged } = useContext(AuthContext);
   const CheckLogout = () => {
     Swal.fire({
@@ -247,6 +248,8 @@ export function Menu_Sidebar({ type }: Prop) {
                     m-0                      
                   "
                   aria-label="Default select example"
+                  onChange={(e) => setFilterByCity && setFilterByCity(e.target.value)}
+
                 >
                   <option
                     value=""

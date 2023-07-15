@@ -17,8 +17,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import { api } from "../../../hook/useApi";
 import { FirebaseUploadFile } from "../../../service/firebase";
 import { MyFile } from "../../../Types/fileUploaded.types";
-
-
+import ReactInputMask from "react-input-mask";
 
 export function CreateProduct() {
   const [filesData, setFileData] = useState<MyFile[]>([]);
@@ -35,7 +34,7 @@ export function CreateProduct() {
   //receive the file from dropzone component
   const handleUpload = (file: MyFile) => {
     if (filesData.length <= 4) {
-      setFileData( old => [...old,file]);
+      setFileData((old) => [...old, file]);
     }
   };
   const handleDelete = (url: string) => {
@@ -43,31 +42,32 @@ export function CreateProduct() {
   };
 
   async function sendNewProduct(formaData: Product) {
-    setIsLoading(true)
-    let  imgUrlArray = [];
+    setIsLoading(true);
+    let imgUrlArray = [];
     const priceFormated = formaData.p_price?.toString().replace(",", ".");
     const oldPriceFormated = formaData.p_old_price
       ?.toString()
       .replace(",", ".");
 
-  for(const img of filesData){
-    const imgUrl = await FirebaseUploadFile(img, "products")
-    if( imgUrl.url){
-      imgUrlArray.push(imgUrl.url)
+    for (const img of filesData) {
+      const imgUrl = await FirebaseUploadFile(img, "products");
+      if (imgUrl.url) {
+        imgUrlArray.push(imgUrl.url);
+      }
     }
-  }
-  const newProductFormated: Product = {
-    farmer_id: userLogged?._id,
-    p_name: formaData.p_name,
-    p_category: formaData.p_category,
-    p_price: priceFormated ? parseFloat(priceFormated) : 0,
-    p_old_price: oldPriceFormated ? parseFloat(oldPriceFormated) : 0,
-    p_stock: formaData.p_stock,
-    p_n_contact: formaData.p_n_contact,
-    p_description: formaData.p_description,
-    p_images: imgUrlArray,
-    p_status: true,
-  };
+    const newProductFormated: Product = {
+      farmer_id: userLogged?._id,
+      p_name: formaData.p_name,
+      p_category: formaData.p_category,
+      p_price: priceFormated ? parseFloat(priceFormated) : 0,
+      p_old_price: oldPriceFormated ? parseFloat(oldPriceFormated) : 0,
+      p_stock: formaData.p_stock,
+      p_n_contact: formaData.p_n_contact?.replace(/[^0-9]+/g,''),
+      p_description: formaData.p_description,
+      p_images: imgUrlArray,
+      p_status: true,
+    };
+
     await api
       .post("/admin/add-product", newProductFormated)
       .then((response) => {
@@ -91,12 +91,13 @@ export function CreateProduct() {
         setTimeout(() => {
           window.location.reload();
         }, 2000);
-      }).finally(()=>{
-        setIsLoading(false)
-        setFileData([]);
-        reset()
       })
-  };
+      .finally(() => {
+        setIsLoading(false);
+        setFileData([]);
+        reset();
+      });
+  }
 
   return (
     <>
@@ -125,7 +126,10 @@ export function CreateProduct() {
               <h1 className="w-full text-center md:text-left text-md md:text-xl text-palm-700 font-semibold my-8 ">
                 Cadastro de Produto
               </h1>
-              <form onSubmit={handleSubmit(sendNewProduct)} className="w-full  h-full   md:py-10  md:mx-auto">
+              <form
+                onSubmit={handleSubmit(sendNewProduct)}
+                className="w-full  h-full   md:py-10  md:mx-auto"
+              >
                 <div className="w-full flex flex-col md:flex-row items-center ">
                   <div className="w-full md:w-1/2 md:mr-[3%] form-group mb-6">
                     <label
@@ -299,8 +303,7 @@ export function CreateProduct() {
                         <span className=" text-xs text-gray-400"></span>:
                       </label>
                       <input
-                       type="text"
-
+                        type="text"
                         className="form-control
                         block
                         w-full
@@ -388,44 +391,35 @@ export function CreateProduct() {
                       Nº WhatsApp
                       <span className="text-red-500 font-bold"> *</span>:
                     </label>
-                    <input
+                    <ReactInputMask
                       type="text"
-                      className="form-control
-                        block
-                        w-full
-                        px-3
-                        py-1.5
-                        text-base
-                        font-normal
-                        text-gray-700
-                        bg-white bg-clip-padding
-                        border border-solid border-gray-300
-                        rounded
-                        transition
-                        ease-in-out
-                        m-0
-                        focus:border-blue-600 focus:outline-none"
-                      id="productWhatsApp"
-                      max={12}
-                      maxLength={12}
-                      aria-describedby="productWhatsApp"
-                      placeholder="(DDD)9XXXX-XXXX"
+                      className="
+                          form-control  
+                          w-full
+                          px-3
+                          py-1.5
+                          text-base
+                          font-normal
+                          text-gray-700
+                          bg-white bg-clip-padding
+                          border border-solid border-gray-300
+                          rounded
+                          transition
+                          ease-in-out
+                          m-0
+                          focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                      id="inputEntityMainPhone"
+                      mask="(99) 99999-9999"
+                      placeholder="(XX) 9XXXX-XXXX"
                       {...register("p_n_contact", {
                         required: "Campo Obrigatório",
                         minLength: {
-                          value: 12,
-                          message: "informe o DDD + Nº do celular",
-                        },
-                        maxLength: {
-                          value: 12,
-                          message: "informe apenas o DDD + Nº do celular",
-                        },
-                        pattern: {
-                          value: /^[0-9]+$/,
-                          message: "Por favor, apenas números",
+                          value: 11,
+                          message: "Contato incompleto",
                         },
                       })}
                     />
+
                     <ErrorMessage
                       errors={errors}
                       name="p_n_contact"
@@ -497,51 +491,45 @@ export function CreateProduct() {
                   </p>
 
                   <div className="w-full flex flex-col md:flex-row justify-start items-center mb-4">
-              
-                      
-                        {filesData.map((item, index) => (
-                          <div
-                            className="relative w-4/5 md:w-1/5 h-[14rem] rounded mb-4 md:mb-0 md:mr-6 "
-                            key={index}
-                          >
-                            <ImgPreview
-                              imgName={item.name!}
-                              url={item.preview}
-                              deleteFile={handleDelete}
-                              classNameAdditionalForImg={
-                                "w-full h-full rounded  "
-                              }
-                            />
-                          </div>
-                        ))}
+                    {filesData.map((item, index) => (
+                      <div
+                        className="relative w-4/5 md:w-1/5 h-[14rem] rounded mb-4 md:mb-0 md:mr-6 "
+                        key={index}
+                      >
+                        <ImgPreview
+                          imgName={item.name!}
+                          url={item.preview}
+                          deleteFile={handleDelete}
+                          classNameAdditionalForImg={"w-full h-full rounded  "}
+                        />
+                      </div>
+                    ))}
 
-                        {!filesData[0] && (
-                          <div className="dropzone w-4/5 md:w-1/5 h-[14rem] ">
-                            <DropzoneInput
-                              onUpload={handleUpload}
-                              typeFile="image"
-                              text="Imagem de capa"
-                              classNameAdditional={
-                                " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0 rounded"
-                              }
-                            />
-                          </div>
-                        )}
+                    {!filesData[0] && (
+                      <div className="dropzone w-4/5 md:w-1/5 h-[14rem] ">
+                        <DropzoneInput
+                          onUpload={handleUpload}
+                          typeFile="image"
+                          text="Imagem de capa"
+                          classNameAdditional={
+                            " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0 rounded"
+                          }
+                        />
+                      </div>
+                    )}
 
-                        {!!filesData[0] && filesData.length < 4 && (
-                          <div className="dropzone w-4/5 md:w-1/5 h-[14rem] ">
-                            <DropzoneInput
-                              onUpload={handleUpload}
-                              typeFile="image"
-                              text="Adicionar outra imagem"
-                              classNameAdditional={
-                                " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0  rounded"
-                              }
-                            />
-                          </div>
-                        )}
-                      
-                  
+                    {!!filesData[0] && filesData.length < 4 && (
+                      <div className="dropzone w-4/5 md:w-1/5 h-[14rem] ">
+                        <DropzoneInput
+                          onUpload={handleUpload}
+                          typeFile="image"
+                          text="Adicionar outra imagem"
+                          classNameAdditional={
+                            " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0  rounded"
+                          }
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
                 <button

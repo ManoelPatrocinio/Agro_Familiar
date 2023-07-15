@@ -19,10 +19,10 @@ import {
   FirebaseUploadFile,
 } from "../../../service/firebase";
 import Cookies from "js-cookie";
+import ReactInputMask from "react-input-mask";
 
-
-interface formEditUser extends User{
-  u_newPassword:string
+interface formEditUser extends User {
+  u_newPassword: string;
 }
 
 export function ManageProfile() {
@@ -35,7 +35,8 @@ export function ManageProfile() {
   const {
     register,
     formState: { errors },
-    handleSubmit,reset
+    handleSubmit,
+    reset,
   } = useForm<formEditUser>();
 
   const {
@@ -43,14 +44,13 @@ export function ManageProfile() {
     isFetching,
     error,
   } = useQuery<User>(
-    ["manageProfile",entityId],
+    ["manageProfile", entityId],
     async () => {
       const response = await api.get(`/entity/${entityId}`);
       return response.data.entity;
     },
     {
       staleTime: 1000 * 60, // 1 minute
-
     }
   );
 
@@ -62,65 +62,64 @@ export function ManageProfile() {
     });
   }
 
-  async function sendformWithBasicUserData  (FormData:(formEditUser|User)) {
-  
-      await api
-        .put(`/admin/update-user/${entityId}`, FormData)
-        .then((response) => {
-          Swal.fire({
-            icon: "success",
-            title: "Success !",
-            text: response.data.message,
-            showConfirmButton: false,
-            timer: 1500,
-          });
+  async function sendformWithBasicUserData(FormData: formEditUser | User) {
 
-          setTimeout(() => {
-            queryClient.invalidateQueries(['manageProfile']);
-            reset()
-          }, 2000);
-        })
-        .catch((error) => {
-          console.error("data", error);
-          Swal.fire({
-            icon: "error",
-            text: error.response.data.message,
-            showConfirmButton: true,
-          });
-        });
-    
-  };
+    FormData!.u_main_contact =  FormData!.u_main_contact!.replace(/[^0-9]+/g,'');
+    FormData.u_secondary_contact =  FormData.u_secondary_contact ? FormData.u_secondary_contact.replace(/[^0-9]+/g,''): ""
 
-  async function formEditUserAccess(userAccessData:formEditUser) {
     await api
-    .put(
-      `/admin/update-user-access-data/${entityId}`,
-      userAccessData
-    )
-    .then((response) => {
-      Swal.fire({
-        icon: "success",
-        title: "Success !",
-        text: response.data.message,
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      setTimeout(() => {
-        Cookies.remove('token');
-        queryClient.invalidateQueries(['manageProfile']);
-        window.location.reload()
-        navigate("/");
-      }, 1800);
-    })
-    .catch((error) => {
-      console.error("error on Edit User Access", error);
-      Swal.fire({
-        icon: "error",
+      .put(`/admin/update-user/${entityId}`, FormData)
+      .then((response) => {
+        Swal.fire({
+          icon: "success",
+          title: "Success !",
+          text: response.data.message,
+          showConfirmButton: false,
+          timer: 1500,
+        });
 
-        text: error.response.data.message,
-        showConfirmButton: true,
+        setTimeout(() => {
+          queryClient.invalidateQueries(["manageProfile"]);
+          reset();
+        }, 2000);
+      })
+      .catch((error) => {
+        console.error("data", error);
+        Swal.fire({
+          icon: "error",
+          text: error.response.data.message,
+          showConfirmButton: true,
+        });
       });
-    });
+  }
+
+  async function formEditUserAccess(userAccessData: formEditUser) {
+    await api
+      .put(`/admin/update-user-access-data/${entityId}`, userAccessData)
+      .then((response) => {
+        Swal.fire({
+          icon: "success",
+          title: "Success !",
+          text: response.data.message,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        setTimeout(() => {
+          Cookies.remove("token");
+          queryClient.invalidateQueries(["manageProfile"]);
+          window.location.reload();
+          navigate("/");
+        }, 1800);
+      })
+      .catch((error) => {
+        console.error("error on Edit User Access", error);
+        Swal.fire({
+          icon: "error",
+
+          text: error.response.data.message,
+          showConfirmButton: true,
+        });
+      });
   }
 
   const handleDeleteUserImg = async (imgRef: string) => {
@@ -146,7 +145,7 @@ export function ManageProfile() {
     }
     await FirebaseDeleteFile(imgName![0], "userImages")
       .then(() => {
-        sendformWithBasicUserData( newUserData as User);
+        sendformWithBasicUserData(newUserData as User);
       })
       .catch((err) => {
         console.log("error on delete image on forebase");
@@ -181,7 +180,7 @@ export function ManageProfile() {
     }
 
     sendformWithBasicUserData(newUserData as User);
-  }; 
+  };
 
   return (
     <>
@@ -252,7 +251,7 @@ export function ManageProfile() {
                     </div>
                     <div className=" text-center md:text-left px-2 md:px-4 py-4">
                       <h4 className="text-sm md:text-lg  text-palm-700 font-display font-semibold md:mb-2  ">
-                        { entityData?.u_full_name}
+                        {entityData?.u_full_name}
                       </h4>
                       <p className="text-xs md:text-sm text-gray-400 font-semibold md:mb-2">
                         {" "}
@@ -665,41 +664,35 @@ export function ManageProfile() {
                         Nº Whatsapp
                         <span className="text-red-500 font-bold"> *</span>:
                       </label>
-                      <input
+                      <ReactInputMask
                         type="text"
                         className="
-                          form-control  
-                          w-full
-                          px-3
-                          py-1.5
-                          text-base
-                          font-normal
-                          text-gray-700
-                          bg-white bg-clip-padding
-                          border border-solid border-gray-300
-                          rounded
-                          transition
-                          ease-in-out
-                          m-0
-                         focus:text-gray-700 focus:bg-white
-                         focus:border-palm-700 focus:outline-none"
-                        id="inputUserMainPhone"
-                        max={12}
-                        maxLength={12}
-                        placeholder="(DDD) 9XXXX-XXXX"
-                        defaultValue={entityData.u_main_contact}
+                      form-control  
+                      w-full
+                      px-3
+                      py-1.5
+                      text-base
+                      font-normal
+                      text-gray-700
+                      bg-white bg-clip-padding
+                      border border-solid border-gray-300
+                      rounded
+                      transition
+                      ease-in-out
+                      m-0
+                      focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                        id="inputEntityMainPhone"
+                        mask="(99) 99999-9999"
+                        placeholder="(XX) 9XXXX-XXXX"
                         {...register("u_main_contact", {
                           required: "Campo Obrigatório",
                           minLength: {
                             value: 11,
-                            message: "Números insuficiente",
-                          },
-                          pattern: {
-                            value: /^[0-9]+$/,
-                            message: "Por favor, apenas números",
+                            message: "Contato incompleto",
                           },
                         })}
                       />
+
                       <ErrorMessage
                         errors={errors}
                         name="u_main_contact"
@@ -722,40 +715,34 @@ export function ManageProfile() {
                         </span>
                         :
                       </label>
-                      <input
+                      <ReactInputMask
                         type="text"
-                        className="form-control
-                        
-                          w-full
-                          px-3
-                          py-1.5
-                          text-base
-                          font-normal
-                          text-gray-700
-                          bg-white bg-clip-padding
-                          border border-solid border-gray-300
-                          rounded
-                          transition
-                          ease-in-out
-                          m-0
-                    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                        id="inputEditUserSecondaryPhone"
-                        placeholder="(DDD) 9XXXX-XXXX"
-                        max={12}
-                        maxLength={12}
-                        defaultValue={entityData.u_secondary_contact}
-                        aria-describedby="entity phone 2"
+                        className="
+                      form-control  
+                      w-full
+                      px-3
+                      py-1.5
+                      text-base
+                      font-normal
+                      text-gray-700
+                      bg-white bg-clip-padding
+                      border border-solid border-gray-300
+                      rounded
+                      transition
+                      ease-in-out
+                      m-0
+                      focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                        id="inputEntityMainPhone"
+                        mask="(99) 99999-9999"
+                        placeholder="(XX) 9XXXX-XXXX"
                         {...register("u_secondary_contact", {
                           minLength: {
-                            value: 12,
-                            message: "Números insuficiente",
-                          },
-                          pattern: {
-                            value: /^[0-9]+$/,
-                            message: "Por favor, apenas números",
+                            value: 11,
+                            message: "Contato incompleto",
                           },
                         })}
                       />
+
                       <ErrorMessage
                         errors={errors}
                         name="u_secondary_contact"

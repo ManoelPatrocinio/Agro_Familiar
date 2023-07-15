@@ -40,7 +40,6 @@ export function Header({ setSearch, ItemSearched, filterByCity }: Iprop) {
         Cookies.remove('token');
         setTimeout(()=>{
           window.location.reload();
-
         },1200)
       }
     });
@@ -49,7 +48,7 @@ export function Header({ setSearch, ItemSearched, filterByCity }: Iprop) {
   return (
     <header className='relative w-full px-5 md:px-14'>
       <nav className='navbar py-2  bg-white relative flex items-end w-full justify-between'>
-        <Menu_Sidebar type='default' />
+        <Menu_Sidebar type='default' setFilterByCity={filterByCity}/>
         <div className='header-form-search hidden md:flex items-end w-[25%]'>
           <div className='w-10 h-10 flex items-end'>
             <MagnifyingGlass size={32} color='#789B3D' mirrored />

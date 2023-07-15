@@ -29,8 +29,8 @@ export function CardProduct({ product }: Prop) {
         </h5>
 
         <div className='w-full h-6 flex justify-center items-center text-base'>
-          <span className=' text-sm text-green-600'> R$ {product.p_price}</span>
-          <span className=' text-sm text-gray-400 line-through ml-3 '>
+          <span className=' text-sm text-green-600 whitespace-nowrap'> R$ {product.p_price}</span>
+          <span className=' text-sm text-gray-400 line-through ml-3 text-ellipsis whitespace-nowrap overflow-hidden'>
             {' '}
             R$ {product.p_old_price}
           </span>
