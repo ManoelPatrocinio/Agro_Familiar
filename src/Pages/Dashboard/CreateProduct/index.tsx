@@ -18,6 +18,9 @@ import { api } from "../../../hook/useApi";
 import { FirebaseUploadFile } from "../../../service/firebase";
 import { MyFile } from "../../../Types/fileUploaded.types";
 import ReactInputMask from "react-input-mask";
+import Icon_money from "../../../assets/images/icon-money.png";
+import Icon_pix from "../../../assets/images/icon-pix.png";
+import Icon_cart from "../../../assets/images/icon-cart.png";
 
 export function CreateProduct() {
   const [filesData, setFileData] = useState<MyFile[]>([]);
@@ -62,11 +65,13 @@ export function CreateProduct() {
       p_price: priceFormated ? parseFloat(priceFormated) : 0,
       p_old_price: oldPriceFormated ? parseFloat(oldPriceFormated) : 0,
       p_stock: formaData.p_stock,
-      p_n_contact: formaData.p_n_contact?.replace(/[^0-9]+/g,''),
+      p_n_contact: formaData.p_n_contact?.replace(/[^0-9]+/g, ""),
       p_description: formaData.p_description,
+      p_payments:formaData.p_payments,
       p_images: imgUrlArray,
       p_status: true,
     };
+
 
     await api
       .post("/admin/add-product", newProductFormated)
@@ -472,6 +477,97 @@ export function CreateProduct() {
                     <ErrorMessage
                       errors={errors}
                       name="p_description"
+                      render={({ message }) => (
+                        <small className="text-red-500 text-xs">
+                          {message}
+                        </small>
+                      )}
+                    />
+                  </div>
+                  <div className="form-group mb-6 w-full md:w-[30%] md:ml-[3%]">
+                    <label className="form-label inline-block mb-2 text-palm-700 ">
+                      Formas de pagamento:
+                    </label>
+                    <div className="w-full flex items-start  space-x-8">
+                      <div className="w-12 h-16 flex flex-col justify-center items-center ">
+                        <label
+                          htmlFor="paymanent_money"
+                          className="form-label w-10 h-12 mb-1 cursor-pointer"
+                        >
+                          <img
+                            src={Icon_money}
+                            alt="Dinheiro"
+                            className="w-full h-full"
+                          />
+                        </label>
+                        <input
+                          type="checkbox"
+                          value="money"
+                          id="paymanent_money"
+                          className="w-4 h-4 cursor-pointer"
+                          {...register("p_payments", {
+                            required:{
+                              value:true,
+                              message: "Selecione no minímo uma forma"
+                            }
+                             
+                          })}
+                        />
+                      </div>
+                      <div className="w-12 h-16 flex flex-col justify-center items-center">
+                        <label
+                          htmlFor="paymanent_pix"
+                          className="form-label w-12 h-10 mb-1 cursor-pointer"
+                        >
+                          <img
+                            src={Icon_pix}
+                            alt="Pix"
+                            className="w-full h-full"
+                          />
+                        </label>
+                        <input
+                          type="checkbox"
+                          value="pix"
+                          id="paymanent_pix"
+                          className="w-4 h-4 cursor-pointer"
+                          {...register("p_payments", {
+                            required:{
+                              value:true,
+                              message: "Selecione no minímo uma forma"
+                            }
+                             
+                          })}
+                        />
+                      </div>
+                      <div className="w-12 h-16 flex flex-col justify-center items-center">
+                        <label
+                          htmlFor="paymanent_cart"
+                          className="form-label w-8 h-8 mb-1 cursor-pointer"
+                        >
+                          <img
+                            src={Icon_cart}
+                            alt="cartão"
+                            className="w-full h-full"
+                          />
+                        </label>
+                        <input
+                          type="checkbox"
+                          value="cart"
+                          id="paymanent_cart"
+                          className="w-4 h-4 cursor-pointer"
+                          {...register("p_payments", {
+                            required:{
+                              value:true,
+                              message: "Selecione no minímo uma forma"
+                            }
+                             
+                          })}
+                        />
+                      </div>
+                    </div>
+                    <ErrorMessage
+                      errors={errors}
+                      name="p_payments"
                       render={({ message }) => (
                         <small className="text-red-500 text-xs">
                           {message}

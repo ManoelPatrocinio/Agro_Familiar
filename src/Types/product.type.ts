@@ -12,5 +12,6 @@ export type Product = {
   p_description?: string;
   p_images?: [] | string[] ;
   p_status?: boolean;
+  p_payments?: ['money','pix','cart'];
   createdAt?: Date;
 };
