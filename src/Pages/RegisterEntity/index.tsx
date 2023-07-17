@@ -12,6 +12,7 @@ import { useState } from "react";
 import { cnpj } from "cpf-cnpj-validator";
 import ReactInputMask from "react-input-mask";
 import { handlePasswordVisibility } from "../../service/auxiliaryFunctions";
+import icon_open_eye from "../../assets/images/icon-visible-enable.png"
 
 export function RegisterEntity() {
   const navigate = useNavigate();
@@ -731,8 +732,7 @@ export function RegisterEntity() {
                   >
                     <img
                       src={
-                        import.meta.env.VITE_IMAGES_URL +
-                        "/icon-visible-enable.png"
+                        icon_open_eye
                       }
                       alt="mostrar"
                       className="w-full h-full"
