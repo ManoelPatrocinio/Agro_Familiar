@@ -20,7 +20,8 @@ import {
 } from "../../../service/firebase";
 import Cookies from "js-cookie";
 import ReactInputMask from "react-input-mask";
-
+import { handlePasswordVisibility } from "../../../service/auxiliaryFunctions";
+import icon_open_eye from "../../../assets/images/icon-visible-enable.png"
 interface formEditUser extends User {
   u_newPassword: string;
 }
@@ -910,6 +911,7 @@ export function ManageProfile() {
                     >
                       Senha Atual
                     </label>
+                    <div className="w-full relative">
                     <input
                       type="password"
                       className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
@@ -924,6 +926,26 @@ export function ManageProfile() {
                         },
                       })}
                     />
+                      <button
+                    type="button"
+                    className="w-6 h-6 absolute  my-auto right-3 bottom-2 cursor-pointer"
+                    onClick={() =>
+                      handlePasswordVisibility(
+                        "inputEditUserPassword",
+                        "icon_eye_open"
+                      )
+                    }
+                  >
+                    <img
+                      src={
+                       icon_open_eye
+                      }
+                      alt="mostrar"
+                      className="w-full h-full"
+                      id="icon_eye_open"
+                    />
+                  </button>
+                  </div>
                     <ErrorMessage
                       errors={errors}
                       name="u_password"
@@ -941,6 +963,7 @@ export function ManageProfile() {
                     >
                       Nova Senha
                     </label>
+                    <div className="w-full relative">
                     <input
                       type="password"
                       className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
@@ -955,6 +978,26 @@ export function ManageProfile() {
                         },
                       })}
                     />
+                      <button
+                    type="button"
+                    className="w-6 h-6 absolute  my-auto right-3 bottom-2 cursor-pointer"
+                    onClick={() =>
+                      handlePasswordVisibility(
+                        "inputEditUserNewPassword",
+                        "icon_eye_open2"
+                      )
+                    }
+                  >
+                    <img
+                      src={
+                       icon_open_eye
+                      }
+                      alt="mostrar"
+                      className="w-full h-full"
+                      id="icon_eye_open2"
+                    />
+                  </button>
+                    </div>
                     <ErrorMessage
                       errors={errors}
                       name="u_newPassword"

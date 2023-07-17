@@ -11,7 +11,7 @@ import { api } from "../../hook/useApi";
 import { useState } from "react";
 import { cnpj } from "cpf-cnpj-validator";
 import ReactInputMask from "react-input-mask";
-
+import { handlePasswordVisibility } from "../../service/auxiliaryFunctions";
 
 export function RegisterEntity() {
   const navigate = useNavigate();
@@ -23,46 +23,41 @@ export function RegisterEntity() {
   } = useForm<User>();
 
   async function formSubmit(FormData: User) {
-    if (!FormData.u_type || FormData.u_type.length === 0) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Escolha o Tipo da Organização",
-      });
-    }
-    const cpfFromated =      FormData!.u_CNPJ_CPF!.replace(/[^0-9]+/g,'');
-    const number_main =      FormData!.u_main_contact!.replace(/[^0-9]+/g,'');
-    const number_secondary = FormData.u_secondary_contact ? FormData.u_secondary_contact.replace(/[^0-9]+/g,''): ""
+    const cpfFromated = FormData!.u_CNPJ_CPF!.replace(/[^0-9]+/g, "");
+    const number_main = FormData!.u_main_contact!.replace(/[^0-9]+/g, "");
+    const number_secondary = FormData.u_secondary_contact
+      ? FormData.u_secondary_contact.replace(/[^0-9]+/g, "")
+      : "";
 
-    if(cnpj.isValid(FormData!.u_CNPJ_CPF!)){
-      FormData!.u_CNPJ_CPF! = cpfFromated
-      FormData!.u_main_contact = number_main
-      FormData.u_secondary_contact = number_secondary
+    if (cnpj.isValid(FormData!.u_CNPJ_CPF!)) {
+      FormData!.u_CNPJ_CPF! = cpfFromated;
+      FormData!.u_main_contact = number_main;
+      FormData.u_secondary_contact = number_secondary;
 
       await api
-      .post("/register", FormData)
-      .then((response) => {
-        Swal.fire({
-          icon: "success",
-          title: "Success !",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+        .post("/register", FormData)
+        .then((response) => {
+          Swal.fire({
+            icon: "success",
+            title: "Success !",
+            showConfirmButton: false,
+            timer: 1500,
+          });
 
-        setTimeout(() => {
-          navigate("/");
-        }, 2000);
-      })
-      .catch((error) => {
-        console.error("data", error);
-        Swal.fire({
-          icon: "error",
-          title: "Oppss..",
-          text: error.response.data.message,
-          showConfirmButton: true,
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
+        })
+        .catch((error) => {
+          console.error("data", error);
+          Swal.fire({
+            icon: "error",
+            title: "Oppss..",
+            text: error.response.data.message,
+            showConfirmButton: true,
+          });
         });
-      });
-    }else{
+    } else {
       Swal.fire({
         icon: "info",
         title: "Oppss..",
@@ -70,9 +65,6 @@ export function RegisterEntity() {
         showConfirmButton: true,
       });
     }
-
-
-  
   }
 
   return (
@@ -104,7 +96,12 @@ export function RegisterEntity() {
                       type="radio"
                       id="inputRegisteEntityTypeAssoc"
                       value={"assoc"}
-                      {...register("u_type", {})}
+                      {...register("u_type", {
+                        required: {
+                          value: true,
+                          message: "Campo obrigatório",
+                        },
+                      })}
                     />
                     <label
                       className="form-check-label inline-block text-gray-800 cursor-pointer"
@@ -119,7 +116,12 @@ export function RegisterEntity() {
                       type="radio"
                       id="inputRegisteEntityTypeCoop"
                       value={"coop"}
-                      {...register("u_type", {})}
+                      {...register("u_type", {
+                        required: {
+                          value: true,
+                          message: "Campo obrigatório",
+                        },
+                      })}
                     />
                     <label
                       className="form-check-label inline-block text-gray-800 cursor-pointer"
@@ -129,6 +131,13 @@ export function RegisterEntity() {
                     </label>
                   </div>
                 </div>
+                <ErrorMessage
+                  errors={errors}
+                  name="u_type"
+                  render={({ message }) => (
+                    <small className="text-red-500 text-xs">{message}</small>
+                  )}
+                />
               </div>
 
               <div className="grid grid-col-2 md:grid-cols-2  md:gap-8">
@@ -201,17 +210,14 @@ export function RegisterEntity() {
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     id="inputRegisterEntityCnpj"
                     aria-describedby="EntityCnpj"
-                    mask='99.999.999/9999.99'
-
+                    mask="99.999.999/9999.99"
                     placeholder="XX.XXX.XXX/XXXX.XX"
-                
                     {...register("u_CNPJ_CPF", {
                       required: "Informe um CNPJ válido para continuar",
                       minLength: {
                         value: 14,
                         message: "Este campo deve ter 14 caracteres",
                       },
-              
                     })}
                   />
                   <ErrorMessage
@@ -547,16 +553,14 @@ export function RegisterEntity() {
                       m-0
                       focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     id="inputEntityMainPhone"
-                    mask='(99) 99999-9999'
-               
+                    mask="(99) 99999-9999"
                     placeholder="(XX) 9XXXX-XXXX"
                     {...register("u_main_contact", {
                       required: "Campo Obrigatório",
                       minLength: {
                         value: 11,
                         message: "Contato incompleto",
-                      }
-                     
+                      },
                     })}
                   />
                   <ErrorMessage
@@ -594,15 +598,13 @@ export function RegisterEntity() {
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     id="inputRegisterEntitySecondaryPhone"
                     placeholder="(XX) 9XXXX-XXXX"
-                    mask='(99) 99999-9999'
-                  
+                    mask="(99) 99999-9999"
                     aria-describedby="entity phone 2"
                     {...register("u_secondary_contact", {
                       minLength: {
                         value: 11,
                         message: "Números insuficiente",
-                      }
-                     
+                      },
                     })}
                   />
                   <ErrorMessage
@@ -695,27 +697,49 @@ export function RegisterEntity() {
                 />
               </div>
 
-              <div className="w-full mb-4">
+              <div className="w-full mb-4 relative">
                 <label
                   htmlFor="inputRegisterUserPassword"
                   className="form-label inline-block text-sm mb-2 text-gray-700"
                 >
                   Sua senha
                 </label>
-                <input
-                  type="password"
-                  className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
-                  placeholder="******"
-                  id="inputRegisterUserPassword"
-                  defaultValue=""
-                  {...register("u_password", {
-                    required: "Campo obrigatório",
-                    minLength: {
-                      value: 6,
-                      message: "O senha deve ter no mínimo 6 caracteres",
-                    },
-                  })}
-                />
+                <div className="w-full relative">
+                  <input
+                    type="password"
+                    className="form-control relative block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
+                    placeholder="******"
+                    id="inputRegisterUserPassword"
+                    defaultValue=""
+                    {...register("u_password", {
+                      required: "Campo obrigatório",
+                      minLength: {
+                        value: 6,
+                        message: "O senha deve ter no mínimo 6 caracteres",
+                      },
+                    })}
+                  />
+                  <button
+                    type="button"
+                    className="w-6 h-6 absolute  my-auto right-3 bottom-2 cursor-pointer"
+                    onClick={() =>
+                      handlePasswordVisibility(
+                        "inputRegisterUserPassword",
+                        "icon_eye"
+                      )
+                    }
+                  >
+                    <img
+                      src={
+                        import.meta.env.VITE_IMAGES_URL +
+                        "/icon-visible-enable.png"
+                      }
+                      alt="mostrar"
+                      className="w-full h-full"
+                      id="icon_eye"
+                    />
+                  </button>
+                </div>
                 <ErrorMessage
                   errors={errors}
                   name="u_password"
@@ -743,7 +767,7 @@ export function RegisterEntity() {
                 de 2
               </p>
               <button
-                onClick={() =>setFormStep(old => !old) }
+                onClick={() => setFormStep((old) => !old)}
                 className="relative text-center text-sm text-gray-500 mx-auto"
               >
                 Voltar

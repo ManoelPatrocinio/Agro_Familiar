@@ -11,6 +11,7 @@ import { api } from "../../hook/useApi";
 import { useState } from "react";
 import { cpf } from "cpf-cnpj-validator";
 import ReactInputMask from "react-input-mask";
+import { handlePasswordVisibility } from "../../service/auxiliaryFunctions";
 
 export function RegisterFarmer() {
   const navigate = useNavigate();
@@ -23,39 +24,40 @@ export function RegisterFarmer() {
 
   async function formSubmit(FormData: User) {
     FormData.u_type = "farmer";
-    const cpfFromated =      FormData!.u_CNPJ_CPF!.replace(/[^\d]+/g,'');
-    const number_main =      FormData!.u_main_contact!.replace(/[^0-9]+/g,'');
-    const number_secondary = FormData.u_secondary_contact ? FormData.u_secondary_contact.replace(/[^0-9]+/g,''): ""
+    const cpfFromated = FormData!.u_CNPJ_CPF!.replace(/[^\d]+/g, "");
+    const number_main = FormData!.u_main_contact!.replace(/[^0-9]+/g, "");
+    const number_secondary = FormData.u_secondary_contact
+      ? FormData.u_secondary_contact.replace(/[^0-9]+/g, "")
+      : "";
 
-    
-    if(cpf.isValid(cpfFromated)){
-      FormData!.u_CNPJ_CPF! = cpfFromated
-      FormData!.u_main_contact = number_main
-      FormData.u_secondary_contact = number_secondary
+    if (cpf.isValid(cpfFromated)) {
+      FormData!.u_CNPJ_CPF! = cpfFromated;
+      FormData!.u_main_contact = number_main;
+      FormData.u_secondary_contact = number_secondary;
       await api
-      .post("/register", FormData)
-      .then((response) => {
-        Swal.fire({
-          icon: "success",
-          title: "Success !",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+        .post("/register", FormData)
+        .then((response) => {
+          Swal.fire({
+            icon: "success",
+            title: "Success !",
+            showConfirmButton: false,
+            timer: 1500,
+          });
 
-        setTimeout(() => {
-          navigate("/");
-        }, 2000);
-      })
-      .catch((error) => {
-        console.error("data", error);
-        Swal.fire({
-          icon: "error",
-          title: "Oppss..",
-          text: error.response.data.message,
-          showConfirmButton: true,
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
+        })
+        .catch((error) => {
+          console.error("data", error);
+          Swal.fire({
+            icon: "error",
+            title: "Oppss..",
+            text: error.response.data.message,
+            showConfirmButton: true,
+          });
         });
-      });
-    }else{
+    } else {
       Swal.fire({
         icon: "info",
         title: "Oppss..",
@@ -63,8 +65,6 @@ export function RegisterFarmer() {
         showConfirmButton: true,
       });
     }
-
-
   }
 
   return (
@@ -85,7 +85,7 @@ export function RegisterFarmer() {
                     htmlFor="inputRegisterFarmerName"
                     className="form-label inline-block mb-2 text-palm-700 mr-3"
                   >
-                    Nome  completo
+                    Nome completo
                     <span className="text-red-500 font-bold"> *</span>:
                   </label>
                   <input
@@ -130,9 +130,9 @@ export function RegisterFarmer() {
                     CPF <span className="text-red-500 font-bold"> *</span>:
                   </label>
                   <ReactInputMask
-                  id="inputRegisterUserCPF"
-                  type="text"
-                  className="form-control
+                    id="inputRegisterUserCPF"
+                    type="text"
+                    className="form-control
                     block
                     w-full
                     px-3
@@ -147,15 +147,14 @@ export function RegisterFarmer() {
                     ease-in-out
                     m-0
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  mask="999.999.999-99"
-                  
+                    mask="999.999.999-99"
                     {...register("u_CNPJ_CPF", {
                       required: "Informe um CPF válido para continuar",
                       minLength: {
                         value: 11,
                         message: "Este campo deve ter 11 caracteres",
-                      },maxLength:14
-                      
+                      },
+                      maxLength: 14,
                     })}
                   />
                   <ErrorMessage
@@ -445,16 +444,14 @@ export function RegisterFarmer() {
                       m-0
                       focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     id="inputFarmerMainPhone"
-                    mask='(99) 99999-9999'
+                    mask="(99) 99999-9999"
                     placeholder="(XX) 9XXXX-XXXX"
-      
                     {...register("u_main_contact", {
                       required: "Campo Obrigatório",
                       minLength: {
                         value: 11,
                         message: "Contato incompleto",
-                      }
-            
+                      },
                     })}
                   />
                   <ErrorMessage
@@ -492,12 +489,12 @@ export function RegisterFarmer() {
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     id="inputRegisterFarmerSecondaryPhone"
                     placeholder="(XX) 9XXXX-XXXX"
-                    mask='(99) 99999-9999'
+                    mask="(99) 99999-9999"
                     {...register("u_secondary_contact", {
                       minLength: {
                         value: 11,
                         message: "Contato incompleto",
-                      }
+                      },
                       // pattern: {
                       //   value: /^[0-9]+$/,
                       //   message: "Por favor, apenas números",
@@ -601,19 +598,42 @@ export function RegisterFarmer() {
                 >
                   Sua senha
                 </label>
-                <input
-                  type="password"
-                  className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-600 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
-                  placeholder="******"
-                  id="inputRegisterFarmerPassword"
-                  {...register("u_password", {
-                    required: "Campo obrigatório",
-                    minLength: {
-                      value: 6,
-                      message: "O senha deve ter no mínimo 6 caracteres",
-                    },
-                  })}
-                />
+                <div className="w-full relative">
+                  <input
+                    type="password"
+                    className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-600 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
+                    placeholder="******"
+                    id="inputRegisterFarmerPassword"
+                    {...register("u_password", {
+                      required: "Campo obrigatório",
+                      minLength: {
+                        value: 6,
+                        message: "O senha deve ter no mínimo 6 caracteres",
+                      },
+                    })}
+                  />
+                  <button
+                    type="button"
+                    className="w-6 h-6 absolute  my-auto right-3 bottom-2 cursor-pointer"
+                    onClick={() =>
+                      handlePasswordVisibility(
+                        "inputRegisterFarmerPassword",
+                        "icon_eye_open"
+                      )
+                    }
+                  >
+                    <img
+                      src={
+                        import.meta.env.VITE_IMAGES_URL +
+                        "/icon-visible-enable.png"
+                      }
+                      alt="mostrar"
+                      className="w-full h-full"
+                      id="icon_eye_open"
+                    />
+                  </button>
+                </div>
+
                 <ErrorMessage
                   errors={errors}
                   name="u_password"

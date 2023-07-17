@@ -6,6 +6,8 @@ import Swal from "sweetalert2";
 import { User } from "../Types/user.type";
 import { AuthContext } from "../context/AuthContext";
 import { api } from "../hook/useApi";
+import { handlePasswordVisibility } from "../service/auxiliaryFunctions";
+import icon_open_eye from "../assets/images/icon-visible-enable.png"
 
 type FormProps = {
   type: "userLogin" | "userRegister";
@@ -127,13 +129,14 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
           />
         </div>
 
-        <div className="mb-4">
           <label
             htmlFor="inputFormAccessUserPassword"
             className="form-label inline-block text-sm mb-2 text-gray-700"
           >
             Sua senha
           </label>
+          <div className="w-full relative">
+
           <input
             type="password"
             className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
@@ -148,6 +151,7 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
               },
             })}
           />
+          
           <ErrorMessage
             errors={errors}
             name="u_password"
@@ -157,11 +161,11 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
           />
         </div>
 
-        {type === "userLogin" && (
+        {/* {type === "userLogin" && (
           <a href="#!" className="w-full text-left text-gray-800 text-sm ">
             Esqueceu sua senha?
           </a>
-        )}
+        )} */}
 
         <div className="flex flex-col justify-center  text-center lg:text-left mt-6">
           <button

@@ -12,7 +12,8 @@ import { ErrorMessage } from "@hookform/error-message";
 import { useState } from "react";
 import { DotsThreeVertical } from "phosphor-react";
 import Cookies from "js-cookie";
-
+import { handlePasswordVisibility } from "../../service/auxiliaryFunctions";
+import icon_open_eye from "../../assets/images/icon-visible-enable.png"
 interface FormEditUserAccessData extends User {
   u_newPassword: string;
   u_confirmNewPassword: string;
@@ -20,12 +21,12 @@ interface FormEditUserAccessData extends User {
 export function ClientProfile() {
   const { userId } = useParams();
   const [alterForm, setAlterForm] = useState<boolean>(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const {
     register,
     formState: { errors },
     handleSubmit,
-    reset
+    reset,
   } = useForm<FormEditUserAccessData>();
 
   const {
@@ -36,7 +37,7 @@ export function ClientProfile() {
     ["clientProfile", userId],
     async () => {
       const response = await api.get(`/entity/${userId}`);
-      reset()
+      reset();
       return await response.data.entity;
     },
     {
@@ -44,7 +45,6 @@ export function ClientProfile() {
     }
   );
 
-  
   if (error) {
     Swal.fire({
       icon: "error",
@@ -52,101 +52,99 @@ export function ClientProfile() {
       text: "Desculpe, não foi possível  essa informação, tente novamente, por favor",
     });
   }
-  
+
   async function formSubmit(userFormData: FormEditUserAccessData) {
-    await api.put(`/admin/update-userinfo/${userId}`,userFormData)
-    .then((response)=>{
-      Cookies.remove('token');
+    await api
+      .put(`/admin/update-userinfo/${userId}`, userFormData)
+      .then((response) => {
+        Cookies.remove("token");
 
-      Swal.fire({
-        icon: "success",
-        title:"Sucesso",
-        text: response.data.message,
-        showConfirmButton: false,
-        timer: 1700
-      });
-      setTimeout(()=>{
-        navigate('/')
-        window.location.reload();
-      },1900)
-    }).catch((error)=>{
-    
-      Swal.fire({
-        icon: "error",
-        title:"Ooppss",
-        text: error.response.data.message,
+        Swal.fire({
+          icon: "success",
+          title: "Sucesso",
+          text: response.data.message,
+          showConfirmButton: false,
+          timer: 1700,
+        });
+        setTimeout(() => {
+          navigate("/");
+          window.location.reload();
+        }, 1900);
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: "Ooppss",
+          text: error.response.data.message,
 
-        timer: 1700
+          timer: 1700,
+        });
       });
-    })
   }
   async function formAlterPassword(userFormData: FormEditUserAccessData) {
-    if(userFormData.u_newPassword !== userFormData.u_confirmNewPassword){
+    if (userFormData.u_newPassword !== userFormData.u_confirmNewPassword) {
       Swal.fire({
         icon: "info",
-        title:"Ooppss",
+        title: "Ooppss",
         text: "O valor inserido no compo 'Confirme a nova senha' é diferente do compo 'Nova senha' ",
-       
       });
       return null;
     }
-    await api.put(`/admin/alter-password/${userId}`,userFormData)
-    .then((response)=>{
-      Cookies.remove('token');
-      Swal.fire({
-        icon: "success",
-        title:"Sucesso",
-        text: response.data.message,
-        showConfirmButton: false,
-        timer: 1700
+    await api
+      .put(`/admin/alter-password/${userId}`, userFormData)
+      .then((response) => {
+        Cookies.remove("token");
+        Swal.fire({
+          icon: "success",
+          title: "Sucesso",
+          text: response.data.message,
+          showConfirmButton: false,
+          timer: 1700,
+        });
+        setTimeout(() => {
+          navigate("/");
+          window.location.reload();
+        }, 1900);
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: "Ooppss",
+          text: error.response.data.message,
+          timer: 1700,
+        });
       });
-      setTimeout(()=>{
-        navigate('/')
-        window.location.reload();
-      },1900)
-
-    }).catch((error)=>{
-     
-      Swal.fire({
-        icon: "error",
-        title:"Ooppss",
-        text: error.response.data.message,
-        timer: 1700
-      });
-    })
   }
 
   async function handleDeleteUserAcount() {
     Swal.fire({
-      icon: 'question',
-      title: 'Excluir conta ?',
+      icon: "question",
+      title: "Excluir conta ?",
       showCancelButton: true,
-      confirmButtonText: 'Sim',
-      text: 'Ao excluir essa conta, todos os seus dados e informações serão perdidas, tem certeza ?',
+      confirmButtonText: "Sim",
+      text: "Ao excluir essa conta, todos os seus dados e informações serão perdidas, tem certeza ?",
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteUserAcount()
+        deleteUserAcount();
       }
     });
   }
-  
 
   async function deleteUserAcount() {
-    await api.delete(`/admin/delete-account/${userId}`).then((response)=>{
-      Cookies.remove('token');
+    await api.delete(`/admin/delete-account/${userId}`).then((response) => {
+      Cookies.remove("token");
       Swal.fire({
         icon: "success",
-        title:"Sucesso",
+        title: "Sucesso",
         text: response.data.message,
         showConfirmButton: false,
-        timer: 1700
-
+        timer: 1700,
       });
-      setTimeout(()=>{
-        navigate('/')
+      setTimeout(() => {
+        navigate("/");
         window.location.reload();
-      },1900)
-    })
+      }, 1900);
+    });
   }
   return (
     <>
@@ -202,25 +200,25 @@ export function ClientProfile() {
               </p> */}
             </div>
           </div>
-          <div className='absolute md:relative mx right-0 top-[30%] flex justify-center '>
-            <div className='dropstart relative md:pt-8'>
+          <div className="absolute md:relative mx right-0 top-[30%] flex justify-center ">
+            <div className="dropstart relative md:pt-8">
               <button
-                className='
+                className="
                     dropdown-toggle
                     py-2.5
                     flex
                     items-center
                     whitespace-nowrap
-                  '
-                type='button'
-                id='dropdownMenuButton1s'
-                data-bs-toggle='dropdown'
-                aria-expanded='false'
+                  "
+                type="button"
+                id="dropdownMenuButton1s"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
-                <DotsThreeVertical size={38} weight='bold' color='#789B3D'  />
+                <DotsThreeVertical size={38} weight="bold" color="#789B3D" />
               </button>
               <ul
-                className='
+                className="
                     dropdown-menu
                     min-w-max
                     absolute
@@ -238,13 +236,13 @@ export function ClientProfile() {
                     m-0
                     bg-clip-padding
                     border-none
-                  '
-                aria-labelledby='dropdownMenuButton1s'
+                  "
+                aria-labelledby="dropdownMenuButton1s"
               >
                 <li>
                   <button
                     type="button"
-                    className='
+                    className="
                         dropdown-item
                         text-sm
                         py-2
@@ -256,8 +254,8 @@ export function ClientProfile() {
                         bg-transparent
                         text-gray-700
                         hover:bg-gray-100
-                      '
-                    onClick={()=>handleDeleteUserAcount()}  
+                      "
+                    onClick={() => handleDeleteUserAcount()}
                   >
                     Exluir conta
                   </button>
@@ -351,21 +349,42 @@ export function ClientProfile() {
               >
                 Sua senha
               </label>
-              <input
-                type="password"
-                className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
-                placeholder="******"
-                id="inputEditUserPassword"
-                autoComplete="off"
-                defaultValue=""
-                {...register("u_password", {
-                  required: "Informe sua senha para válidar a alteração",
-                  minLength: {
-                    value: 6,
-                    message: "O senha deve ter no mínimo 6 caracteres",
-                  },
-                })}
-              />
+              <div className="w-full relative">
+                <input
+                  type="password"
+                  className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
+                  placeholder="******"
+                  id="inputEditUserPassword"
+                  autoComplete="off"
+                  defaultValue=""
+                  {...register("u_password", {
+                    required: "Informe sua senha para válidar a alteração",
+                    minLength: {
+                      value: 6,
+                      message: "O senha deve ter no mínimo 6 caracteres",
+                    },
+                  })}
+                />
+                <button
+                  type="button"
+                  className="w-6 h-6 absolute  my-auto right-3 bottom-2 cursor-pointer"
+                  onClick={() =>
+                    handlePasswordVisibility(
+                      "inputEditUserPassword",
+                      "img_eye_open"
+                    )
+                  }
+                >
+                  <img
+                    src={
+                      icon_open_eye
+                    }
+                    alt="mostrar"
+                    className="w-full h-full"
+                    id="img_eye_open"
+                  />
+                </button>
+              </div>
               <ErrorMessage
                 errors={errors}
                 name="u_password"
@@ -378,7 +397,7 @@ export function ClientProfile() {
             <button
               className="flex justify-center items-center text-sm font-medium text-palm-700 mb-8 transition duration-150 ease-in-out hover:text-palm-900 hover:underline"
               type="button"
-              onClick={()=>setAlterForm((old) => !old)}
+              onClick={() => setAlterForm((old) => !old)}
             >
               Alterar senha
               <svg
@@ -418,21 +437,42 @@ export function ClientProfile() {
               >
                 Senha atual
               </label>
-              <input
-                type="password"
-                className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
-                placeholder="******"
-                id="inputEditUserPassword"
-                autoComplete="off"
-                defaultValue=""
-                {...register("u_password", {
-                  required: "Informe sua senha para válidar a alteração",
-                  minLength: {
-                    value: 6,
-                    message: "O senha deve ter no mínimo 6 caracteres",
-                  },
-                })}
-              />
+              <div className="w-full relative">
+                <input
+                  type="password"
+                  className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
+                  placeholder="******"
+                  id="inputEditUserPasswordForm2"
+                  autoComplete="off"
+                  defaultValue=""
+                  {...register("u_password", {
+                    required: "Informe sua senha para válidar a alteração",
+                    minLength: {
+                      value: 6,
+                      message: "O senha deve ter no mínimo 6 caracteres",
+                    },
+                  })}
+                />
+                <button
+                  type="button"
+                  className="w-6 h-6 absolute  my-auto right-3 bottom-2 cursor-pointer"
+                  onClick={() =>
+                    handlePasswordVisibility(
+                      "inputEditUserPasswordForm2",
+                      "img_eye_open2"
+                    )
+                  }
+                >
+                  <img
+                    src={
+                      icon_open_eye
+                    }
+                    alt="mostrar"
+                    className="w-full h-full"
+                    id="img_eye_open2"
+                  />
+                </button>
+              </div>
               <ErrorMessage
                 errors={errors}
                 name="u_password"
@@ -448,22 +488,42 @@ export function ClientProfile() {
               >
                 Nova senha
               </label>
-              <input
-                type="password"
-                className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
-                placeholder="******"
-                id="inputEditUserNewPassword"
-                autoComplete="off"
-                defaultValue=""
-
-                {...register("u_newPassword", {
-                  required: "Campo obrigatório",
-                  minLength: {
-                    value: 6,
-                    message: "O senha deve ter no mínimo 6 caracteres",
-                  },
-                })}
-              />
+              <div className="w-full relative">
+                <input
+                  type="password"
+                  className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
+                  placeholder="******"
+                  id="inputEditUserNewPassword"
+                  autoComplete="off"
+                  defaultValue=""
+                  {...register("u_newPassword", {
+                    required: "Campo obrigatório",
+                    minLength: {
+                      value: 6,
+                      message: "O senha deve ter no mínimo 6 caracteres",
+                    },
+                  })}
+                />
+                <button
+                  type="button"
+                  className="w-6 h-6 absolute  my-auto right-3 bottom-2 cursor-pointer"
+                  onClick={() =>
+                    handlePasswordVisibility(
+                      "inputEditUserNewPassword",
+                      "img_eye_open3"
+                    )
+                  }
+                >
+                  <img
+                    src={
+                      icon_open_eye
+                    }
+                    alt="mostrar"
+                    className="w-full h-full"
+                    id="img_eye_open3"
+                  />
+                </button>
+              </div>
               <ErrorMessage
                 errors={errors}
                 name="u_newPassword"
@@ -479,22 +539,42 @@ export function ClientProfile() {
               >
                 Confirme a nova senha
               </label>
-              <input
-                type="password"
-                className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
-                placeholder="******"
-                id="inputEditConfirmUserNewPassword"
-                autoComplete="off"
-                defaultValue=""
-
-                {...register("u_confirmNewPassword", {
-                  required: "Campo obrigatório",
-                  minLength: {
-                    value: 6,
-                    message: "O senha deve ter no mínimo 6 caracteres",
-                  },
-                })}
-              />
+              <div className="w-full relative">
+                <input
+                  type="password"
+                  className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
+                  placeholder="******"
+                  id="inputEditConfirmUserNewPassword"
+                  autoComplete="off"
+                  defaultValue=""
+                  {...register("u_confirmNewPassword", {
+                    required: "Campo obrigatório",
+                    minLength: {
+                      value: 6,
+                      message: "O senha deve ter no mínimo 6 caracteres",
+                    },
+                  })}
+                />
+                <button
+                  type="button"
+                  className="w-6 h-6 absolute  my-auto right-3 bottom-2 cursor-pointer"
+                  onClick={() =>
+                    handlePasswordVisibility(
+                      "inputEditConfirmUserNewPassword",
+                      "img_eye_open4"
+                    )
+                  }
+                >
+                  <img
+                    src={
+                      icon_open_eye
+                    }
+                    alt="mostrar"
+                    className="w-full h-full"
+                    id="img_eye_open4"
+                  />
+                </button>
+              </div>
               <ErrorMessage
                 errors={errors}
                 name="u_confirmNewPassword"
@@ -509,18 +589,29 @@ export function ClientProfile() {
             >
               Salvar
             </button>
-            
+
             <button
               className="w-1/2 mx-auto flex justify-center items-center text-sm font-medium text-palm-700 mb-8 transition duration-150 ease-in-out hover:text-palm-900 hover:underline"
               type="button"
-              onClick={()=>setAlterForm((old) => !old)}
+              onClick={() => setAlterForm((old) => !old)}
             >
-              <svg width="28" height="12" viewBox="0 0 33 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M7.21875 10.5556H25.7812C26.3588 10.5556 26.8125 10.0911 26.8125 9.50001C26.8125 8.9089 26.3588 8.44446 25.7812 8.44446H7.21875C6.64125 8.44446 6.1875 8.9089 6.1875 9.50001C6.1875 10.0911 6.64125 10.5556 7.21875 10.5556Z" fill="#789B3D"/>
-              <path d="M12.375 17.9445C12.5102 17.9462 12.6443 17.9189 12.7687 17.8643C12.893 17.8098 13.0048 17.7292 13.0969 17.6278C13.5094 17.2056 13.5094 16.5511 13.0969 16.1289L6.6 9.47892L13.0969 2.82892C13.5094 2.4067 13.5094 1.75226 13.0969 1.33003C12.6844 0.907811 12.045 0.907811 11.6325 1.33003L4.41375 8.71892C4.00125 9.14114 4.00125 9.79559 4.41375 10.2178L11.6325 17.6067C11.8387 17.8178 12.1069 17.9234 12.3544 17.9234L12.375 17.9445Z" fill="#789B3D"/>
+              <svg
+                width="28"
+                height="12"
+                viewBox="0 0 33 19"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.21875 10.5556H25.7812C26.3588 10.5556 26.8125 10.0911 26.8125 9.50001C26.8125 8.9089 26.3588 8.44446 25.7812 8.44446H7.21875C6.64125 8.44446 6.1875 8.9089 6.1875 9.50001C6.1875 10.0911 6.64125 10.5556 7.21875 10.5556Z"
+                  fill="#789B3D"
+                />
+                <path
+                  d="M12.375 17.9445C12.5102 17.9462 12.6443 17.9189 12.7687 17.8643C12.893 17.8098 13.0048 17.7292 13.0969 17.6278C13.5094 17.2056 13.5094 16.5511 13.0969 16.1289L6.6 9.47892L13.0969 2.82892C13.5094 2.4067 13.5094 1.75226 13.0969 1.33003C12.6844 0.907811 12.045 0.907811 11.6325 1.33003L4.41375 8.71892C4.00125 9.14114 4.00125 9.79559 4.41375 10.2178L11.6325 17.6067C11.8387 17.8178 12.1069 17.9234 12.3544 17.9234L12.375 17.9445Z"
+                  fill="#789B3D"
+                />
               </svg>
-              voltar 
-
+              voltar
             </button>
           </form>
         )}
