@@ -138,7 +138,9 @@ export function EditProduct() {
           timer: 1500,
         });
         setTimeout(() => {
+          navigate(`/Admin/manager/${userLogged?._id}`)
           queryClient.invalidateQueries(["editProduct"]);
+
         }, 1700);
       })
       .catch((error) => {
@@ -318,7 +320,7 @@ export function EditProduct() {
                         <span className="text-red-500 font-bold"> *</span>:
                       </label>
                       <input
-                        type="number"
+                        type="text"
                         className="form-control
                     
                         w-full
@@ -336,9 +338,13 @@ export function EditProduct() {
                         id="productPrice"
                         aria-describedby="productPrice"
                         placeholder="R$"
-                        defaultValue={product?.p_price}
+                        defaultValue={product?.p_price?.toString().replace(".", ",")}
                         {...register("p_price", {
                           required: "Campo Obrigatório",
+                          pattern:{
+                            value: /^[\d,?!]+$/,
+                            message: "Apenas valores no formato: 1,50 ou 1200,50"
+                          },
                           minLength: {
                             value: 1,
                             message: "o Preço deve ter mais de 1 caractere",
@@ -364,7 +370,7 @@ export function EditProduct() {
                         <span className=" text-xs text-gray-400"></span>:
                       </label>
                       <input
-                        type="number"
+                        type="text"
                         className="form-control
                         block
                         w-full
@@ -382,8 +388,12 @@ export function EditProduct() {
                        focus:border-blue-600 focus:outline-none"
                         id="productOldPrice"
                         placeholder="R$"
-                        defaultValue={product?.p_old_price}
+                        defaultValue={product?.p_old_price?.toString().replace(".", ",")}
                         {...register("p_old_price", {
+                          pattern:{
+                            value: /^[\d,?!]+$/,
+                            message: "Apenas valores no formato: 1,50 ou 1200,50"
+                          },
                           minLength: {
                             value: 1,
                             message: "o Preço deve ter mais de 1 caractere",

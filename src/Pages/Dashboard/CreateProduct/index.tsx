@@ -283,6 +283,10 @@ export function CreateProduct() {
                         placeholder="R$"
                         {...register("p_price", {
                           required: "Campo Obrigatório",
+                          pattern:{
+                            value: /^[\d,?!]+$/,
+                            message: "Apenas valores no formato: 1,50 ou 1200,50"
+                          },
                           minLength: {
                             value: 1,
                             message: "o Preço deve ter mais de 1 caractere",
@@ -327,6 +331,10 @@ export function CreateProduct() {
                         id="productOldPrice"
                         placeholder="R$"
                         {...register("p_old_price", {
+                          pattern:{
+                            value: /^[\d,?!]+$/,
+                            message: "Apenas valores no formato: 1,50 ou 1200,50"
+                          },
                           minLength: {
                             value: 1,
                             message: "o Preço deve ter mais de 1 caractere",

@@ -90,6 +90,7 @@ export function Home() {
       alert('Not Available');
     }
   }
+
   return (
     <>
       <Header setSearch={setSearch} ItemSearched={search} />
@@ -184,25 +185,25 @@ export function Home() {
                   <div className='w-full h-full flex justify-evenly items-center'>
                     <img
                       src={Logo_Barra}
-                      className='w-16 h-16 md:w-28 md:h-20'
+                      className=' w-1/3 h-1/2  aspect-[4/3] object-contain'
                       alt='logo'
                     />
                     <img
                       src={Logo_Irece}
-                      className='w-16 h-16 md:w-28 md:h-28'
+                      className=' w-1/3 h-1/2  aspect-[4/3] object-contain'
                       alt='logo'
                     />
                     <img
                       src={Logo_Xique}
-                      className='w-16 h-16 md:w-28 md:h-28'
+                      className=' w-1/3 h-1/2 aspect-[4/3] object-contain'
                       alt='logo'
                     />
                   </div>
                 </div>
                 <div className='  carousel-item  float-left w-full h-full'>
                   <div className='w-full h-full flex justify-evenly items-center'>
-                    <img src={Logo_Embrapa} className='w-16 h-16 md:w-32 md:h-28'alt='logo' />
-                    <img src={Logo_Buritirama} className='w-16 h-16 md:w-36 md:h-28' alt='logo' />
+                    <img src={Logo_Embrapa} className='w-1/3 h-1/2 aspect-[4/3] object-contain' alt='logo' />
+                    <img src={Logo_Buritirama} className=' w-1/3 h-1/2 aspect-[4/3] object-contain' alt='logo' />
                   </div>
                 </div>
               </div>
