@@ -20,6 +20,7 @@ import Icon_WhatsApp from '../../assets/images/icon-whatsapp.svg';
 import Star from '../../assets/images/star_icon.png';
 import exemple_user_cover_background from '../../assets/images/user_cover_background.jpg';
 import Cookies from 'js-cookie';
+import { api } from '../../hook/useApi';
 
 let total: number = 0; //number of products in the list, to calculate the number must be  pages shown
 let categorySelected: string = 'Produtos';
@@ -44,7 +45,16 @@ export function Entity() {
   } = useQuery<Product[]>(
     ['myShop', userId],
     async () => {
-      return await getEntityData();
+      const response = await api.get(`${backendUrl}/entity-enable-products/${userId}`)
+      await api.get(`${backendUrl}/get-farmer-comments/${userId}`).then((response)=>{
+        setCommentsList(response.data.comments);
+      })
+      setEntityData(response.data.entity)
+      total = response.data.products.length;
+      setPagination(offSet, response.data.products);
+
+      return response.data.products
+      
     },
     {
       refetchOnWindowFocus: false,
@@ -59,24 +69,7 @@ export function Entity() {
     });
   }
 
-  async function getEntityData() {
-    let productList: Product[] = [];
-    axios
-      .all([
-        axios.get(`${backendUrl}/entity-enable-products/${userId}`),
-        axios.get(`${backendUrl}/get-farmer-comments/${userId}`),
-      ])
-      .then(
-        axios.spread((productAndEntityData, comments) => {
-          setEntityData(productAndEntityData.data.entity);
-          setPagination(offSet, productAndEntityData.data.products);
-          setCommentsList(comments.data.comments);
-          total = productAndEntityData.data.products.length;
-          productList = productAndEntityData.data.products;
-        })
-      );
-    return productList;
-  }
+
 
   function setPagination(offset: number, productArray?: Product[]) {
     setOffSet(offset);
@@ -94,6 +87,7 @@ export function Entity() {
   }
 
   function filterByCategory(category: string) {
+    console.log("category",category)
     setSearch('');
     setOffSet(0);
     categorySelected = category;
@@ -110,7 +104,7 @@ export function Entity() {
         : setProductData([]);
     }
   }
-
+ 
   function raitingCalculate(comments: Comment[]) {
     // Na escala de 1 a 5, as notas 1 e 2 são negativas(detractors), 4 e 5 são positivas(promoters), e 3 é neutro.
     var promoters = 0;
