@@ -27,7 +27,10 @@ export function ClientProfile() {
     formState: { errors },
     handleSubmit,
     reset,
-  } = useForm<FormEditUserAccessData>();
+    watch
+  } = useForm<FormEditUserAccessData>({
+    mode:'onTouched'
+  });
 
   const {
     data: entity,
@@ -82,14 +85,6 @@ export function ClientProfile() {
       });
   }
   async function formAlterPassword(userFormData: FormEditUserAccessData) {
-    if (userFormData.u_newPassword !== userFormData.u_confirmNewPassword) {
-      Swal.fire({
-        icon: "info",
-        title: "Ooppss",
-        text: "O valor inserido no compo 'Confirme a nova senha' é diferente do compo 'Nova senha' ",
-      });
-      return null;
-    }
     await api
       .put(`/admin/alter-password/${userId}`, userFormData)
       .then((response) => {
@@ -146,6 +141,8 @@ export function ClientProfile() {
       }, 1900);
     });
   }
+  const user_newPassword = watch('u_newPassword')
+
   return (
     <>
       <Header setSearch={() => {}} ItemSearched={""} />
@@ -502,6 +499,7 @@ export function ClientProfile() {
                       value: 6,
                       message: "O senha deve ter no mínimo 6 caracteres",
                     },
+                    
                   })}
                 />
                 <button
@@ -553,6 +551,8 @@ export function ClientProfile() {
                       value: 6,
                       message: "O senha deve ter no mínimo 6 caracteres",
                     },
+                    validate: (value) =>
+                    value === user_newPassword || "Valor diferente do escolhido para a nova senha",
                   })}
                 />
                 <button

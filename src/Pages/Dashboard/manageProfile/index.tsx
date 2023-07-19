@@ -21,25 +21,13 @@ import {
 import Cookies from "js-cookie";
 import ReactInputMask from "react-input-mask";
 import { handlePasswordVisibility } from "../../../service/auxiliaryFunctions";
-import icon_open_eye from "../../../assets/images/icon-visible-enable.png"
+import icon_open_eye from "../../../assets/images/icon-visible-enable.png";
 interface formEditUser extends User {
   u_newPassword: string;
 }
 
 export function ManageProfile() {
   const { entityId } = useParams();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-
-  const [toggleForm, setToggleForm] = useState<boolean>(false);
-
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    reset,
-  } = useForm<formEditUser>();
-
   const {
     data: entityData,
     isFetching,
@@ -62,11 +50,25 @@ export function ManageProfile() {
       text: "Desculpe, não foi possível  exibir suas informações, tente novamente, por favor",
     });
   }
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [toggleForm, setToggleForm] = useState<boolean>(false);
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    reset,
+  } = useForm<formEditUser>({
+    mode: "onTouched",
+    defaultValues: entityData && entityData,
+  });
 
   async function sendformWithBasicUserData(FormData: formEditUser | User) {
-
-    FormData!.u_main_contact =  FormData!.u_main_contact!.replace(/[^0-9]+/g,'');
-    FormData.u_secondary_contact =  FormData.u_secondary_contact ? FormData.u_secondary_contact.replace(/[^0-9]+/g,''): ""
+    FormData!.u_main_contact = FormData!.u_main_contact!.replace(/[^0-9]+/g,"");
+    FormData.u_secondary_contact = FormData.u_secondary_contact
+      ? FormData.u_secondary_contact.replace(/[^0-9]+/g, "")
+      : "";
+     FormData.u_CNPJ_CPF!.replace(/[^0-9]+/g, "");
 
     await api
       .put(`/admin/update-user/${entityId}`, FormData)
@@ -314,7 +316,6 @@ export function ManageProfile() {
                           focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                         id="inputEditUserFullName"
                         placeholder="Digite aqui"
-                        defaultValue={entityData?.u_full_name}
                         {...register("u_full_name", {
                           required: "Campo obrigatório",
                           minLength: {
@@ -340,8 +341,9 @@ export function ManageProfile() {
                       >
                         CPF <span className="text-red-500 font-bold"> *</span>:
                       </label>
-                      <input
+                      <ReactInputMask
                         type="text"
+                        mask={"999.999.999-99"}
                         className="form-control
                           block
                           w-full
@@ -361,7 +363,6 @@ export function ManageProfile() {
                         placeholder="XXX.XXX.XXX-XX"
                         max={14}
                         maxLength={14}
-                        defaultValue={entityData.u_CNPJ_CPF}
                         {...register("u_CNPJ_CPF", {
                           required: "Informe um CPF válido para continuar",
                           minLength: {
@@ -410,7 +411,6 @@ export function ManageProfile() {
                         id="inputEditUserCity"
                         maxLength={40}
                         max={40}
-                        defaultValue={entityData.u_city}
                         placeholder="Digite aqui"
                         {...register("u_city", {
                           required: "Campo Obrigatório",
@@ -461,7 +461,6 @@ export function ManageProfile() {
                           focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                         id="inputEditUserDistrict"
                         placeholder="Digite aqui"
-                        defaultValue={entityData.u_district}
                         max={40}
                         maxLength={40}
                         {...register("u_district", {
@@ -514,7 +513,6 @@ export function ManageProfile() {
                         placeholder="Digite aqui"
                         max={70}
                         maxLength={70}
-                        defaultValue={entityData.u_street}
                         {...register("u_street", {
                           minLength: {
                             value: 2,
@@ -563,7 +561,6 @@ export function ManageProfile() {
                           m-0
                           focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                         id="inputEditUserNumber"
-                        defaultValue={entityData.u_number}
                         max={6}
                         maxLength={6}
                         {...register("u_number", {
@@ -610,7 +607,6 @@ export function ManageProfile() {
                             focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                           aria-label="select entity Uf"
                           id="inputRegisterEntityUf"
-                          defaultValue={entityData.u_UF}
                           {...register("u_UF", {
                             required: "Campo obrigatório",
                           })}
@@ -668,20 +664,20 @@ export function ManageProfile() {
                       <ReactInputMask
                         type="text"
                         className="
-                      form-control  
-                      w-full
-                      px-3
-                      py-1.5
-                      text-base
-                      font-normal
-                      text-gray-700
-                      bg-white bg-clip-padding
-                      border border-solid border-gray-300
-                      rounded
-                      transition
-                      ease-in-out
-                      m-0
-                      focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                          form-control  
+                          w-full
+                          px-3
+                          py-1.5
+                          text-base
+                          font-normal
+                          text-gray-700
+                          bg-white bg-clip-padding
+                          border border-solid border-gray-300
+                          rounded
+                          transition
+                          ease-in-out
+                          m-0
+                        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                         id="inputEntityMainPhone"
                         mask="(99) 99999-9999"
                         placeholder="(XX) 9XXXX-XXXX"
@@ -783,7 +779,6 @@ export function ManageProfile() {
                       id="inputEditUserDescription"
                       rows={3}
                       placeholder="Descreva aqui o que os cliente precisam ou querem saber sobre voçê, e, sobre o que produz."
-                      defaultValue={entityData.u_description}
                       {...register("u_description", {
                         minLength: {
                           value: 30,
@@ -880,7 +875,6 @@ export function ManageProfile() {
                       className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                       placeholder="exemplo@gmail.com"
                       id="inputEditUserEmail"
-                      defaultValue={entityData.u_email}
                       {...register("u_email", {
                         required: "Campo obrigatório",
                         pattern: {
@@ -912,40 +906,38 @@ export function ManageProfile() {
                       Senha Atual
                     </label>
                     <div className="w-full relative">
-                    <input
-                      type="password"
-                      className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
-                      placeholder="******"
-                      autoComplete="off"
-                      id="inputEditUserPassword"
-                      {...register("u_password", {
-                        required: "Campo Obrigatório",
-                        minLength: {
-                          value: 6,
-                          message: "O senha deve ter no mínimo 6 caracteres",
-                        },
-                      })}
-                    />
+                      <input
+                        type="password"
+                        className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
+                        placeholder="******"
+                        autoComplete="off"
+                        id="inputEditUserPassword"
+                        {...register("u_password", {
+                          required: "Campo Obrigatório",
+                          minLength: {
+                            value: 6,
+                            message: "O senha deve ter no mínimo 6 caracteres",
+                          },
+                        })}
+                      />
                       <button
-                    type="button"
-                    className="w-6 h-6 absolute  my-auto right-3 bottom-2 cursor-pointer"
-                    onClick={() =>
-                      handlePasswordVisibility(
-                        "inputEditUserPassword",
-                        "icon_eye_open"
-                      )
-                    }
-                  >
-                    <img
-                      src={
-                       icon_open_eye
-                      }
-                      alt="mostrar"
-                      className="w-full h-full"
-                      id="icon_eye_open"
-                    />
-                  </button>
-                  </div>
+                        type="button"
+                        className="w-6 h-6 absolute  my-auto right-3 bottom-2 cursor-pointer"
+                        onClick={() =>
+                          handlePasswordVisibility(
+                            "inputEditUserPassword",
+                            "icon_eye_open"
+                          )
+                        }
+                      >
+                        <img
+                          src={icon_open_eye}
+                          alt="mostrar"
+                          className="w-full h-full"
+                          id="icon_eye_open"
+                        />
+                      </button>
+                    </div>
                     <ErrorMessage
                       errors={errors}
                       name="u_password"
@@ -964,39 +956,36 @@ export function ManageProfile() {
                       Nova Senha
                     </label>
                     <div className="w-full relative">
-                    <input
-                      type="password"
-                      className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
-                      placeholder="******"
-                      autoComplete="off"
-                      id="inputEditUserNewPassword"
-                      {...register("u_newPassword", {
-                        required: "Campo Obrigatório",
-                        minLength: {
-                          value: 6,
-                          message: "O senha deve ter no mínimo 6 caracteres",
-                        },
-                      })}
-                    />
+                      <input
+                        type="password"
+                        className="form-control block w-full p-2  text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
+                        placeholder="******"
+                        autoComplete="off"
+                        id="inputEditUserNewPassword"
+                        {...register("u_newPassword", {
+                          minLength: {
+                            value: 6,
+                            message: "O senha deve ter no mínimo 6 caracteres",
+                          },
+                        })}
+                      />
                       <button
-                    type="button"
-                    className="w-6 h-6 absolute  my-auto right-3 bottom-2 cursor-pointer"
-                    onClick={() =>
-                      handlePasswordVisibility(
-                        "inputEditUserNewPassword",
-                        "icon_eye_open2"
-                      )
-                    }
-                  >
-                    <img
-                      src={
-                       icon_open_eye
-                      }
-                      alt="mostrar"
-                      className="w-full h-full"
-                      id="icon_eye_open2"
-                    />
-                  </button>
+                        type="button"
+                        className="w-6 h-6 absolute  my-auto right-3 bottom-2 cursor-pointer"
+                        onClick={() =>
+                          handlePasswordVisibility(
+                            "inputEditUserNewPassword",
+                            "icon_eye_open2"
+                          )
+                        }
+                      >
+                        <img
+                          src={icon_open_eye}
+                          alt="mostrar"
+                          className="w-full h-full"
+                          id="icon_eye_open2"
+                        />
+                      </button>
                     </div>
                     <ErrorMessage
                       errors={errors}

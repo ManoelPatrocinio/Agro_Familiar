@@ -6,8 +6,6 @@ import Swal from "sweetalert2";
 import { User } from "../Types/user.type";
 import { AuthContext } from "../context/AuthContext";
 import { api } from "../hook/useApi";
-import { handlePasswordVisibility } from "../service/auxiliaryFunctions";
-import icon_open_eye from "../assets/images/icon-visible-enable.png"
 
 type FormProps = {
   type: "userLogin" | "userRegister";
@@ -18,7 +16,9 @@ export const FormUserAccess = memo(({ type }: FormProps) => {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<User>();
+  } = useForm<User>({
+    mode: "onTouched"
+  });
 
   const { signIn } = useContext(AuthContext);
   async function formSubmit(userFormData: User) {

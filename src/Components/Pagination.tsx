@@ -64,7 +64,7 @@ export function Pagination({ limit, total, offSet, setOffSet }: IProp) {
             onClick={() => onPageChange(current + 1)}
             disabled={current === totalPage}
           >
-            Proxíma
+            Próxima
           </button>
         </li>
       </ul>
