@@ -12,10 +12,10 @@ export function ContactUs() {
     <>
       <Header setSearch={() => {}} ItemSearched={""} />
       <Carrousel />
-      <main className="w-full flex items-start flex-col px-8 md:px-20">
+      <main className="w-full flex items-start flex-col px-8 lg:px-20">
         <SectionTitle title={"Fale Conosco"} className={"my-6 w-full"} />
-        <div className="w-full flex flex-col md:flex-row">
-          <div className="w-full md:w-1/2 md:max-w-[50%]  md:px-10 md:pt-14">
+        <div className="w-full flex flex-col lg:flex-row">
+          <div className="w-full lg:w-1/2 lg:max-w-[50%]  md:px-10 md:pt-14">
             <p className="w-full text-left text-md text-gray-800 font-medium mb-4 ">
               Ficou com alguma dúvida, sugetão ou algo que queria falar conosco
               ? <br /> Se sim, teremos o maior prazer em te ajudar !
@@ -59,7 +59,7 @@ export function ContactUs() {
               </div>{" "}
             </div>
           </div>
-          <div className="w-full md:w-1/2 md:max-w-[50%]  md:px-10 mt-8 md:mt-0 ">
+          <div className="w-full lg:w-1/2 lg:max-w-[50%]  md:px-10 mt-8 md:mt-0 ">
             <h3 className="w-full text-center text-lg text-gray-800 font-display font-semibold py-4">
               Contato
             </h3>
