@@ -34,7 +34,7 @@ export function Header({ setSearch, ItemSearched, filterByCity }: Iprop) {
       title: 'Sair',
       showCancelButton: true,
       confirmButtonText: 'Sim',
-      text: 'Deseja mesmo nos deixar ?',
+      text: 'Deseja mesmo finalizar a sessão ?',
     }).then((result) => {
       if (result.isConfirmed) {
         Cookies.remove('token');

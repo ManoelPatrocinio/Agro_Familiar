@@ -60,7 +60,6 @@ export function ManageProfile() {
     reset,
   } = useForm<formEditUser>({
     mode: "onTouched",
-    defaultValues: entityData && entityData,
   });
 
   async function sendformWithBasicUserData(FormData: formEditUser | User) {
@@ -84,6 +83,7 @@ export function ManageProfile() {
         setTimeout(() => {
           queryClient.invalidateQueries(["manageProfile"]);
           reset();
+          navigate("/Admin/create-product")
         }, 2000);
       })
       .catch((error) => {
@@ -250,7 +250,7 @@ export function ManageProfile() {
                           }
                           whereSave="profile"
                         />
-                      )}
+                      )} 
                     </div>
                     <div className=" text-center md:text-left px-2 md:px-4 py-4">
                       <h4 className="text-sm md:text-lg  text-palm-700 font-display font-semibold md:mb-2  ">
@@ -316,6 +316,7 @@ export function ManageProfile() {
                           focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                         id="inputEditUserFullName"
                         placeholder="Digite aqui"
+                        defaultValue={entityData?.u_full_name}
                         {...register("u_full_name", {
                           required: "Campo obrigatório",
                           minLength: {
@@ -363,6 +364,8 @@ export function ManageProfile() {
                         placeholder="XXX.XXX.XXX-XX"
                         max={14}
                         maxLength={14}
+                        defaultValue={entityData?.u_CNPJ_CPF}
+
                         {...register("u_CNPJ_CPF", {
                           required: "Informe um CPF válido para continuar",
                           minLength: {
@@ -412,6 +415,8 @@ export function ManageProfile() {
                         maxLength={40}
                         max={40}
                         placeholder="Digite aqui"
+                        defaultValue={entityData?.u_city}
+
                         {...register("u_city", {
                           required: "Campo Obrigatório",
                           minLength: {
@@ -463,6 +468,7 @@ export function ManageProfile() {
                         placeholder="Digite aqui"
                         max={40}
                         maxLength={40}
+                        defaultValue={entityData?.u_district}
                         {...register("u_district", {
                           minLength: {
                             value: 2,
@@ -513,6 +519,7 @@ export function ManageProfile() {
                         placeholder="Digite aqui"
                         max={70}
                         maxLength={70}
+                        defaultValue={entityData?.u_street}
                         {...register("u_street", {
                           minLength: {
                             value: 2,
@@ -563,6 +570,7 @@ export function ManageProfile() {
                         id="inputEditUserNumber"
                         max={6}
                         maxLength={6}
+                        defaultValue={entityData?.u_number}
                         {...register("u_number", {
                           pattern: {
                             value: /^[0-9]+$/,
@@ -607,6 +615,7 @@ export function ManageProfile() {
                             focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                           aria-label="select entity Uf"
                           id="inputRegisterEntityUf"
+                          defaultValue={entityData?.u_UF}
                           {...register("u_UF", {
                             required: "Campo obrigatório",
                           })}
@@ -681,6 +690,7 @@ export function ManageProfile() {
                         id="inputEntityMainPhone"
                         mask="(99) 99999-9999"
                         placeholder="(XX) 9XXXX-XXXX"
+                        defaultValue={entityData?.u_main_contact}
                         {...register("u_main_contact", {
                           required: "Campo Obrigatório",
                           minLength: {
@@ -732,6 +742,7 @@ export function ManageProfile() {
                         id="inputEntityMainPhone"
                         mask="(99) 99999-9999"
                         placeholder="(XX) 9XXXX-XXXX"
+                        defaultValue={entityData?.u_secondary_contact}
                         {...register("u_secondary_contact", {
                           minLength: {
                             value: 11,
@@ -779,6 +790,7 @@ export function ManageProfile() {
                       id="inputEditUserDescription"
                       rows={3}
                       placeholder="Descreva aqui o que os cliente precisam ou querem saber sobre voçê, e, sobre o que produz."
+                      defaultValue={entityData?.u_description}
                       {...register("u_description", {
                         minLength: {
                           value: 30,
@@ -875,6 +887,7 @@ export function ManageProfile() {
                       className="form-control block w-full p-2 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-palm-700 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-palm-700 focus:outline-none"
                       placeholder="exemplo@gmail.com"
                       id="inputEditUserEmail"
+                      defaultValue={entityData?.u_email}
                       {...register("u_email", {
                         required: "Campo obrigatório",
                         pattern: {

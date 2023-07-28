@@ -14,6 +14,9 @@ import { DotsThreeVertical } from "phosphor-react";
 import Cookies from "js-cookie";
 import { handlePasswordVisibility } from "../../service/auxiliaryFunctions";
 import icon_open_eye from "../../assets/images/icon-visible-enable.png"
+import { ImgPreview } from "../../Components/ImgPreview";
+import { DropzoneInput } from "../../Components/Dropzone";
+import { FirebaseDeleteFile, FirebaseUploadFile } from "../../service/firebase";
 interface FormEditUserAccessData extends User {
   u_newPassword: string;
   u_confirmNewPassword: string;
@@ -125,6 +128,75 @@ export function ClientProfile() {
     });
   }
 
+  async function handleDeleteUserImg(imgUrl:string){
+    let imgName: string[];
+    let newUserData: User;
+
+    entity?.u_img_profile === imgUrl
+      const splits = entity!.u_img_profile!.split("%2F");
+      imgName = splits[1].split("?alt");
+      newUserData = {
+        ...entity!,
+        u_img_profile: "",
+      };
+  
+    await FirebaseDeleteFile(imgName![0], "userImages")
+      .then(() => {
+        updateUserImgProfile(newUserData as User);
+      })
+      .catch((err) => {
+        console.log("error on delete image on forebase");
+        Swal.fire({
+          icon: "error",
+          title: "Oppss",
+          text: "Desculpe, não foi possível excluir essa imagem, tente novamente, por favor",
+        });
+      });
+  }
+  async function handleSetUserImg(file:File) {
+    const { url } = await FirebaseUploadFile(file, "/userImages");
+    if (!url) {
+      Swal.fire({
+        icon: "error",
+        title: "Oppss",
+        text: "Desculpe, não foi possível salvar essa imagem, tente novamente, por favor",
+        showConfirmButton: true
+      });
+      return null
+    }
+    const newUserData = {
+      ...entity,
+      u_type:"customer",
+      u_img_profile: url
+    }
+
+    updateUserImgProfile(newUserData as User) 
+  }
+
+  async function updateUserImgProfile(userData:User) {
+    await api
+    .put(`/admin/update-userImgProfile/${userId}`, userData)
+    .then((response) => {
+      Swal.fire({
+        icon: "success",
+        title: "Sucesso",
+        showConfirmButton: false,
+        timer: 1700,
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 1900);
+    })
+    .catch((error) => {
+      Swal.fire({
+        icon: "error",
+        title: "Ooppss",
+        text: error.response.data.message,
+        timer: 1700,
+      });
+    });
+  }
+
   async function deleteUserAcount() {
     await api.delete(`/admin/delete-account/${userId}`).then((response) => {
       Cookies.remove("token");
@@ -163,29 +235,25 @@ export function ClientProfile() {
         <div className=" w-full absolute top-[7rem] md:top-[87%] flex flex-col md:flex-row  justify-between items-center  md:px-16 ">
           <div className="flex flex-col md:flex-row items-center ">
             <div className="w-[7rem] h-[7rem] md:w-[8rem] md:h-[8rem] rounded-[50%] ">
-              {entity && entity.u_img_profile ? (
-                <>
-                  {entity.u_img_profile.length > 0 ? (
-                    <img
-                      src={entity.u_img_profile}
-                      alt="foto de perfil"
-                      className="w-full h-full rounded-[50%]"
-                    />
-                  ) : (
-                    <img
-                      src={exemple_user_profile}
-                      alt="foto de perfil"
-                      className="w-full h-full  rounded-[50%]"
-                    />
-                  )}
-                </>
+              {entity && entity.u_img_profile && entity.u_img_profile.length > 0  ? (
+                <ImgPreview
+                  imgName={entity.u_img_profile}
+                  url={entity.u_img_profile}
+                  deleteFile={handleDeleteUserImg}
+                  classNameAdditionalForImg="w-full h-full rounded-full"
+                />
               ) : (
-                <img
-                  src={exemple_user_profile}
-                  alt="foto de perfil"
-                  className="w-full h-full rounded-[50%]"
+                <DropzoneInput
+                  onUpload={handleSetUserImg}
+                  typeFile="image"
+                  text="imagem de perfil"
+                  classNameAdditional={
+                    " bg-gray-100 border border-dashed border-gray-400 rounded mb-4 md:mb-0 rounded-full"
+                  }
+                  whereSave="profile"
                 />
               )}
+             
             </div>
             <div className="flex flex-col items-center md:items-start justify-evenly px-4 pb-4">
               <h4 className="text-sm md:text-lg text-center md:text-left text-palm-700 font-display font-semibold pt-5 ">

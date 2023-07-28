@@ -32,7 +32,9 @@ export function CreateProduct() {
     formState: { errors },
     reset,
     handleSubmit,
-  } = useForm<Product>();
+  } = useForm<Product>({
+    mode: "onTouched"
+  });
 
   //receive the file from dropzone component
   const handleUpload = (file: MyFile) => {

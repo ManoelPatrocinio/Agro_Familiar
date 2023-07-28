@@ -22,14 +22,16 @@ export function CardEntity({ entity }: Props) {
     >
       {entity.u_type === 'farmer' ? (
         <>
-          <div className='w-[5rem] h-[5rem] mx-auto mb-2'>
+          <Link 
+           to={`/my-shop/${entity._id}`}
+            className='w-[5rem] h-[5rem] mx-auto mb-2'>
             <img
               src={!entity.u_img_profile ? UserPhoto : entity.u_img_profile}
               alt='foto de perfil'
               className='w-full h-full rounded-[50%]'
               loading='lazy'
             />
-          </div>
+          </Link>
           <Link
             to={`/my-shop/${entity._id}`}
             className='w-full text-sm text-center whitespace-nowrap text-ellipsis overflow-hidden text-palm-700 font-display px-2 '

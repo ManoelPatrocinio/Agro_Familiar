@@ -10,6 +10,8 @@ import { SystemRoutes } from './Routers/router';
 import { AuthProvider } from './context/AuthContext';
 import { PuchaseListProvider } from './context/PuchaseListContext';
 import { queryClient } from './service/queryClient';
+import { HelpModal } from './Components/HelpModal';
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
@@ -20,7 +22,8 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       </AuthProvider>
     </QueryClientProvider>
 
-    <ToastContainer />
+    <ToastContainer autoClose={1000}/>
     <ModalRegister />
+    <HelpModal/>
   </React.StrictMode>
 );

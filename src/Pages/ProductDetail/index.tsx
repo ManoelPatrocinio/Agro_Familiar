@@ -516,7 +516,7 @@ export function ProductDetail() {
               </button>
             </div>
             <a
-              href={`http://api.whatsapp.com/send?l=pt_BR&phone=+5574988393944&text=Olá tudo bem ? Eu Tenho interesse no produto: ${productData?.p_name}, de preço: ${productData?.p_price} reais. Ainda estar disponível ?`}
+              href={`http://api.whatsapp.com/send?l=pt_BR&phone=+55${productData?.p_n_contact}&text=Olá tudo bem ? Eu Tenho interesse no produto: ${productData?.p_name}, de preço: ${productData?.p_price} reais. Ainda estar disponível ?`}
               target="_blank"
               className="w-full max-h-[40%] flex justify-center items-center px-2 py-2.5 bg-green-600 text-white  text-sm leading-tight uppercase rounded shadow-md hover:bg-green-500 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-600 active:shadow-lg transition duration-150 ease-in-out"
             >

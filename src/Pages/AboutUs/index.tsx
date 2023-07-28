@@ -23,8 +23,7 @@ export function AboutUs() {
           </h3>
           <p className="w-full text-md text-gray-700 ">
             O Portal Agro Familiar foi idealizado com o objetivo de ser mais do
-            que um produto, e sim, uma ferramenta social e de transformação.
-            trazendo maior visibilidade e competitividade para a agricultura
+            que um produto, e sim, uma ferramenta social e de transformação, trazendo maior visibilidade e competitividade para a agricultura
             familiar.
           </p>
         </div>
