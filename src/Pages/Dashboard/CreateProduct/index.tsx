@@ -33,7 +33,7 @@ export function CreateProduct() {
     reset,
     handleSubmit,
   } = useForm<Product>({
-    mode: "onTouched"
+    mode: "onTouched",
   });
 
   //receive the file from dropzone component
@@ -69,11 +69,10 @@ export function CreateProduct() {
       p_stock: formaData.p_stock,
       p_n_contact: formaData.p_n_contact?.replace(/[^0-9]+/g, ""),
       p_description: formaData.p_description,
-      p_payments:formaData.p_payments,
+      p_payments: formaData.p_payments,
       p_images: imgUrlArray,
       p_status: true,
     };
-
 
     await api
       .post("/admin/add-product", newProductFormated)
@@ -109,8 +108,15 @@ export function CreateProduct() {
   return (
     <>
       {" "}
-      <header className="w-full md:hidden h-auto px-3 flex justify-between items-end">
-        <Question size={40} color="#89B045" />
+      <header className="w-full lg:hidden h-auto px-3 flex justify-between items-end">
+        <button
+          type="button"
+          className=" w-10"
+          data-bs-toggle="modal"
+          data-bs-target="#modalHelp"
+        >
+          <Question size={40} color="#89B045" />
+        </button>
 
         <Link to="/" className="w-[9rem]  mt-4">
           {" "}
@@ -119,10 +125,10 @@ export function CreateProduct() {
         <Menu_Sidebar type="admin" />
       </header>
       <div className="flex">
-        <div className="hidden md:block w-[25%] min-h-full border-r border-gray-200 ">
+        <div className="hidden lg:block w-[25%] min-h-full border-r border-gray-200 ">
           <MenuOfDashboard />
         </div>
-        <div className="relative w-full md:w-[75%] h-full px-8">
+        <div className="relative w-full lg:w-[75%] h-full px-8">
           {isLoading ? (
             <Load_spinner
               adicionalClass="w-full h-screen bg-white "
@@ -285,9 +291,10 @@ export function CreateProduct() {
                         placeholder="R$"
                         {...register("p_price", {
                           required: "Campo Obrigatório",
-                          pattern:{
+                          pattern: {
                             value: /^[\d,?!]+$/,
-                            message: "Apenas valores no formato: 1,50 ou 1200,50"
+                            message:
+                              "Apenas valores no formato: 1,50 ou 1200,50",
                           },
                           minLength: {
                             value: 1,
@@ -333,9 +340,10 @@ export function CreateProduct() {
                         id="productOldPrice"
                         placeholder="R$"
                         {...register("p_old_price", {
-                          pattern:{
+                          pattern: {
                             value: /^[\d,?!]+$/,
-                            message: "Apenas valores no formato: 1,50 ou 1200,50"
+                            message:
+                              "Apenas valores no formato: 1,50 ou 1200,50",
                           },
                           minLength: {
                             value: 1,
@@ -516,11 +524,10 @@ export function CreateProduct() {
                           id="paymanent_money"
                           className="w-4 h-4 cursor-pointer"
                           {...register("p_payments", {
-                            required:{
-                              value:true,
-                              message: "Selecione no minímo uma forma"
-                            }
-                             
+                            required: {
+                              value: true,
+                              message: "Selecione no minímo uma forma",
+                            },
                           })}
                         />
                       </div>
@@ -541,11 +548,10 @@ export function CreateProduct() {
                           id="paymanent_pix"
                           className="w-4 h-4 cursor-pointer"
                           {...register("p_payments", {
-                            required:{
-                              value:true,
-                              message: "Selecione no minímo uma forma"
-                            }
-                             
+                            required: {
+                              value: true,
+                              message: "Selecione no minímo uma forma",
+                            },
                           })}
                         />
                       </div>
@@ -566,11 +572,10 @@ export function CreateProduct() {
                           id="paymanent_cart"
                           className="w-4 h-4 cursor-pointer"
                           {...register("p_payments", {
-                            required:{
-                              value:true,
-                              message: "Selecione no minímo uma forma"
-                            }
-                             
+                            required: {
+                              value: true,
+                              message: "Selecione no minímo uma forma",
+                            },
                           })}
                         />
                       </div>

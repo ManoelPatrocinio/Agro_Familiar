@@ -118,7 +118,7 @@ export function Farmers() {
         filterByCity={setCity}
       />
       <Carrousel />
-      <main className=' w-full flex items-start flex-col px-1 md:px-20'>
+      <main className=' w-full flex items-start flex-col px-1 lg:px-20'>
         <SectionTitle title='Produtores' className={'my-6 w-full'} />
         <Dropdrown
           items={['De A a Z', 'De Z a A']}

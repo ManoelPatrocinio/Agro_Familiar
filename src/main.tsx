@@ -10,7 +10,7 @@ import { SystemRoutes } from './Routers/router';
 import { AuthProvider } from './context/AuthContext';
 import { PuchaseListProvider } from './context/PuchaseListContext';
 import { queryClient } from './service/queryClient';
-import { HelpModal } from './Components/HelpModal';
+import { ModalHelp } from './Components/ModalHelp';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
@@ -24,6 +24,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 
     <ToastContainer autoClose={1000}/>
     <ModalRegister />
-    <HelpModal/>
+    <ModalHelp/>
   </React.StrictMode>
 );

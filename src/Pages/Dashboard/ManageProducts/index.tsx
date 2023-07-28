@@ -157,7 +157,7 @@ export function ManageProducts() {
 
   return (
     <>
-      <header className='w-full md:hidden h-auto px-3 flex justify-between items-end'>
+      <header className='w-full lg:hidden h-auto px-3 flex justify-between items-end'>
         <Question size={40} color='#89B045' />
         <Link to='/' className='w-[9rem]  mt-4'>
           {' '}
@@ -171,10 +171,10 @@ export function ManageProducts() {
         <Menu_Sidebar type='admin' />
       </header>
       <div className='flex '>
-        <div className='hidden md:block w-[25%] min-h-full border-r border-gray-200 '>
+        <div className='hidden lg:block w-[25%] min-h-full border-r border-gray-200 '>
           <MenuOfDashboard />
         </div>
-        <div className='w-full md:w-[75%] h-full px-8 pb-8'>
+        <div className='w-full lg:w-[75%] h-full px-8 pb-8'>
           <h1 className='w-full text-center md:text-left text-md md:text-xl text-palm-700 font-semibold my-8'>
             Gerenciar Produtos
           </h1>
@@ -195,6 +195,7 @@ export function ManageProducts() {
                 type='text'
                 placeholder='Busque Aqui...'
                 className='w-full h-full pl-2  border-[1px] rounded border-palm-700  focus:outline-none'
+                onChange={(e) => setSearch(e.target.value)}
               />
               <MagnifyingGlass
                 size={24}

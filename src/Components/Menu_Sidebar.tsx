@@ -37,20 +37,20 @@ export function Menu_Sidebar({ type,setFilterByCity }: Prop) {
     });
   };
   return (
-    <div className="md:hidden m-0 p-0 ">
+    <div className="lg:hidden m-0 p-0 ">
       <button
-        className="md:hidden m-0 p-0 border-0"
+        className="lg:hidden m-0 p-0 border-0"
         type="button"
         data-bs-toggle="offcanvas"
         data-bs-target="#offcanvasExample"
         aria-controls="offcanvasExample"
       >
-        <List size={40} color="#789B3D" className="md:hidden" />
+        <List size={40} color="#789B3D"  />
       </button>
 
       <div
         className="offcanvas offcanvas-start w-[90vw] fixed bottom-0 flex 
-        flex-col max-w-full bg-white invisible bg-clip-padding shadow-sm outline-none
+        flex-col max-w-full overflow-y-auto bg-white invisible bg-clip-padding shadow-sm outline-none
         transition duration-300 ease-in-out text-gray-700 top-0 left-0 border-none "
         tabIndex={-1}
         id="offcanvasExample"

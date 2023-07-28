@@ -49,7 +49,7 @@ export function Header({ setSearch, ItemSearched, filterByCity }: Iprop) {
     <header className='relative w-full px-5 md:px-14'>
       <nav className='navbar py-2  bg-white relative flex items-end w-full justify-between'>
         <Menu_Sidebar type='default' setFilterByCity={filterByCity}/>
-        <div className='header-form-search hidden md:flex items-end w-[25%]'>
+        <div className='header-form-search hidden lg:flex items-end w-[25%]'>
           <div className='w-10 h-10 flex items-end'>
             <MagnifyingGlass size={32} color='#789B3D' mirrored />
           </div>
@@ -70,8 +70,8 @@ export function Header({ setSearch, ItemSearched, filterByCity }: Iprop) {
             loading='lazy'
           />
         </Link>
-        <div className='header-icons-right w-10 md:w-[25%] flex  justify-end items-end'>
-          <div className='dropdown relative  h-auto min-h-10 mr-6 hidden md:flex items-center'>
+        <div className='header-icons-right w-10 lg:w-[25%] flex  justify-end items-end'>
+          <div className='dropdown relative  h-auto min-h-10 mr-6 hidden lg:flex items-center'>
             <button
               onClick={() => setShowForm(!showForm)}
               className='
@@ -206,7 +206,7 @@ export function Header({ setSearch, ItemSearched, filterByCity }: Iprop) {
           <PurchaseList />
         </div>
       </nav>
-      <ul className='w-full hidden max-h-8 h-8 md:flex items-center justify-evenly mt-8'>
+      <ul className='w-full hidden max-h-8 h-8 lg:flex items-center justify-evenly mt-8'>
         <li>
           {' '}
           <Link

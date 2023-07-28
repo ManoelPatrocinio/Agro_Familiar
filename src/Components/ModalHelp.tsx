@@ -1,4 +1,4 @@
-export function HelpModal() {
+export function ModalHelp() {
   return (
     <div
       className="modal fade fixed top-0 left-0  hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
@@ -11,7 +11,7 @@ export function HelpModal() {
       <div className="modal-dialog modal-lg relative w-auto ">
         <div
           className="modal-content bg-white  border-none shadow-lg relative  
-                    w-full h-auto md:h-[24rem] px-6  rounded "
+                    w-full h-auto md:h-[24rem] px-1 py-6 md:px-6 md:py-0   rounded "
         >
           <header className="w-full flex justify-center items-center">
             <svg

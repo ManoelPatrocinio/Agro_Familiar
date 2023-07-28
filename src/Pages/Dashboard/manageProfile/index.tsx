@@ -187,7 +187,7 @@ export function ManageProfile() {
 
   return (
     <>
-      <header className="w-full md:hidden h-auto px-3 flex justify-between items-end">
+      <header className="w-full lg:hidden h-auto md:pb-4 px-3 flex justify-between items-end">
         <Question size={40} color="#89B045" />
         <a href="/" className="w-[9rem]  mt-4">
           {" "}
@@ -197,10 +197,10 @@ export function ManageProfile() {
       </header>
 
       <div className="flex min-h-screen">
-        <div className="hidden md:block w-[25%] min-h-full border-r border-gray-200 ">
+        <div className="hidden lg:block w-[25%] min-h-full border-r border-gray-200 ">
           <MenuOfDashboard />
         </div>
-        <div className="w-full md:w-[75%] h-full ">
+        <div className="w-full lg:w-[75%] h-full ">
           {isFetching && (
             <Load_spinner
               adicionalClass="w-full h-screen"
@@ -230,7 +230,7 @@ export function ManageProfile() {
                     classNameAdditionalForImg="w-full h-full "
                   />
                 )}
-                <div className=" w-full absolute top-[7rem] md:top-[87%] flex flex-col md:flex-row  justify-between items-center  md:px-8 ">
+                <div className=" w-full absolute  top-[87%] flex flex-col md:flex-row  justify-between items-center  md:px-8 ">
                   <div className="flex flex-col md:flex-row items-center md:items-end">
                     <div className="w-[6rem] h-[6rem] md:w-[9.5rem] md:h-[9.5rem] rounded-[50%] ">
                       {entityData.u_img_profile ? (
@@ -252,7 +252,7 @@ export function ManageProfile() {
                         />
                       )} 
                     </div>
-                    <div className=" text-center md:text-left px-2 md:px-4 py-4">
+                    <div className="text-center md:text-left px-2 md:px-4 py-4">
                       <h4 className="text-sm md:text-lg  text-palm-700 font-display font-semibold md:mb-2  ">
                         {entityData?.u_full_name}
                       </h4>
@@ -260,7 +260,7 @@ export function ManageProfile() {
                         {" "}
                         {entityData?.u_city}
                       </p>
-                      <div className="flex w-1/4 items-center justify-start">
+                      <div className="flex w-full lg:w-1/4 items-center justify-center lg:justify-start">
                         <span className="text-xs md:text-sm text-gray-400">
                           {" "}
                           4.6{" "}

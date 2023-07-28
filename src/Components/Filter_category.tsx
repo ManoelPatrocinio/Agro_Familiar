@@ -15,9 +15,9 @@ export function Filter_category({
   return (
     <div
       className={classNames(" transition-all", {
-        "block fixed right-[-2rem] top-[0] min-h-screen h-auto w-[90%] z-10 py-4 px-2 bg-white  shadow-md shadow-gray-400":
+        "block fixed right-[-2rem] top-[0] min-h-screen max-h-screen overflow-y-auto h-auto w-[90%] z-10 py-4 px-2 bg-white  shadow-md shadow-gray-400":
           mobileVisiblity,
-        "hidden md:block md:w-1/4 border-[1px] border-palm-700 rounded px-4 py-2":
+        "hidden lg:block md:w-1/4 border-[1px] border-palm-700 rounded px-4 py-2":
           !mobileVisiblity,
       })}
     >

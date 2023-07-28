@@ -138,7 +138,7 @@ export function Products() {
       />
       <Carrousel />
 
-      <main className='flex items-start flex-col px-1 md:px-20'>
+      <main className='flex items-start flex-col px-1 lg:px-20'>
         <SectionTitle
           title={categorySelected}
           className={'my-6 mb-6 md:mb-12'}
@@ -150,7 +150,7 @@ export function Products() {
             mobileVisiblity={toggleFilterVisibility}
             filterByCategory={filterByCategory}
           />
-          <div className='w-full md:w-3/4 flex flex-col  items-start'>
+          <div className='w-full lg:w-3/4 flex flex-col  items-start'>
             <div className='w-full flex justify-between md:justify-start px-2'>
               <Dropdrown
                 items={['Menor Preço', 'Maior Preço', 'De A a Z', 'De Z a A']}

@@ -96,7 +96,7 @@ export function Home() {
       <Header setSearch={setSearch} ItemSearched={search} />
       <Carrousel />
 
-      <main className='w-full flex items-start flex-col px-1 md:px-20 '>
+      <main className='w-full flex items-start flex-col px-1 lg:px-20 '>
         <SectionTitle title={'Destaques'} className={'my-6 w-full'} />
   
         <div className='w-full flex flex-wrap justify-around gap-4 pt-4 px-2 '>

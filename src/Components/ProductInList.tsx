@@ -20,7 +20,7 @@ export function ProductInList({ product, alterStatus, deleteProduct }: IProp) {
         data-bs-ride="carousel"
         data-bs-interval="false"
       >
-        <div className="carousel-inner relative w-full h-full overflow-hidden rounded">
+        <div className="carousel-inner relative w-full h-full max-h-[15rem] md:max-h-full overflow-hidden rounded">
           {product?.p_images?.map((img, index) => (
             <div
               className={classNames("carousel-item float-left h-full", {
@@ -31,7 +31,7 @@ export function ProductInList({ product, alterStatus, deleteProduct }: IProp) {
             >
               <img
                 src={img}
-                className="block w-full h-full"
+                className="block w-full h-full object-cover"
                 alt="imagem do produto"
               />
             </div>

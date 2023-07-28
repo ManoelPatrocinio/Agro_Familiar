@@ -162,7 +162,7 @@ export function EditProduct() {
   return (
     <>
       {" "}
-      <header className="w-full md:hidden h-auto px-3 flex justify-between items-end">
+      <header className="w-full lg:hidden h-auto px-3 flex justify-between items-end">
         <Question size={40} color="#89B045" />
 
         <Link to="/" className="w-[9rem]  mt-4">
@@ -172,10 +172,10 @@ export function EditProduct() {
         <Menu_Sidebar type="admin" />
       </header>
       <div className="flex">
-        <div className="hidden md:block w-[25%] min-h-full border-r border-gray-200 ">
+        <div className="hidden lg:block w-[25%] min-h-full border-r border-gray-200 ">
           <MenuOfDashboard />
         </div>
-        <div className="relative w-full md:w-[75%] h-full px-8">
+        <div className="relative w-full lg:w-[75%] h-full px-8">
           {isFetching || isLoading ? (
             <Load_spinner
               adicionalClass="w-full h-screen bg-white "

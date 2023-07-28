@@ -127,7 +127,7 @@ export function Entities() {
         filterByCity={setCity}
       />
       <Carrousel />
-      <main className=' w-full flex items-start flex-col px-6 md:px-20'>
+      <main className=' w-full flex items-start flex-col px-6 lg:px-20'>
         <SectionTitle title='Entidades' className={'my-6 w-full'} />
 
         <div className='w-full flex justify-around py-3 '>
