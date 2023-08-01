@@ -26,7 +26,7 @@ export function Products() {
   const [productData, setProductData] = useState<Product[]>([]);
   const [offSet, setOffSet] = useState<number>(0);
   const [city, setCity] = useState<string | null>(null);
-
+ 
   const Limit_perPage = 9; //cards number shown per page
   const {
     data: productAPi,
