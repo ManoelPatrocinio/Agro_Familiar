@@ -42,7 +42,7 @@ export function Menu_Sidebar({ type,setFilterByCity }: Prop) {
         className="lg:hidden m-0 p-0 border-0"
         type="button"
         data-bs-toggle="offcanvas"
-        data-bs-target="#offcanvasExample"
+        data-bs-target="#offcanvasMenuAside"
         aria-controls="offcanvasExample"
       >
         <List size={40} color="#789B3D"  />
@@ -53,7 +53,7 @@ export function Menu_Sidebar({ type,setFilterByCity }: Prop) {
         flex-col max-w-full overflow-y-auto bg-white invisible bg-clip-padding shadow-sm outline-none
         transition duration-300 ease-in-out text-gray-700 top-0 left-0 border-none "
         tabIndex={-1}
-        id="offcanvasExample"
+        id="offcanvasMenuAside"
         aria-labelledby="offcanvasExampleLabel"
       >
         {type === "default" ? (
@@ -175,6 +175,7 @@ export function Menu_Sidebar({ type,setFilterByCity }: Prop) {
                     </div>
                   ) : (
                     <FormUserAccess type="userLogin" />
+                    // <p>oi</p>
                   )}
                 </div>
               </div>

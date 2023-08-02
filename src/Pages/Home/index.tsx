@@ -17,6 +17,7 @@ import Logo_Xique from "../../assets/images/xique_logo.png";
 import Logo_Embrapa from "../../assets/images/embrapa.png";
 import Logo_Buritirama from "../../assets/images/buritirama.png";
 import { api } from "../../hook/useApi";
+import { Empty_search } from "../../Components/Empty_search";
 
 const backendUrl = import.meta.env.VITE_BACKEND_PORT;
 export function Home() {
@@ -32,7 +33,7 @@ export function Home() {
   } = useQuery<Product[]>(
     ["homeGetAllProd", city],
     async () => {
-      //getUserPosition();
+      // getUserPosition();
       getProductsForSections();
       const response = await api.get(`/all-enable-products/?city=${city}`);
       return response.data.products;
@@ -68,28 +69,29 @@ export function Home() {
         })
       );
   }
-  async function getUserPosition() {
-    if ("geolocation" in navigator) {
-      await navigator.geolocation.getCurrentPosition(function (position) {
-        const lat: number = position.coords.latitude;
-        const long: number = position.coords.longitude;
-        if (lat && long) {
-          axios
-            .get(
-              `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${long}&format=json`
-            )
-            .then((response) => {
-              console.log("response", response.data.address.city);
-            })
-            .catch((err) => {
-              console.log("erro get location", err);
-            });
-        }
-      });
-    } else {
-      alert("Not Available");
-    }
-  }
+  // async function getUserPosition() {
+  //   if ("geolocation" in navigator) {
+  //     await navigator.geolocation.getCurrentPosition(function (position) {
+  //       const lat: number = position.coords.latitude;
+  //       const long: number = position.coords.longitude;
+  //       if (lat && long) {
+  //         axios
+  //           .get(
+  //             `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${long}&format=json`
+  //           )
+  //           .then((response) => {
+  //             setCity( response.data.address.city)
+  //             console.log("response city", response.data.address.city);
+  //           })
+  //           .catch((err) => {
+  //             console.log("erro get location", err);
+  //           });
+  //       }
+  //     });
+  //   } else {
+  //     alert("Not Available");
+  //   }
+  // }
 
   return (
     <>
@@ -111,7 +113,14 @@ export function Home() {
             />
           ) : (
             <>
-              {search?.length > 0 && (
+              {search?.length > 0 && filteredProdList!.length === 0 ? (
+                <>
+                  <Empty_search
+                    text="Ainda não temos esses itens "
+                    classAdicinonal="h-[50vh] w-full justify-center"
+                  />
+                </>
+              ) : (
                 <>
                   {filteredProdList?.map((product) => (
                     <CardProduct product={product} key={product._id} />
@@ -121,9 +130,22 @@ export function Home() {
 
               {search?.length === 0 && (
                 <>
-                  {productsMostRating.map((product) => (
-                    <CardProduct product={product} key={product._id} />
-                  ))}
+                  {productsMostRating?.length > 0 ? (
+                    <>
+                      {productsMostRating.map((product) => (
+                        <CardProduct product={product} key={product._id} />
+                      ))}
+                    </>
+                  ) : (
+                    <>
+                      {
+                        <Empty_search
+                          text="Ainda não temos itens de destaque nessa região  "
+                          classAdicinonal="h-[50vh] w-full justify-center"
+                        />
+                      }
+                    </>
+                  )}
                 </>
               )}
             </>
@@ -142,9 +164,24 @@ export function Home() {
             />
           ) : (
             <>
-              {productsRecents.map((product) => (
-                <CardProduct product={product} key={product._id} />
-              ))}
+           
+
+              {productsRecents?.length > 0 ? (
+                <>
+                  {productsRecents.map((product) => (
+                    <CardProduct product={product} key={product._id} />
+                  ))}
+                </>
+              ) : (
+                <>
+                  {
+                    <Empty_search
+                      text="Ainda não temos itens recém adiconados nessa região  "
+                      classAdicinonal="h-[50vh] w-full justify-center"
+                    />
+                  }
+                </>
+              )}
             </>
           )}
         </div>

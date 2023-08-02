@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import {
   ClipboardText,
+  List,
   MagnifyingGlass,
   User,
   UserCircle,
@@ -25,7 +26,6 @@ interface Iprop {
 }
 
 export function Header({ setSearch, ItemSearched, filterByCity }: Iprop) {
-  const [showForm, setShowForm] = useState<boolean>(false);
   const { purchaseList } = useContext(PuchaseListContext);
   const { userLogged } = useContext(AuthContext);
   const CheckLogout = () => {
@@ -48,7 +48,11 @@ export function Header({ setSearch, ItemSearched, filterByCity }: Iprop) {
   return (
     <header className='relative w-full px-5 md:px-14'>
       <nav className='navbar py-2  bg-white relative flex items-end w-full justify-between'>
-        <Menu_Sidebar type='default' setFilterByCity={filterByCity}/>
+         <div className='block lg:hidden'>
+
+          <Menu_Sidebar type='default' setFilterByCity={filterByCity}/>
+         </div>
+       
         <div className='header-form-search hidden lg:flex items-end w-[25%]'>
           <div className='w-10 h-10 flex items-end'>
             <MagnifyingGlass size={32} color='#789B3D' mirrored />
@@ -73,7 +77,6 @@ export function Header({ setSearch, ItemSearched, filterByCity }: Iprop) {
         <div className='header-icons-right w-10 lg:w-[25%] flex  justify-end items-end'>
           <div className='dropdown relative  h-auto min-h-10 mr-6 hidden lg:flex items-center'>
             <button
-              onClick={() => setShowForm(!showForm)}
               className='
                 text-left
                 font-body
