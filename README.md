@@ -6,7 +6,7 @@
 
 A plataforma AgroFamiliar é um concentrador e facilitador das relações entre o consumidor e produtores familiares da regionais. 
 
-[Confira o projeto](https://ecatalogo-manoelpatrocinio.vercel.app/) 
+[Confira o projeto](https://agrofamiliar.vercel.app/) 
 
 
 ## TECNOLOGIAS USADAS
