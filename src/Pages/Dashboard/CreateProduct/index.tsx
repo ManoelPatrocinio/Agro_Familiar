@@ -67,7 +67,7 @@ export function CreateProduct() {
       p_category: formaData.p_category,
       p_price: priceFormated ? parseFloat(priceFormated) : 0,
       p_old_price: oldPriceFormated ? parseFloat(oldPriceFormated) : 0,
-      p_stock:  formaData.p_stock ? parseInt(formaData.p_stock!) : 1,
+      p_stock:  formaData.p_stock ? formaData.p_stock : 1,
       p_n_contact: formaData.p_n_contact?.replace(/[^0-9]+/g, ""),
       p_description: formaData.p_description,
       p_payments: formaData.p_payments,
