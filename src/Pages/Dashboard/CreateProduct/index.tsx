@@ -48,6 +48,7 @@ export function CreateProduct() {
 
   async function sendNewProduct(formaData: Product) {
     setIsLoading(true);
+    
     let imgUrlArray = [];
     const priceFormated = formaData.p_price?.toString().replace(",", ".");
     const oldPriceFormated = formaData.p_old_price
@@ -66,7 +67,7 @@ export function CreateProduct() {
       p_category: formaData.p_category,
       p_price: priceFormated ? parseFloat(priceFormated) : 0,
       p_old_price: oldPriceFormated ? parseFloat(oldPriceFormated) : 0,
-      p_stock: formaData.p_stock,
+      p_stock:  formaData.p_stock ? parseInt(formaData.p_stock!) : 1,
       p_n_contact: formaData.p_n_contact?.replace(/[^0-9]+/g, ""),
       p_description: formaData.p_description,
       p_payments: formaData.p_payments,
@@ -77,13 +78,15 @@ export function CreateProduct() {
     await api
       .post("/admin/add-product", newProductFormated)
       .then((response) => {
-        setFileData([]);
         Swal.fire({
           icon: "success",
           title: "Success !",
           showConfirmButton: false,
           timer: 1500,
         });
+        setIsLoading(false);
+        setFileData([]);
+        reset();
       })
       .catch((error) => {
         console.error("add product erro:", error);
@@ -94,15 +97,9 @@ export function CreateProduct() {
           text: error.response.data.message,
           showConfirmButton: true,
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
+
       })
-      .finally(() => {
-        setIsLoading(false);
-        setFileData([]);
-        reset();
-      });
+      
   }
 
   return (
@@ -366,8 +363,8 @@ export function CreateProduct() {
                         htmlFor="productStock"
                         className="form-label inline-block mb-2 text-palm-700 mr-3"
                       >
-                        Etoque
-                        <span className=" text-xs text-gray-400"></span>:
+                        Estoque
+                        <span className="text-red-500 font-bold"> *</span>:
                       </label>
                       <input
                         type="number"
@@ -389,6 +386,7 @@ export function CreateProduct() {
                         id="productStock"
                         aria-describedby="product stock"
                         {...register("p_stock", {
+                          required: "Campo Obrigatório",
                           minLength: {
                             value: 1,
                             message: "Insira algum valor",
@@ -454,7 +452,7 @@ export function CreateProduct() {
                     />
                   </div>
                 </div>
-                <div className="w-full flex flex-col md:flex-row items-center ">
+                <div className="w-full flex flex-col md:flex-row items-start ">
                   <div className="form-group mb-6 w-full md:w-1/2">
                     <label
                       htmlFor="productDescription"
@@ -647,14 +645,15 @@ export function CreateProduct() {
                   type="submit"
                   disabled={filesData.length <= 0 ? true : false}
                   className={classNames(
-                    " block w-[90%] md:w-1/4 mx-auto md:mx-0 my-8 py-3 px-3 text-white text-md font-semibold   rounded ",
+                    " block w-[90%]  mx-auto md:mx-0 my-8 py-3 px-3 text-white text-md font-semibold   rounded ",
                     {
-                      "bg-palm-700": filesData.length > 0,
-                      "bg-palm-900 opacity-80": filesData.length <= 0,
+                      "md:w-1/4 bg-palm-700": filesData.length > 0,
+                      "md:w-1/3 bg-gray-400 opacity-80": filesData.length <= 0,
                     }
                   )}
                 >
-                  Cadastrar produto
+                  {filesData.length <= 0 ? "Lembre-se escolher as imagens " : "Cadastrar produto"}
+                  
                 </button>
               </form>
             </>

@@ -208,7 +208,7 @@ export function ManageProfile() {
             />
           )}
           {entityData && (
-            <main className="w-full h-full  flex flex-col justify-between items-start pt-8 md:pt-0">
+            <main className="w-full h-full flex flex-col justify-between items-start pt-8 md:pt-0">
               <div className="w-full h-[35vh] md:h-[15rem] md:min-h-[40vh] relative ">
                 {!entityData.u_cover_photo ? (
                   <div className="w-full h-full">
@@ -227,7 +227,7 @@ export function ManageProfile() {
                     imgName={entityData.u_cover_photo}
                     url={entityData.u_cover_photo}
                     deleteFile={handleDeleteUserImg}
-                    classNameAdditionalForImg="w-full h-full "
+                    classNameAdditionalForImg="object-cover w-full h-full"
                   />
                 )}
                 <div className=" w-full absolute  top-[87%] flex flex-col md:flex-row  justify-between items-center  md:px-8 ">
