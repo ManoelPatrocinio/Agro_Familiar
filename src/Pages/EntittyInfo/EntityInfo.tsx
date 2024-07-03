@@ -171,7 +171,7 @@ export function EntityInfo() {
               <h4 className='text-sm md:text-lg text-center md:text-left text-palm-700 font-display font-semibold pt-3 md:pt-0'>
                 {entityData?.u_full_name}
               </h4>
-              <p className='text-xs md:text-sm text-gray-400 font-semibold py-2 md:py-1'>
+              <p className='text-xs md:text-sm text-gray-400 font-semibold my-2'>
                 {' '}
                 {entityData?.u_city}
               </p>
@@ -197,7 +197,12 @@ export function EntityInfo() {
       </div>
       <main className='w-full px-8 md:px-20 mt-[11rem] md:mt-[9rem]'>
         <h1 className='w-full text-center text-sm md:text-lg  text-gray-800 font-display font-semibold  mb-4'>
-          Informações sobre a Associação
+          
+          {entityData?.u_type == 'farmer' && "Informações sobre o produtor"}
+          {entityData?.u_type == 'assoc' && "Informações sobre a associação"}
+          {entityData?.u_type == 'coop' && "Informações sobre a cooperativa"}
+          
+
         </h1>
 
         <p className='w-full md:text-left text-justify text-sm text-gray-700 indent-9 md:indent-12'>

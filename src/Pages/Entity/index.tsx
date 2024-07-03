@@ -229,7 +229,7 @@ export function Entity() {
               <h4 className='text-sm md:text-lg text-center md:text-left text-palm-700 font-display font-semibold pt-3 md:pt-0'>
                 {entityData?.u_full_name}
               </h4>
-              <p className='text-xs md:text-sm text-gray-400 font-semibold'>
+              <p className='text-xs md:text-sm text-gray-400 font-semibold my-2'>
                 {' '}
                 {entityData?.u_city}
               </p>
